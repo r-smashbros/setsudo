@@ -15,6 +15,7 @@ new class extends Client {
     // Init Global Vars
     this.commands = new Collection();
     this.events = new Collection();
+    this.constants = require('./Constants.js');
 
     // Run Init Functions
     this.init();

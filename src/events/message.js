@@ -5,6 +5,8 @@ module.exports = class extends Event {
     super(client, {
       name: "message"
     });
+
+    this.permissions = new (require('../handlers/permission.js'))();
   }
 
   async execute(ctx = null) {
@@ -18,7 +20,8 @@ module.exports = class extends Event {
     const command = await this.fetchCommand(content.split(' ')[0]);
     if (!command) return;
 
-    // TODO: Add permission check *after* validating command
+    ctx.perm = this.checkPerm(ctx);
+    if (command.ltu > ctx.perm[0]) return;
 
     return command.execute(ctx);
   }
@@ -29,5 +32,9 @@ module.exports = class extends Event {
       this.client.commands.forEach(c => { if (c.aliases && c.aliases.includes(text)) return resolve(c); });
       return resolve();
     });
+  }
+
+  checkPerm(message) { 
+    return this.permissions.fetch(this.client, message);
   }
 };

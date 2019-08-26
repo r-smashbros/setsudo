@@ -6,7 +6,8 @@ module.exports = class extends Command {
   constructor(client) {
     super(client, {
       name: "eval",
-      aliases: []
+      aliases: [],
+      ltu: client.constants.perms.dev
     });
 
     this.embed = function (input, output, error = false) {
@@ -15,8 +16,6 @@ module.exports = class extends Command {
   }
 
   execute(message) {
-    if (message.author.id !== this.client.config['discord']['owner']) return;
-
     const code = message.content.slice(message.content.search(' ') + 1);
     if (!code.length) return message.channel.send('No code input.');
 

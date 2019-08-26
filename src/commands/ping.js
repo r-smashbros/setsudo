@@ -4,7 +4,8 @@ module.exports = class extends Command {
   constructor(client) {
     super(client, {
       name: "ping",
-      aliases: []
+      aliases: [],
+      ltu: client.constants.perms.user
     });
   }
 
