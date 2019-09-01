@@ -1,5 +1,6 @@
 const path = require('path');
 const klaw = require('klaw');
+const Enmap = require("enmap");
 const { Client, Collection } = require('discord.js');
 
 const commandsPath = path.join(__dirname, "commands");
@@ -16,6 +17,14 @@ new class extends Client {
     this.commands = new Collection();
     this.events = new Collection();
     this.constants = require('./Constants.js');
+
+    // Init Database Tables (Enmap)
+    this.db = {};
+    this.db.settings = new Enmap({name: "settings"});
+    this.db.detention = new Enmap({name: "detention"});
+    this.db.tempBans = new Enmap({name: "tempBans"});
+    this.db.modNotes = new Enmap({name: "modNotes"});
+    this.db.emojiStats = new Enmap({name: "emojiStats"});
 
     // Run Init Functions
     this.init();

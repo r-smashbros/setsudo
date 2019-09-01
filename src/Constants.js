@@ -1,8 +1,8 @@
 module.exports = {
   "perms": {
+    // To Protect Eval
     "dev": 10,
-    "admin": 9,
-    "mod": 8,
+    "staff": 9,
     "user": 1,
     "blacklist": 0
   },
@@ -11,5 +11,13 @@ module.exports = {
     "error": "0xFF0000",
     "warn": "0xFF8800",
     "success": "0x00FF00"
+  },
+  "defaultSettings": {
+    // Role ID
+    "staffrole": null,
+    // Category ID
+    "detentioncategory": null,
+    // Channel ID
+    "logschannel": null
   }
 };

@@ -9,20 +9,13 @@ class PermissionLevel {
         "Developer"
       ];
 
-    // TODO: Implement DB here
-    /*
-    if (message.member.roles.some(r => config['discord']['roleAuth']['admin'].includes(r.id)))
+    const gSettings = this.client.db.settings.get(message.guild.id);
+    if (gSettings['staffRole'] && message.member.roles.some(r => r.id === gSettings['staffRole']))
       return [
-        client.constants.perms.admin,
-        "Admin"
+        client.constants.perms.staff,
+        "Staff"
       ];
 
-    if (message.member.roles.some(r => config['discord']['roleAuth']['mod'].includes(r.id)))
-      return [
-        client.constants.perms.mod,
-        "Mod"
-      ];
-    */
     return [client.constants.perms.user, "Guild Member"];
   }
 }
