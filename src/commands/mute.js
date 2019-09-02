@@ -31,7 +31,7 @@ module.exports = class extends Command {
 
     detCat = message.guild.channels.get(detCat);
 
-    await muteMember.roles.add(muteUser);
+    await muteMember.roles.add(muteRole);
     const endTime = Date.now() + (Number(match[2]) * 60 * 1000);
 
     const muteChan = await message.guild.channels.create(
