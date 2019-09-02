@@ -38,7 +38,7 @@ module.exports = {
         .addField("» Moderator", `${message.author.tag} (${message.author.id})`, false)
         .addField("» Reason", reason, false)
         .setTimestamp()
-        .setColor(this.colours.info);
+        .setColor(0x00FFF9);
     },
     "logs": (message, user, action, reason) => { 
       const embed = new MessageEmbed()
@@ -52,7 +52,7 @@ module.exports = {
       if (/kick/i.test(action)) return embed.setColor(0xFFA500);
       if (/mute|detention|silence/i.test(action)) return embed.setColor(0xFFFF00);
       if (/warn/i.test(action)) return embed.setColor(0x00FF00);
-      return embed.setColor(this.colours.info);
+      return embed.setColor(0x00FFF9);
     }
   }
 };
