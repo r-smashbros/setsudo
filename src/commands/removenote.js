@@ -17,7 +17,7 @@ module.exports = class extends Command {
     const user = await this.client.users.fetch(match[1]);
 
     this.client.handlers.modNotes.removeNote(message, user, match[2])
-      .then(() => message.reply(`Note for ${user.tag} added`))
+      .then(() => message.reply(`Note #${match[2]} for ${user.tag} removed`))
       .catch(e => message.reply(`ERR: ${e}`));
   }
 };
