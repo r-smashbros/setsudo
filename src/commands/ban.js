@@ -25,7 +25,7 @@ module.exports = class extends Command {
       .setColor(this.client.constants.colours.info);
 
     user.send({ embed }).catch(() => message.reply('Unable to DM user.'));
-    user.send(`You may appeal in a month's time at the below URL.\n${this.client.constants.banAppealURL}`).catch(() => null);
+    user.send(`You may appeal in a month's time at the below URL.\n<${this.client.constants.banAppealURL}>`).catch(() => null);
 
     await (await message.guild.members.fetch(user.id)).ban();
 
