@@ -82,10 +82,12 @@ class ModNotes {
         });
       } else desc += "No notes stored";
 
-      return new MessageEmbed()
-        .setAuthor(`Mod Notes for ${user.tag} (${user.id})`, user.displayAvatarURL(), "https://google.com/")
-        .setDescription(desc)
-        .setColor(this.client.constants.colours.info);
+      return resolve(
+        new MessageEmbed()
+          .setAuthor(`Mod Notes for ${user.tag} (${user.id})`, user.displayAvatarURL(), "https://google.com/")
+          .setDescription(desc)
+          .setColor(this.client.constants.colours.info)
+      );
     });
   }
 
@@ -105,7 +107,7 @@ class ModNotes {
     });
   }
 
-  editAction(message, user, aNum, reason) { 
+  editAction(message, user, aNum, reason) {
     aNum = Number(aNum) - 1;
     return new Promise((resolve, reject) => {
       const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init(message, user);
@@ -120,7 +122,7 @@ class ModNotes {
     });
   }
 
-  removeAction(message, user, aNum) { 
+  removeAction(message, user, aNum) {
     aNum = Number(aNum) - 1;
     return new Promise((resolve, reject) => {
       const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init(message, user);
