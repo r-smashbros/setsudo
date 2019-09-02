@@ -29,6 +29,10 @@ class Timers {
           member.roles.remove(muteRole);
         }
 
+        if (dbEntry['action'] === "tempban") { 
+          guild.members.unban(user);
+        }
+
         this.client.db.tempModActions.delete(key);
       }
     }, 10 * 1000);

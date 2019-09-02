@@ -36,7 +36,7 @@ module.exports = class extends Command {
     user.send({ embed }).catch(() => message.reply('Unable to DM user.'));
 
     this.client.db.tempModActions.set(`${message.guild.id}-${user.id}`, { action: "mute", endTime });
-    this.client.handlers.modNotes.addAction(message, user, message.author, `Mute (${match[2]})m`, match[3]);
+    this.client.handlers.modNotes.addAction(message, user, message.author, `Mute (${match[2]}m)`, match[3]);
     return message.reply(`${user.tag} muted for ${match[2]} minutes.`);
   }
 };
