@@ -70,7 +70,7 @@ class ModNotes {
       if (userNotes['actions'].length) {
         userNotes['actions'].forEach((item, index) => {
           desc += `${index + 1}. ${item.mod}\n`;
-          desc += `> [${item.action}] ${item.reason}・${item.date}\n\n`;
+          desc += `> [${item.action}] ${item.reason}・${item.date}\n`;
         });
       } else desc += "No actions stored\n\n";
 
@@ -78,7 +78,7 @@ class ModNotes {
       if (userNotes['notes'].length) {
         userNotes['notes'].forEach((item, index) => {
           desc += `${index + 1}. ${item.mod}\n`;
-          desc += `> ${item.note}・${item.date}${userNotes['notes'].length === (index + 1) ? "" : "\n\n"}`;
+          desc += `> ${item.note}・${item.date}${userNotes['notes'].length === (index + 1) ? "" : "\n"}`;
         });
       } else desc += "No notes stored";
 
