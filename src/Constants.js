@@ -20,6 +20,12 @@ module.exports = {
     // Channel ID
     "logschannel": null,
     // Role ID
-    "mutedrole": null
+    "mutedrole": null,
+    // Role ID
+    "detentionrole": null
+  },
+  "defaultNotes": {
+    "actions": [],
+    "notes": []
   }
 };
