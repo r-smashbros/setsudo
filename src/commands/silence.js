@@ -35,7 +35,7 @@ module.exports = class extends Command {
       logsChan.send({ embed: this.client.constants.embedTemplates.logs(message, user, `Silence (${match[2]} minutes)`, match[3]) });
     }
 
-    this.client.db.tempModActions.set(`${message.guild.id}-${user.id}`, { action: "mute", endTime });
+    this.client.db.tempModActions.set(`${message.guild.id}-${user.id}`, { action: "silence", endTime });
     this.client.handlers.modNotes.addAction(message, user, message.author, `Silence (${match[2]}m)`, match[3]);
     return message.reply(`${user.tag} silenced for ${match[2]} minutes.`);
   }

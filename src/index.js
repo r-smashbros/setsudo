@@ -1,5 +1,6 @@
 const path = require('path');
 const klaw = require('klaw');
+const fetch = require('snekfetch');
 const Enmap = require("enmap");
 const { Client, Collection } = require('discord.js');
 
@@ -44,6 +45,30 @@ new class extends Client {
   init() {
     this._loadCommands();
     this._loadEvents();
+  }
+
+  async hastebin(data) {
+    const { body } = await fetch.post("https://hastebin.com/documents").send(data).catch(e => { return false; });
+    if (!body || !body.key) return false;
+    return `${this.config.hastebinURL}/${body.key}`;
+  }
+
+  getChanMsg(channel) { 
+    return new Promise(async (resolve, reject) => {
+      let lastMsgID = 0;
+      let lastMsgCount = 100;
+      let msgCollection = new Collection();
+
+      while (lastMsgCount >= 100) { 
+        const tempColl = await channel.fetchMessages({ limit: 100, after: lastMsgID }).catch(reject);
+        lastMsgCount = tempColl.size;
+        lastMsgID = tempColl.last().id;
+        msgCollection = msgCollection.concat(tempColl);
+      }
+      
+      msgCollection = new Collection([...msgCollection].reverse());
+      resolve(msgCollection);
+    });
   }
 
   _loadCommands() {

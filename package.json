@@ -20,6 +20,8 @@
     "better-sqlite-pool": "^0.2.2",
     "discord.js": "github:discordjs/discord.js",
     "enmap": "^5.1.2",
-    "klaw": "^3.0.0"
+    "klaw": "^3.0.0",
+    "moment": "^2.24.0",
+    "snekfetch": "^4.0.4"
   }
 }
