@@ -10,7 +10,7 @@ module.exports = class extends Command {
   }
 
   async execute(message) {
-    const match = /(?:search)(?:\s+(?:<@)?(\d{17,20})>?)/.exec(message.content);
+    const match = /(?:search)(?:\s+(?:<@!?)?(\d{17,20})>?)/.exec(message.content);
     if (!match) return message.reply("Invalid Syntax: search <user-id/mention>");
 
     const user = await this.client.users.fetch(match[1]);

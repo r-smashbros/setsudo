@@ -11,7 +11,7 @@ module.exports = class extends Command {
 
   async execute(message) {
     // editNote(message, user, nNum, note)
-    const match = /(?:editnote)\s+(?:(?:<@)?(\d{17,20})>?)(?:\s+(\d+))(?:\s+(.+))/.exec(message.content);
+    const match = /(?:editnote)\s+(?:(?:<@!?)?(\d{17,20})>?)(?:\s+(\d+))(?:\s+(.+))/.exec(message.content);
     if (!match) return message.reply("Invalid Syntax: editnote <user-id/mention> <note #> <note>");
 
     const user = await this.client.users.fetch(match[1]);
