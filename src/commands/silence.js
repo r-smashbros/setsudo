@@ -6,7 +6,7 @@ module.exports = class extends Command {
     super(client, {
       name: "silence",
       aliases: [],
-      ltu: client.constants.perms.user
+      ltu: client.constants.perms.staff
     });
   }
 
