@@ -6,7 +6,7 @@ class Timers {
   }
 
   init() { 
-    this.clock = setInterval(() => {
+    this.clock = setInterval(async () => {
       const toExecute = this.client.db.tempModActions.filter(entry => entry.endTime > Date.now());
       if (!toExecute.size) return;
 
@@ -18,7 +18,7 @@ class Timers {
 
         const guild = this.client.guilds.get(key.split('-')[0]);
         if (!guild) return;
-        const member = guild.members.get(user);
+        const member = await guild.members.fetch(user);
 
         if (dbEntry['action'] === "mute") { 
           const gSettings = this.client.db.settings.get(guild.id);
