@@ -48,7 +48,7 @@ new class extends Client {
   }
 
   async hastebin(data) {
-    const { body } = await fetch.post("https://hastebin.com/documents").send(data).catch(e => { return false; });
+    const { body } = await fetch.post(`${this.config.hastebinURL}/documents`).send(data).catch(e => { return false; });
     if (!body || !body.key) return false;
     return `${this.config.hastebinURL}/${body.key}`;
   }
@@ -60,7 +60,7 @@ new class extends Client {
       let msgCollection = new Collection();
 
       while (lastMsgCount >= 100) { 
-        const tempColl = await channel.fetchMessages({ limit: 100, after: lastMsgID }).catch(reject);
+        const tempColl = await channel.messages.fetch({ limit: 100, after: lastMsgID }).catch(reject);
         lastMsgCount = tempColl.size;
         lastMsgID = tempColl.last().id;
         msgCollection = msgCollection.concat(tempColl);
