@@ -42,7 +42,7 @@ module.exports = {
     },
     "logs": (message, user, action, reason) => { 
       const embed = new MessageEmbed()
-        .setAuthor(user.tag, message.author.displayAvatarURL(), "https://google.com")
+        .setAuthor(`${user.tag} (user.id)`, message.author.displayAvatarURL(), "https://google.com")
         .addField("» Action", action, false)
         .addField("» Moderator", `${message.author.tag} (${message.author.id})`, false)
         .addField("» Reason", reason, false)
