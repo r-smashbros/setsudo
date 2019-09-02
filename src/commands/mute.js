@@ -57,6 +57,7 @@ module.exports = class extends Command {
 
     this.client.db.tempModActions.set(`${message.guild.id}-${muteUser.id}`, { action: "mute", endTime });
     this.client.db.detention.set(`${message.guild.id}-${muteUser.id}`, muteChan.id);
+    this.client.handlers.modNotes.addAction(message, muteUser, message.author, `Mute (${match[2]} minutes)`, match[3]);
 
     return message.reply(`${muteUser.tag} has been muted.`);
   }
