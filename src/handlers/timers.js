@@ -7,7 +7,7 @@ class Timers {
 
   init() { 
     this.clock = setInterval(async () => {
-      const toExecute = this.client.db.tempModActions.filter(entry => entry.endTime > Date.now());
+      const toExecute = this.client.db.tempModActions.filter(entry => Date.now() > entry.endTime);
       if (!toExecute.size) return;
 
       for (const key of toExecute.keyArray()) {
