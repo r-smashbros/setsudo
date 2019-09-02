@@ -9,7 +9,7 @@ class PermissionLevel {
         "Developer"
       ];
 
-    const gSettings = this.client.db.settings.get(message.guild.id);
+    const gSettings = client.db.settings.get(message.guild.id);
     if (gSettings['staffrole'] && message.member.roles.some(r => r.id === gSettings['staffrole']))
       return [
         client.constants.perms.staff,
