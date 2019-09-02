@@ -19,7 +19,7 @@ class ModNotes {
 
   addNote(message, user, mod, note) {
     return new Promise((resolve, reject) => {
-      const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init();
+      const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init(message, user);
 
       userNotes['notes'].push({
         "mod": `${mod.tag} (${mod.id})`,
@@ -35,7 +35,7 @@ class ModNotes {
   editNote(message, user, nNum, note) {
     nNum = Number(nNum) - 1;
     return new Promise((resolve, reject) => {
-      const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init();
+      const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init(message, user);
       if (userNotes === this.client.constants.defaultNotes) return reject("User has no entries");
 
       if (!userNotes['notes'][nNum]) return reject(`Note #${nNum + 1} does not exist for ${user.id}`);
@@ -50,7 +50,7 @@ class ModNotes {
   removeNote(message, user, nNum) {
     nNum = Number(nNum) - 1;
     return new Promise((resolve, reject) => {
-      const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init();
+      const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init(message, user);
       if (userNotes === this.client.constants.defaultNotes) return reject("User has no entries");
 
       if (!userNotes['notes'][nNum]) return reject(`Note #${nNum + 1} does not exist for ${user.id}`);
@@ -63,7 +63,7 @@ class ModNotes {
 
   listNotes(message, user) {
     return new Promise((resolve, reject) => {
-      const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init();
+      const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init(message, user);
 
       let desc = "";
       desc += "__Mod Actions__\n";
@@ -91,7 +91,7 @@ class ModNotes {
 
   addAction(message, user, mod, action, reason) {
     return new Promise((resolve, reject) => {
-      const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init();
+      const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init(message, user);
 
       userNotes['actions'].push({
         "mod": `${mod.tag} (${mod.id})`,
@@ -108,7 +108,7 @@ class ModNotes {
   editAction(message, user, aNum, reason) { 
     aNum = Number(aNum) - 1;
     return new Promise((resolve, reject) => {
-      const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init();
+      const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init(message, user);
       if (userNotes === this.client.constants.defaultNotes) return reject("User has no entries");
 
       if (!userNotes['actions'][aNum]) return reject(`Action #${aNum + 1} does not exist for ${user.id}`);
@@ -123,7 +123,7 @@ class ModNotes {
   removeAction(message, user, aNum) { 
     aNum = Number(aNum) - 1;
     return new Promise((resolve, reject) => {
-      const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init();
+      const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init(message, user);
       if (userNotes === this.client.constants.defaultNotes) return reject("User has no entries");
 
       if (!userNotes['actions'][aNum]) return reject(`Action #${aNum + 1} does not exist for ${user.id}`);
