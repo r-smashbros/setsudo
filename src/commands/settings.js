@@ -7,7 +7,7 @@ module.exports = class extends Command {
       aliases: ["set"],
       ltu: client.constants.perms.staff
     });
-    this.possibleSettings = "Possible settings:\n`staffrole` | `detentioncategory` | `logschannel`";
+    this.possibleSettings = "Possible settings:\n`staffrole` | `detentioncategory` | `logschannel` | `mutedrole`";
   }
 
   async execute(message) {
@@ -17,7 +17,7 @@ module.exports = class extends Command {
       return message.reply("An error has occurred. Contact the bot developer.");
     }
 
-    const gSettings = this.client.db.get(message.guild.id);
+    const gSettings = this.client.db.settings.get(message.guild.id);
 
     if (!match[1]) return message.reply(`No setting provided. ${this.possibleSettings}`);
     if (match[1] && !match[2]) {
@@ -47,6 +47,12 @@ module.exports = class extends Command {
               this.client.db.settings.set(message.guild.id, gSettings);
               return message.reply(`Setting \`${match[1]}\` set to \`${match[2]}\``);
             } else return message.reply(`The provided value is not a valid category ID: ${match[2]}`);
+        case ("mutedrole"):
+          if (message.guild.roles.get(match[2])) {
+            gSettings['mutedrole'] = match[2];
+            this.client.db.settings.set(message.guild.id, gSettings);
+            return message.reply(`Setting \`${match[1]}\` set to \`${match[2]}\``);
+          } else return message.reply(`The provided value is not a valid role ID: ${match[2]}`);
         default:
           message.channel.reply(`Invalid seting provided: \`${match[1]}\`. ${this.possibleSettings}`);
           break;

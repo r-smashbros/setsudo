@@ -18,6 +18,8 @@ module.exports = {
     // Category ID
     "detentioncategory": null,
     // Channel ID
-    "logschannel": null
+    "logschannel": null,
+    // Role ID
+    "mutedrole": null
   }
 };

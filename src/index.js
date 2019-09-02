@@ -8,7 +8,10 @@ const eventsPath = path.join(__dirname, "events");
 
 new class extends Client {
   constructor() {
-    super();
+    super({
+      fetchAllMembers: true,
+      disableEveryone: true
+    });
 
     // Load Config
     this.config = require("../config.json");
@@ -20,11 +23,13 @@ new class extends Client {
 
     // Init Database Tables (Enmap)
     this.db = {};
-    this.db.settings = new Enmap({name: "settings"});
-    this.db.detention = new Enmap({name: "detention"});
-    this.db.tempBans = new Enmap({name: "tempBans"});
-    this.db.modNotes = new Enmap({name: "modNotes"});
-    this.db.emojiStats = new Enmap({name: "emojiStats"});
+    // K-GuildID; V-SettingsObj
+    this.db.settings = new Enmap({ name: "settings", fetchAll: true });
+    // K-GuildID-UserID; V-ChannelID
+    this.db.detention = new Enmap({ name: "detention", fetchAll: true});
+    this.db.tempBans = new Enmap({ name: "tempBans", fetchAll: true});
+    this.db.modNotes = new Enmap({ name: "modNotes", fetchAll: true});
+    this.db.emojiStats = new Enmap({ name: "emojiStats", fetchAll: true});
 
     // Run Init Functions
     this.init();

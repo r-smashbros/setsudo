@@ -10,7 +10,7 @@ class PermissionLevel {
       ];
 
     const gSettings = this.client.db.settings.get(message.guild.id);
-    if (gSettings['staffRole'] && message.member.roles.some(r => r.id === gSettings['staffRole']))
+    if (gSettings['staffrole'] && message.member.roles.some(r => r.id === gSettings['staffrole']))
       return [
         client.constants.perms.staff,
         "Staff"
