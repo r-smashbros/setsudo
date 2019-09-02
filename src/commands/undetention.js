@@ -3,7 +3,7 @@ const Command = require('../structures/command.js');
 module.exports = class extends Command {
   constructor(client) {
     super(client, {
-      name: "detention",
+      name: "undetention",
       aliases: [],
       ltu: client.constants.perms.staff
     });
@@ -12,12 +12,10 @@ module.exports = class extends Command {
   async execute(message) {
     const gSettings = this.client.db.settings.get(message.guild.id);
 
-    let detCat = gSettings['detentioncategory'];
     let muteRole = gSettings['mutedrole'];
 
     const user = /(\d{17,20})/.exec(message.content);
 
-    if (!detCat || !message.guild.channels.get(detCat)) return message.reply('The detention channel is either not set or no longer exists.');
     if (!muteRole || !message.guild.roles.get(muteRole)) return message.reply('The muted role is either not set or no longer exists');
     // TODO: Handle if user left server before detention ended
     if (!user || !message.guild.members.get(user[1])) return message.reply('Either a user was not supplied, or the user is no longer a member of the guild.');
@@ -26,26 +24,16 @@ module.exports = class extends Command {
     const detMember = message.guild.members.get(user[1]);
     muteRole = message.guild.roles.get(muteRole);
 
-    if (this.client.db.detention.get(`${message.guild.id}-${detUser.id}`)) return message.reply(`${detUser.tag} is already detentioned`);
+    let detChan = this.client.db.detention.get(`${message.guild.id}-${detUser.id}`);
+    if (!detChan) return message.reply(`${detUser.tag} is not currently detentioned.`);
 
-    detCat = message.guild.channels.get(detCat);
+    detMember.roles.remove(muteRole);
 
-    detMember.roles.add(muteRole);
+    detChan = message.guild.channels.get(detChan);
+    await detChan.delete(`${message.author.tag} removed ${detUser.tag} from detention`);
 
-    const detChan = await message.guild.channels.create(
-      `detention-${detUser.username.replace(/\s/, '-')}`,
-      {
-        parent: detCat,
-        reason: `${message.author.tag} detentioned ${detUser.tag}`
-      }
-    );
+    this.client.db.detention.delete(`${message.guild.id}-${detUser.id}`);
 
-    detChan.updateOverwrite(detUser.id, {
-      VIEW_CHANNEL: true
-    });
-
-    this.client.db.detention.set(`${message.guild.id}-${detUser.id}`, detChan.id);
-
-    return message.reply(`${detUser.tag} has been detentioned.`);
+    return message.reply(`${detUser.tag} has been removed from detention`);
   }
 };
