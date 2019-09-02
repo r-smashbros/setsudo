@@ -38,7 +38,7 @@ module.exports = {
         .addField("» Moderator", `${message.author.tag} (${message.author.id})`, false)
         .addField("» Reason", reason, false)
         .setTimestamp()
-        .setColor(this.client.constants.colours.info);
+        .setColor(this.colours.info);
     },
     "logs": (message, user, action, reason) => { 
       const embed = new MessageEmbed()
