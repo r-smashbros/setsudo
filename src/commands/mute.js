@@ -16,7 +16,7 @@ module.exports = class extends Command {
     const gSettings = this.client.db.settings.get(message.guild.id);
 
     let detCat = gSettings['detentioncategory'];
-    let muteRole = gSettings['muterole'];
+    let muteRole = gSettings['mutedrole'];
 
     if (!detCat || !message.guild.channels.get(detCat)) return message.reply('The detention category is either not set or no longer exists.');
     if (!muteRole || !message.guild.roles.get(muteRole)) return message.reply('The muted role is either not set or no longer exists');
