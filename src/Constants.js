@@ -27,5 +27,6 @@ module.exports = {
   "defaultNotes": {
     "actions": [],
     "notes": []
-  }
+  },
+  "banAppealURL": "https://docs.google.com/forms/d/1t9lQxW-E-CAtDPBRqj2yMvqO0cSe_4bPlGvxrmvtWyA/viewform?edit_requested=true#response=ACYDBNhLXWAHHu46_PahMQcsRNuTFjk7HJbqNU4qqYVagtGj5U2ym131sENyj2c"
 };
