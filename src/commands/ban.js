@@ -16,18 +16,20 @@ module.exports = class extends Command {
     if (!match) return message.reply("Invalid Syntax: ban <user-id/mention> <msg>");
 
     const user = await this.client.users.fetch(match[1]);
+    const member = message.guild.members.get(user);
 
-    const embed = new MessageEmbed()
-      .setAuthor("Banned", message.guild.iconURL(), "https://google.com")
-      .addField("» Moderator", `${message.author.tag} (${message.author.id})`, false)
-      .addField("» Reason", match[2], false)
-      .setTimestamp()
-      .setColor(this.client.constants.colours.info);
+    user.send({ embed: this.client.constants.embedTemplates.dm(message, "Banned", match[2]) })
+      .catch(() => message.reply('Unable to DM user.'));
+    user.send(`You may appeal at the URL below.\n<${this.client.constants.banAppealURL}>`)
+      .catch(() => null);
 
-    user.send({ embed }).catch(() => message.reply('Unable to DM user.'));
-    user.send(`You may appeal in a month's time at the below URL.\n<${this.client.constants.banAppealURL}>`).catch(() => null);
+    await member.ban();
 
-    await (await message.guild.members.fetch(user.id)).ban();
+    let logsChan = this.client.db.settings.get(message.guild.id, "logschannel");
+    if (logsChan && message.guild.channels.get(logsChan)) {
+      logsChan = message.guild.channels.get(logsChan);
+      logsChan.send({ embed: this.client.constants.embedTemplates.logs(message, user, "Ban", match[2]) });
+    }
 
     this.client.handlers.modNotes.addAction(message, user, message.author, "Ban", match[2]);
     return message.reply(`${user.tag} banned.`);

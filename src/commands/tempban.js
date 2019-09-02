@@ -20,14 +20,16 @@ module.exports = class extends Command {
 
     const endTime = Date.now() + (Number(match[2]) * 24 * 60 * 60 * 1000);
 
-    const embed = new MessageEmbed()
-      .setAuthor(`Tempban (${match[2]}d)`, message.guild.iconURL(), "https://google.com")
-      .addField("» Moderator", `${message.author.tag} (${message.author.id})`, false)
-      .addField("» Reason", match[3], false)
-      .setTimestamp()
-      .setColor(this.client.constants.colours.info);
+    user.send({ embed: this.client.constants.embedTemplates.dm(message, `Tempbanned (${match[2]} days)`, match[3]) })
+      .catch(() => message.reply('Unable to DM user.'));
+    
+    await member.ban();
 
-    user.send({ embed }).catch(() => message.reply('Unable to DM user.'));
+    let logsChan = this.client.db.settings.get(message.guild.id, "logschannel");
+    if (logsChan && message.guild.channels.get(logsChan)) {
+      logsChan = message.guild.channels.get(logsChan);
+      logsChan.send({ embed: this.client.constants.embedTemplates.logs(message, user, `Tempban (${match[2]} days)`, match[3]) });
+    }
 
     this.client.db.tempModActions.set(`${message.guild.id}-${user.id}`, { action: "tempban", endTime });
     this.client.handlers.modNotes.addAction(message, user, message.author, `Tempban (${match[2]}d)`, match[3]);

@@ -16,17 +16,18 @@ module.exports = class extends Command {
     if (!match) return message.reply("Invalid Syntax: kick <user-id/mention> <msg>");
 
     const user = await this.client.users.fetch(match[1]);
+    const member = message.guild.members.get(user);
 
-    const embed = new MessageEmbed()
-      .setAuthor("Kicked", message.guild.iconURL(), "https://google.com")
-      .addField("» Moderator", `${message.author.tag} (${message.author.id})`, false)
-      .addField("» Reason", match[2], false)
-      .setTimestamp()
-      .setColor(this.client.constants.colours.info);
+    user.send({ embed: this.client.constants.embedTemplates.dm(message, "Kicked", match[2]) })
+      .catch(() => message.reply('Unable to DM user.'));
 
-    user.send({ embed }).catch(() => message.reply('Unable to DM user.'));
+    await member.kick();
 
-    await (await message.guild.members.fetch(user.id)).kick();
+    let logsChan = this.client.db.settings.get(message.guild.id, "logschannel");
+    if (logsChan && message.guild.channels.get(logsChan)) {
+      logsChan = message.guild.channels.get(logsChan);
+      logsChan.send({ embed: this.client.constants.embedTemplates.logs(message, user, "Kick", match[2]) });
+    }
 
     this.client.handlers.modNotes.addAction(message, user, message.author, "Kick", match[2]);
     return message.reply(`${user.tag} kicked.`);

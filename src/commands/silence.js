@@ -26,17 +26,17 @@ module.exports = class extends Command {
     await member.roles.add(muteRole);
     const endTime = Date.now() + (Number(match[2]) * 60 * 1000);
 
-    const embed = new MessageEmbed()
-      .setAuthor(`Mute (${match[2]}m)`, message.guild.iconURL(), "https://google.com")
-      .addField("» Moderator", `${message.author.tag} (${message.author.id})`, false)
-      .addField("» Reason", match[3], false)
-      .setTimestamp()
-      .setColor(this.client.constants.colours.info);
+    user.send({ embed: this.client.constants.embedTemplates.dm(message, `Muted (${match[2]} minutes)`, match[3]) })
+      .catch(() => message.reply('Unable to DM user.'));
 
-    user.send({ embed }).catch(() => message.reply('Unable to DM user.'));
+    let logsChan = this.client.db.settings.get(message.guild.id, "logschannel");
+    if (logsChan && message.guild.channels.get(logsChan)) {
+      logsChan = message.guild.channels.get(logsChan);
+      logsChan.send({ embed: this.client.constants.embedTemplates.logs(message, user, `Silence (${match[2]} minutes)`, match[3]) });
+    }
 
     this.client.db.tempModActions.set(`${message.guild.id}-${user.id}`, { action: "mute", endTime });
-    this.client.handlers.modNotes.addAction(message, user, message.author, `Mute (${match[2]}m)`, match[3]);
-    return message.reply(`${user.tag} muted for ${match[2]} minutes.`);
+    this.client.handlers.modNotes.addAction(message, user, message.author, `Silence (${match[2]}m)`, match[3]);
+    return message.reply(`${user.tag} silenced for ${match[2]} minutes.`);
   }
 };

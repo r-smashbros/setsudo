@@ -17,14 +17,14 @@ module.exports = class extends Command {
 
     const user = await this.client.users.fetch(match[1]);
 
-    const embed = new MessageEmbed()
-      .setAuthor("Warning", message.guild.iconURL(), "https://google.com")
-      .addField("» Moderator", `${message.author.tag} (${message.author.id})`, false)
-      .addField("» Reason", match[2], false)
-      .setTimestamp()
-      .setColor(this.client.constants.colours.info);
-    
-    user.send({ embed }).catch(() => message.reply('Unable to DM user.'));
+    user.send({ embed: this.client.constants.embedTemplates.dm(message, `Warned`, match[2]) })
+      .catch(() => message.reply('Unable to DM user.'));
+
+    let logsChan = this.client.db.settings.get(message.guild.id, "logschannel");
+    if (logsChan && message.guild.channels.get(logsChan)) {
+      logsChan = message.guild.channels.get(logsChan);
+      logsChan.send({ embed: this.client.constants.embedTemplates.logs(message, user, `Warn`, match[2]) });
+    }
 
     this.client.handlers.modNotes.addAction(message, user, message.author, "Warn", match[2]);
     return message.reply(`${user.tag} warned.`);
