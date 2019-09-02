@@ -66,7 +66,7 @@ class ModNotes {
       const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init(message, user);
 
       let desc = "";
-      desc += "__Mod Actions__\n";
+      desc += "**__Mod Actions__**\n";
       if (userNotes['actions'].length) {
         userNotes['actions'].forEach((item, index) => {
           desc += `${index + 1}. ${item.mod}\n`;
@@ -74,7 +74,7 @@ class ModNotes {
         });
       } else desc += "No actions stored\n\n";
 
-      desc += "__Mod Notes__\n";
+      desc += "**__Mod Notes__**\n";
       if (userNotes['notes'].length) {
         userNotes['notes'].forEach((item, index) => {
           desc += `${index + 1}. ${item.mod}\n`;
