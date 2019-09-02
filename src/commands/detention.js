@@ -50,7 +50,7 @@ module.exports = class extends Command {
     let logsChan = this.client.db.settings.get(message.guild.id, "logschannel");
     if (logsChan && message.guild.channels.get(logsChan)) {
       logsChan = message.guild.channels.get(logsChan);
-      logsChan.send({ embed: this.client.constants.embedTemplates.logs(message, user, "Detention", "N/A") });
+      logsChan.send({ embed: this.client.constants.embedTemplates.logs(message, detUser, "Detention", "N/A") });
     }
 
     this.client.db.detention.set(`${message.guild.id}-${detUser.id}`, detChan.id);
