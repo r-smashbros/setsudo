@@ -23,7 +23,7 @@ module.exports = class extends Command {
     if (!user || !message.guild.members.get(user[1])) return message.reply('Either a user was not supplied, or the user is no longer a member of the guild.');
 
     const detUser = this.client.users.get(user[1]);
-    const detMember = message.guild.members.get(user[1]);
+    const detMember = await message.guild.members.fetch(user[1]);
     detRole = message.guild.roles.get(detRole);
 
     if (this.client.db.detention.get(`${message.guild.id}-${detUser.id}`)) return message.reply(`${detUser.tag} is already detentioned`);
@@ -50,7 +50,7 @@ module.exports = class extends Command {
     let logsChan = this.client.db.settings.get(message.guild.id, "logschannel");
     if (logsChan && message.guild.channels.get(logsChan)) {
       logsChan = message.guild.channels.get(logsChan);
-      logsChan.send({ embed: this.client.constants.embedTemplates.logs(message, user, "Ban", "N/A") });
+      logsChan.send({ embed: this.client.constants.embedTemplates.logs(message, user, "Detention", "N/A") });
     }
 
     this.client.db.detention.set(`${message.guild.id}-${detUser.id}`, detChan.id);

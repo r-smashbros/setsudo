@@ -24,7 +24,7 @@ module.exports = class extends Command {
     if (!match[1] || !message.guild.members.get(match[1])) return message.reply('Either a user was not supplied, or the user is no longer a member of the guild.');
 
     const muteUser = this.client.users.get(match[1]);
-    const muteMember = message.guild.members.get(muteUser);
+    const muteMember = await message.guild.members.fetch(match[1]);
     muteRole = message.guild.roles.get(muteRole);
 
     if (this.client.db.detention.get(`${message.guild.id}-${muteUser.id}`)) return message.reply(`${muteUser.tag} is already muted`);
