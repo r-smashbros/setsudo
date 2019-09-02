@@ -51,6 +51,8 @@ class Timers {
 
               await guild.channels.get(muteChan).delete();
             }
+
+            this.client.db.detention.delete(`${guild.id}-${user.id}`);
           }
         }
 
