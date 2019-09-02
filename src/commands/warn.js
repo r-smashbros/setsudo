@@ -18,7 +18,7 @@ module.exports = class extends Command {
     const user = await this.client.users.fetch(match[1]);
 
     const embed = new MessageEmbed()
-      .setAuthor("Warning", message.guild.iconURL, "https://google.com")
+      .setAuthor("Warning", message.guild.iconURL(), "https://google.com")
       .addField("» Moderator", `${message.author.tag} (${message.author.id})`, false)
       .addField("» Reason", match[2], false)
       .setTimestamp()

@@ -24,13 +24,15 @@ new class extends Client {
     // Init Database Tables (Enmap)
     this.db = {};
     this.db.settings = new Enmap({ name: "settings", fetchAll: true });
-    this.db.detention = new Enmap({ name: "detention", fetchAll: true});
-    this.db.tempBans = new Enmap({ name: "tempBans", fetchAll: true });
+    this.db.detention = new Enmap({ name: "detention", fetchAll: true });
+    // K-GuildID-UserID; V-{action, endTime}
+    this.db.tempModActions = new Enmap({ name: "tempModActions", fetchAll: true });
     this.db.modNotes = new Enmap({ name: "modNotes", fetchAll: true});
     this.db.emojiStats = new Enmap({ name: "emojiStats", fetchAll: true });
     
     // Load Global Handlers
     this.handlers = {};
+    this.handlers.timers = new (require('./handlers/timers.js'))(this);
     this.handlers.modNotes = new (require('./handlers/modNotes.js'))(this);
 
     // Run Init Functions
