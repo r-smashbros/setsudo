@@ -39,10 +39,10 @@ module.exports = class extends Command {
       let muteChanMsg = await this.client.getChanMsg(detChan);
       muteChanMsg = muteChanMsg
         .map(m => `${moment(m.createdAt).format("dddd MMMM Do, YYYY, hh:mm A")} | ${m.author.tag} (${m.author.id}):\n${m.content}`)
-        .join("\n\n=-= =-= =-= =-= =-=\n\n")
+        .join("\n\n=-= =-= =-= =-= =-=\n\n");
 
       const embed = new MessageEmbed()
-        .setAuthor(`${user.tag} (${user.id})`, user.displayAvatarURL())
+        .setAuthor(`${detUser.tag} (${detUser.id})`, detUser.displayAvatarURL())
         .setDescription("Detention Ended")
         .addField("Hastebin Link", await this.client.hastebin(muteChanMsg), false);
 
