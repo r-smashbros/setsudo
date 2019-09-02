@@ -31,15 +31,16 @@ class Timers {
           member.roles.remove(muteRole);
 
           if (dbEntry['action'] === "mute") {
-            const muteChan = this.client.db.detention.get(`${guild.id}-${user.id}`);
+            let muteChan = this.client.db.detention.get(`${guild.id}-${user.id}`);
             if (muteChan && guild.channels.get(muteChan)) {
+              muteChan = guild.channels.get(muteChan);
               if (gSettings['logschannel'] && guild.channels.get(gSettings['logschannel'])) {
                 const logsChan = guild.channels.get(gSettings['logschannel']);
 
                 let muteChanMsg = await this.client.getChanMsg(muteChan);
                 muteChanMsg = muteChanMsg
                   .map(m => `${moment(m.createdAt).format("dddd MMMM Do, YYYY, hh:mm A")} | ${m.author.tag} (${m.author.id}):\n${m.content}`)
-                  .join("\n\n=-= =-= =-= =-= =-=\n\n")
+                  .join("\n\n=-= =-= =-= =-= =-=\n\n");
 
                 const embed = new MessageEmbed()
                   .setAuthor(`${user.tag} (${user.id})`, user.displayAvatarURL())
@@ -49,7 +50,7 @@ class Timers {
                 logsChan.send({ embed });
               }
 
-              await guild.channels.get(muteChan).delete();
+              await muteChan.delete();
             }
 
             this.client.db.detention.delete(`${guild.id}-${user.id}`);
