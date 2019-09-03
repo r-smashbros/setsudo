@@ -25,9 +25,6 @@ module.exports = class extends Event {
       detChanMsg = detChanMsg
         .map(m => `${moment(m.createdAt).format("dddd MMMM Do, YYYY, hh:mm A")} | ${m.author.tag} (${m.author.id}):\n${m.content}`)
         .join("\n\n=-= =-= =-= =-= =-=\n\n");
-      
-      console.log(detChanMsg);
-      console.log(await this.client.hastebin(detChanMsg));
 
       const embed = new MessageEmbed()
         .setAuthor(`${ctx.user.tag} (${ctx.user.id})`, ctx.user.displayAvatarURL())
