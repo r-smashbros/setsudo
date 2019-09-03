@@ -53,6 +53,6 @@ module.exports = class extends Command {
 
     this.client.db.tempModActions.delete(`${message.guild.id}-${user.id}`);
     this.client.db.detention.delete(`${message.guild.id}-${user.id}`);
-    this.client.handlers.modNotes.addAction(message, user, message.author, `Unmuted`, match[2]);
+    this.client.handlers.modNotes.addAction(message, user, message.author, `Unmute`, match[2]);
   }
 };

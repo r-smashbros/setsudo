@@ -8,7 +8,7 @@ class ModNotes {
 
   _init(message, user) {
     this.client.db.modNotes.set(`${message.guild.id}-${user.id}`, this.client.constants.defaultNotes);
-    return this.client.constants.defaultNotes;
+    return this.client.db.modNotes.get(`${message.guild.id}-${user.id}`);
   }
 
   _getDateString() {
@@ -69,16 +69,16 @@ class ModNotes {
       desc += "**__Mod Actions__**\n";
       if (userNotes['actions'].length) {
         userNotes['actions'].forEach((item, index) => {
-          desc += `${index + 1}. ${item.mod}\n`;
-          desc += `> [${item.action}] ${item.reason}・${item.date}\n`;
+          desc += `${index + 1}. ${item.mod}・${item.date}\n`;
+          desc += `> [${item.action}] ${item.reason}\n`;
         });
       } else desc += "No actions stored\n\n";
 
       desc += "**__Mod Notes__**\n";
       if (userNotes['notes'].length) {
         userNotes['notes'].forEach((item, index) => {
-          desc += `${index + 1}. ${item.mod}\n`;
-          desc += `> ${item.note}・${item.date}${userNotes['notes'].length === (index + 1) ? "" : "\n"}`;
+          desc += `${index + 1}. ${item.mod}・${item.date}\n`;
+          desc += `> ${item.note}${userNotes['notes'].length === (index + 1) ? "" : "\n"}`;
         });
       } else desc += "No notes stored";
 
