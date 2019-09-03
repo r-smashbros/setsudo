@@ -1,6 +1,6 @@
 const Command = require('../structures/command.js');
 const moment = require('moment');
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, TextChannel } = require('discord.js');
 
 module.exports = class extends Command {
   constructor(client) {
@@ -48,7 +48,8 @@ module.exports = class extends Command {
       logsChan.send({ embed });
     }
 
-    if (muteChan && message.guild.channels.get(muteChan)) message.guild.channels.get(muteChan).delete();
+    if (typeof muteChan === TextChannel) muteChan.delete();
+    else if (muteChan && message.guild.channels.get(muteChan)) message.guild.channels.get(muteChan).delete();
 
     this.client.db.tempModActions.delete(`${message.guild.id}-${user.id}`);
     this.client.db.detention.delete(`${message.guild.id}-${user.id}`);
