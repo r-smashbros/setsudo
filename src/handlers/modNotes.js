@@ -83,10 +83,12 @@ class ModNotes {
       } else desc += "No notes stored";
 
       return resolve(
-        new MessageEmbed()
-          .setAuthor(`Mod Notes for ${user.tag} (${user.id})`, user.displayAvatarURL(), "https://google.com/")
-          .setDescription(desc)
-          .setColor(this.client.constants.colours.info)
+        desc.length > 2048 ?
+          desc :
+          new MessageEmbed()
+            .setAuthor(`Mod Notes for ${user.tag} (${user.id})`, user.displayAvatarURL(), "https://google.com/")
+            .setDescription(desc)
+            .setColor(this.client.constants.colours.info)
       );
     });
   }

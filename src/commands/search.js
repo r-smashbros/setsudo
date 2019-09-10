@@ -15,11 +15,18 @@ module.exports = class extends Command {
 
     const user = await this.client.users.fetch(match[1]);
 
-    message.channel.send({
-      embed: await this.client.handlers.modNotes.listNotes(message, user)
-    }).catch(e => { 
-      message.reply("An error occurred. Contact the bot developer");
-      console.error(e.stack);
-    });
+    const notes = await this.client.handlers.modNotes.listNotes(message, user);
+
+    if (notes instanceof String) {
+      message.channel.send(notes).catch(e => {
+        message.reply("An error occurred. Contact the bot developer");
+        console.error(e.stack);
+      });
+    } else {
+      message.channel.send({ embed: notes }).catch(e => {
+        message.reply("An error occurred. Contact the bot developer");
+        console.error(e.stack);
+      });
+    }
   }
 };
