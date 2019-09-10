@@ -17,7 +17,7 @@ module.exports = class extends Command {
 
     const notes = await this.client.handlers.modNotes.listNotes(message, user);
 
-    if (notes instanceof String) {
+    if (typeof notes === "string") {
       message.channel.send(notes).catch(e => {
         message.reply("An error occurred. Contact the bot developer");
         console.error(e.stack);
