@@ -18,7 +18,7 @@ module.exports = class extends Command {
     const notes = await this.client.handlers.modNotes.listNotes(message, user);
 
     if (typeof notes === "string") {
-      message.channel.send(notes).catch(e => {
+      message.channel.send(`User Notes are too long to be sent within Discord\n\n${await this.client.hastebin(notes)}`).catch(e => {
         message.reply("An error occurred. Contact the bot developer");
         console.error(e.stack);
       });
