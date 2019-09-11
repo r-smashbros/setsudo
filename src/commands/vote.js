@@ -11,7 +11,7 @@ module.exports = class extends Command {
 
   async execute(message) {
     await message.delete().catch(e => null);
-    const toReact = (await message.channel.messages.fetch({ limit: 2 })).last();
+    const toReact = (await message.channel.messages.fetch({ limit: 1 })).last();
 
     const num = /([1-9])/.exec(message.content);
 
