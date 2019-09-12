@@ -6,6 +6,7 @@ class AutoMod {
   }
 
   addWord(message, term) {
+    term = term.toLowerCase();
     return new Promise((resolve, reject) => {
       const gSettings = this.client.db.settings.get(message.guild.id);
 
@@ -43,7 +44,7 @@ class AutoMod {
 
       gSettings['automodlist'].splice(number, 1);
       this.client.db.settings.set(message.guild.id, gSettings);
-      
+
       return resolve();
     });
   }

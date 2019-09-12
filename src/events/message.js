@@ -42,17 +42,22 @@ module.exports = class extends Event {
 
   async autoModCheck(message) { 
     const gSettings = this.client.db.settings.get(message.guild.id);
+    console.log("Checking if AM settings exist");
     if (gSettings['automodlist'] && gSettings['automodlist'].length) {
-
+      console.log("AM settings exist");
+      console.log("Checking through AM list");
       for (const term of gSettings['automodlist']) {
-        const checkRegex = new RegExp(`\b${term}\b`);
+        console.log(`Term found: ${term}`);
+        const checkRegex = new RegExp(`\b${term}\b`,'i');
+        console.log("Regex constructed");
 
         if (checkRegex.test(message.content)) {
+          console.log("Regex matched");
           let nearMsgs = await message.channel.messages.fetch({ limit: 5 });
           nearMsgs = new Collection([...nearMsgs].reverse());
-
+          console.log("Deleting message");
           await message.delete();
-
+          console.log("Checking if AM channel exists")
           if (gSettings['automodchannel'] && message.guild.channels.get(gSettings['automodchannel'])) {
             const amChan = message.guild.channels.get(gSettings['automodchannel']);
 

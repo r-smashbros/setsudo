@@ -15,6 +15,7 @@ module.exports = class extends Command {
         if (!gSet.hasOwnProperty(defVal)) {
           message.channel.send(`${gID} does not have setting ${defVal}. Setting...`);
           gSet[defVal] = this.client.constants.defaultSettings[defVal];
+          this.client.db.settings.set(gID, gSet);
         }
       }
       await message.channel.send(`${gID} settings synced.`);
