@@ -24,7 +24,11 @@ module.exports = {
     // Role ID
     "mutedrole": null,
     // Role ID
-    "detentionrole": null
+    "detentionrole": null,
+    // Array of strings
+    "automodlist": [],
+    // Channel ID
+    "automodchannel": null
   },
   "defaultNotes": {
     "actions": [],
