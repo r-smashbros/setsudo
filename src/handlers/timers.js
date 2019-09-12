@@ -3,8 +3,8 @@ const { MessageEmbed } = require('discord.js');
 class Timers {
   constructor(client) {
     this.client = client;
-    this.init();
     this.clock = null;
+    this.init();
   }
 
   init() {
