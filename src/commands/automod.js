@@ -20,11 +20,11 @@ module.exports = class extends Command {
     if (addRegex) {
       return this.client.handlers.autoMod.addWord(message, addRegex[1])
         .then(() => message.channel.send(`${addRegex[1]} has been added to the automod list`))
-        .catch(e => message.channek.send(`ERR: ${e}`));
+        .catch(e => message.channel.send(`ERR: ${e}`));
     } else if (removeRegex) {
       return this.client.handlers.autoMod.removeWord(message, removeRegex[1])
         .then(() => message.channel.send(`Entry ${removeRegex[1]} has been removed from the automod list`))
-        .catch(e => message.channek.send(`ERR: ${e}`));
+        .catch(e => message.channel.send(`ERR: ${e}`));
     } else {
       return message.channel.send(await this.client.handlers.autoMod.listWords(message));
     }
