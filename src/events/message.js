@@ -51,6 +51,10 @@ module.exports = class extends Event {
         const checkRegex = new RegExp(`\b${term}\b`,'i');
         console.log("Regex constructed");
 
+        console.log(checkRegex);
+        console.log(message.content);
+        console.log(term);
+
         if (checkRegex.test(message.content)) {
           console.log("Regex matched");
           let nearMsgs = await message.channel.messages.fetch({ limit: 5 });
