@@ -19,9 +19,9 @@ module.exports = class extends Command {
     role.setMentionable(true, `${message.author.tag} set ${role.name} mentionable`).then(r => {
       setTimeout(() => {
         r.setMentionable(false);
-      }, 5 * 1000);
+      }, 10 * 1000);
     });
 
-    message.reply(`${role.name} is mentionable for 5 seconds.`);
+    message.reply(`${role.name} is mentionable for 10 seconds.`);
   }
 };
