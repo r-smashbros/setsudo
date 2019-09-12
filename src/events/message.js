@@ -48,7 +48,7 @@ module.exports = class extends Event {
       console.log("Checking through AM list");
       for (const term of gSettings['automodlist']) {
         console.log(`Term found: ${term}`);
-        const checkRegex = new RegExp(`\b${term}\b`,'i');
+        const checkRegex = new RegExp("\b" + term + "\b",'i');
         console.log("Regex constructed");
 
         console.log(checkRegex);
@@ -61,7 +61,7 @@ module.exports = class extends Event {
           nearMsgs = new Collection([...nearMsgs].reverse());
           console.log("Deleting message");
           await message.delete();
-          console.log("Checking if AM channel exists")
+          console.log("Checking if AM channel exists");
           if (gSettings['automodchannel'] && message.guild.channels.get(gSettings['automodchannel'])) {
             const amChan = message.guild.channels.get(gSettings['automodchannel']);
 
