@@ -13,7 +13,7 @@ module.exports = class extends Event {
     if (ctx.author.bot) return;
     if (ctx.channel.type !== "text") return;
 
-    await this.autoModCheck();
+    await this.autoModCheck(ctx);
 
     if (!ctx.content.startsWith(this.client.config['discord']['prefix'])) return;
 
