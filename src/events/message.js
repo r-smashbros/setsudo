@@ -48,7 +48,7 @@ module.exports = class extends Event {
       console.log("Checking through AM list");
       for (const term of gSettings['automodlist']) {
         console.log(`Term found: ${term}`);
-        const checkRegex = new RegExp("\b" + term + "\b",'i');
+        const checkRegex = new RegExp(`\\b${term}\\b`,'i');
         console.log("Regex constructed");
 
         console.log(checkRegex);
