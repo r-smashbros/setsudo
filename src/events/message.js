@@ -1,5 +1,5 @@
 const Event = require('../structures/event.js');
-
+const { Collection, MessageEmbed } = require('discord.js');
 module.exports = class extends Event {
   constructor(client) {
     super(client, {
@@ -12,6 +12,8 @@ module.exports = class extends Event {
   async execute(ctx = null) {
     if (ctx.author.bot) return;
     if (ctx.channel.type !== "text") return;
+
+    await this.autoModCheck();
 
     if (!ctx.content.startsWith(this.client.config['discord']['prefix'])) return;
 
@@ -34,7 +36,39 @@ module.exports = class extends Event {
     });
   }
 
-  checkPerm(message) { 
+  checkPerm(message) {
     return this.permissions.fetch(this.client, message);
+  }
+
+  async autoModCheck(message) { 
+    const gSettings = this.client.db.settings.get(message.guild.id);
+    if (gSettings['automodlist'] && gSettings['automodlist'].length) {
+
+      for (const term of gSettings['automodlist']) {
+        const checkRegex = new RegExp(`\b${term}\b`);
+
+        if (checkRegex.test(message.content)) {
+          let nearMsgs = await message.channel.messages.fetch({ limit: 5 });
+          nearMsgs = new Collection([...nearMsgs].reverse());
+
+          await message.delete();
+
+          if (gSettings['automodchannel'] && message.guild.channels.get(gSettings['automodchannel'])) {
+            const amChan = message.guild.channels.get(gSettings['automodchannel']);
+
+            const embed = new MessageEmbed()
+              .setTitle(`Potential trouble found in <#${message.channel.id}>`)
+              .setColor(this.client.constants.colours.info)
+              .setTimestamp();
+
+            for (const m of nearMsgs.values()) {
+              embed.addField(`${m.author.tag} (${m.author.id})`, m.content.replace(term, `__**${term}**__`), false);
+            }
+
+            amChan.send({ embed });
+          }
+        }
+      }
+    }
   }
 };
