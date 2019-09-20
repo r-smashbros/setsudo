@@ -16,14 +16,13 @@ module.exports = class extends Command {
     if (!match) return message.reply("Invalid Syntax: ban <user-id/mention> <msg>");
 
     const user = await this.client.users.fetch(match[1]);
-    const member = await message.guild.members.fetch(match[1]);
 
     user.send({ embed: this.client.constants.embedTemplates.dm(message, "Banned", match[2]) })
       .catch(() => message.reply('Unable to DM user.'));
     user.send(`You may appeal at the URL below.\n<${this.client.constants.banAppealURL}>`)
       .catch(() => null);
 
-    await member.ban();
+    await message.guild.members.ban(user.id);
 
     let logsChan = this.client.db.settings.get(message.guild.id, "logschannel");
     if (logsChan && message.guild.channels.get(logsChan)) {
