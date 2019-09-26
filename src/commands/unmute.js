@@ -27,7 +27,7 @@ module.exports = class extends Command {
     muteRole = message.guild.roles.get(muteRole);
     member.roles.remove(muteRole);
 
-    user.send({ embed: this.client.constants.embedTemplates.dm(message, `Unmuted`, match[2]) })
+    await user.send({ embed: this.client.constants.embedTemplates.dm(message, `Unmuted`, match[2]) })
       .catch(() => message.reply('Unable to DM user.'));
 
     if (muteChan && message.guild.channels.get(muteChan) && logsChan && message.guild.channels.get(logsChan)) {

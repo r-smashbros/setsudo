@@ -44,7 +44,7 @@ module.exports = class extends Command {
       VIEW_CHANNEL: true
     });
 
-    detUser.send({ embed: this.client.constants.embedTemplates.dm(message, "Detentioned", `<#${detChan.id}>`) })
+    await detUser.send({ embed: this.client.constants.embedTemplates.dm(message, "Detentioned", `<#${detChan.id}>`) })
       .catch(() => message.reply('Unable to DM user.'));
 
     let logsChan = this.client.db.settings.get(message.guild.id, "logschannel");

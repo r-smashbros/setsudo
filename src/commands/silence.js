@@ -26,7 +26,7 @@ module.exports = class extends Command {
     await member.roles.add(muteRole);
     const endTime = Date.now() + (Number(match[2]) * 60 * 1000);
 
-    user.send({ embed: this.client.constants.embedTemplates.dm(message, `Muted (${match[2]} minutes)`, match[3]) })
+    await user.send({ embed: this.client.constants.embedTemplates.dm(message, `Muted (${match[2]} minutes)`, match[3]) })
       .catch(() => message.reply('Unable to DM user.'));
 
     let logsChan = this.client.db.settings.get(message.guild.id, "logschannel");

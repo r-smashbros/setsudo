@@ -17,9 +17,9 @@ module.exports = class extends Command {
 
     const user = await this.client.users.fetch(match[1]);
 
-    user.send({ embed: this.client.constants.embedTemplates.dm(message, "Banned", match[2]) })
+    await user.send({ embed: this.client.constants.embedTemplates.dm(message, "Banned", match[2]) })
       .catch(() => message.reply('Unable to DM user.'));
-    user.send(`You may appeal at the URL below.\n<${this.client.constants.banAppealURL}>`)
+    await user.send(`You may appeal at the URL below.\n<${this.client.constants.banAppealURL}>`)
       .catch(() => null);
 
     await message.guild.members.ban(user.id);

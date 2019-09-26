@@ -18,7 +18,7 @@ module.exports = class extends Command {
     const user = await this.client.users.fetch(match[1]);
     const member = await message.guild.members.fetch(match[1]);
 
-    user.send({ embed: this.client.constants.embedTemplates.dm(message, "Kicked", match[2]) })
+    await user.send({ embed: this.client.constants.embedTemplates.dm(message, "Kicked", match[2]) })
       .catch(() => message.reply('Unable to DM user.'));
 
     await member.kick();
