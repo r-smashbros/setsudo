@@ -60,10 +60,13 @@ module.exports = class extends Command {
       const voteChan = this.client.guilds.get(this.client.config['servSpec']['modServ']).channels.get(this.client.config['servSpec']['voteChan']);
       let voteMsg = await voteChan.messages.fetch({ limit: 100 });
       voteMsg = voteMsg.filter(m => m.createdTimestamp > Date.now() - 1209600000 && m.reactions.size);
-      voteMsg.forEach(msg => msg.reactions.forEach(async r => {
-        rUsers = rUsers.concat(rUsers, await r.users.fetch());
-        console.log(rUsers.size);
-      }));
+      voteMsg.forEach(msg => {
+        const _rUsers = msg.reactions.map(r => {
+          return r.users.fetch();
+        });
+
+        rUsers = rUsers.concat(_rUsers);
+      });
 
       console.log("MAIN: " + rUsers.size);
       res(rUsers);
