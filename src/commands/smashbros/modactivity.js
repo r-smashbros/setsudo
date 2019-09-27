@@ -31,7 +31,7 @@ module.exports = class extends Command {
     voteMsg = voteMsg.filter(m => m.createdTimestamp > Date.now() - 1209600000 && m.reactions.size);
     voteMsg.forEach(async (msg) => {
       // Actually get full Message instance
-      const m = await voteChan.messages.fetch(msg);
+      const m = voteChan.messages.get(msg.id);
 
       m.reactions.forEach(r => r.users.forEach(u => {
         vStats[u.id] = vStats[u.id] + 1 || 1;
