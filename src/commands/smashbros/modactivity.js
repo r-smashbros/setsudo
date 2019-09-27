@@ -33,7 +33,8 @@ module.exports = class extends Command {
       const rUsers = await r.users.fetch();
 
       rUsers.forEach(u => {
-        vStats[u.id] = vStats[u.id] + 1 || 1;
+        vStats[u.id] = vStats[u.id] ? vStats[u.id] + 1 : 1;
+        console.log(`Stat added: ${u.id}`);
       });
     }));
 
