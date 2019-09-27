@@ -26,7 +26,7 @@ module.exports = class extends Command {
       mStr += `${user.tag}: ${v['messages']}\n`;
     });
 
-    const voteChan = this.client.guilds.get(this.client.config['serverSpec']['modServ']).channels.get(this.client.config['serverSpec']['voteChan']);
+    const voteChan = this.client.guilds.get(this.client.config['servSpec']['modServ']).channels.get(this.client.config['servSpec']['voteChan']);
     let voteMsg = await voteChan.messages.fetch({ limit: 100 });
     voteMsg = voteMsg.filter(m => m.createdTimestamp > Date.now() - 1209600000 && m.reactions.size);
     voteMsg.forEach((msg) => msg.reactions.forEach(r => r.users.forEach(u => {
