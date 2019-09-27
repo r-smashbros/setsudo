@@ -19,22 +19,13 @@ module.exports = class extends Command {
     let mStr = "";
     let vStr = "";
 
-    const vStats = {};
-
     this.client.db.activityStats.forEach(async (v, k) => {
       const user = await this.client.users.fetch(k);
       aStr += `${user.tag}: ${v['actions']}\n`;
       mStr += `${user.tag}: ${v['messages']}\n`;
     });
 
-    const rUsers = await this.getVoteUsers();
-
-    for (const u of rUsers.values()) { 
-      if (!vStats[u.id]) vStats[u.id] = 0;
-      console.log(vStats[u.id]);
-      vStats[u.id] += 1;
-      console.log(vStats[u.id]);
-    }
+    const vStats = await this.getVoteUsers();
 
     console.log(vStats["94197783195561984"]);
 
@@ -58,7 +49,7 @@ module.exports = class extends Command {
 
   getVoteUsers() { 
     return new Promise(async (res, rej) => {
-      let rUsers = new Collection();
+      const rUsers = {};
 
       const voteChan = this.client.guilds.get(this.client.config['servSpec']['modServ']).channels.get(this.client.config['servSpec']['voteChan']);
       let voteMsg = await voteChan.messages.fetch({ limit: 100 });
@@ -67,7 +58,11 @@ module.exports = class extends Command {
       for (const msg of voteMsg.values()) {
         for (const r of msg.reactions.values()){
           const _rUsers = await r.users.fetch();
-          rUsers = rUsers.concat(_rUsers);
+
+          for (const u of _rUsers.values()) {
+            if (!rUsers[u.id]) rUsers[u.id] = 0;
+            rUsers[u.id] += 1;
+          }
         }
       }
 
