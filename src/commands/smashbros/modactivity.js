@@ -29,18 +29,12 @@ module.exports = class extends Command {
     const voteChan = this.client.guilds.get(this.client.config['servSpec']['modServ']).channels.get(this.client.config['servSpec']['voteChan']);
     let voteMsg = await voteChan.messages.fetch({ limit: 100 });
     voteMsg = voteMsg.filter(m => m.createdTimestamp > Date.now() - 1209600000 && m.reactions.size);
-    voteMsg.forEach(async (msg) => {
-      // Actually get full Message instance
-      await voteChan.messages.fetch(msg.id);
-      const m = voteChan.messages.get(msg.id);
-
-      m.reactions.forEach(r => {
-        console.log(r);
-        r.users.forEach(u => {
-          vStats[u.id] = vStats[u.id] + 1 || 1;
-        });
+    voteMsg.forEach(msg => msg.reactions.forEach(async r => {
+      const rUsers = await r.fetch();
+      rUsers.forEach(u => {
+        vStats[u.id] = vStats[u.id] + 1 || 1;
       });
-    });
+    }));
 
     for (const [k, v] of Object.entries(vStats)) {
       const user = await this.client.users.fetch(k);
