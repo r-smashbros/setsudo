@@ -62,8 +62,10 @@ module.exports = class extends Command {
       voteMsg = voteMsg.filter(m => m.createdTimestamp > Date.now() - 1209600000 && m.reactions.size);
       voteMsg.forEach(msg => msg.reactions.forEach(async r => {
         rUsers = rUsers.concat(await r.users.fetch());
+        console.log(rUsers.size);
       }));
 
+      console.log("MAIN: " + rUsers.size);
       res(rUsers);
     });
   }
