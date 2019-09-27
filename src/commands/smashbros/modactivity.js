@@ -40,9 +40,9 @@ module.exports = class extends Command {
 
     const embed = new MessageEmbed()
       .setTitle("Moderator Activity Stats")
-      .addField("Action Activity", aStr, false)
-      .addField("Mod Message Activity", mStr, false)
-      .addField("Vote Participation", vStr, false)
+      .addField("Action Activity", aStr + "test", false)
+      .addField("Mod Message Activity", mStr + "test", false)
+      .addField("Vote Participation", vStr + "test", false)
       .setTimestamp()
       .setColor(0x36393F);
     
