@@ -1,4 +1,4 @@
-const Command = require("../structures/command.js");
+const Command = require("../../structures/command.js");
 const util = require("util");
 const MessageEmbed = require("discord.js").MessageEmbed;
 
@@ -7,7 +7,8 @@ module.exports = class extends Command {
     super(client, {
       name: "eval",
       aliases: [],
-      ltu: client.constants.perms.dev
+      ltu: client.constants.perms.dev,
+      selfhost: true
     });
 
     this.embed = function (input, output, error = false) {

@@ -36,6 +36,11 @@ new class extends Client {
     this.handlers.modNotes = new (require('./handlers/modNotes.js'))(this);
     this.handlers.autoMod = new (require('./handlers/autoMod.js'))(this);
 
+    // [SH] Init r/smashbros Specific DB Tables / Handlers
+    if (!this.config["selfhost"]) { 
+      this.db.activityStats = new Enmap({ name: "activityStats", fetchAll: true });
+    }
+
     // Run Init Functions
     this.init();
 

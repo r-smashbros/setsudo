@@ -1,11 +1,12 @@
-const Command = require('../structures/command.js');
+const Command = require('../../structures/command.js');
 
 module.exports = class extends Command {
   constructor(client) {
     super(client, {
       name: "settings",
       aliases: ["set"],
-      ltu: client.constants.perms.staff
+      ltu: client.constants.perms.staff,
+      selfhost: true
     });
     this.possibleSettings = "Possible settings:\n`staffrole` | `detentioncategory` | `logschannel` | `mutedrole` | `detentionrole` | `automodchannel`";
   }

@@ -1,4 +1,5 @@
 {
+  "selfhost": true,
   "discord": {
     "prefix": "",
     "token": "",

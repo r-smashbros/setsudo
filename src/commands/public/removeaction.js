@@ -1,11 +1,12 @@
-const Command = require('../structures/command.js');
+const Command = require('../../structures/command.js');
 
 module.exports = class extends Command {
   constructor(client) {
     super(client, {
       name: "removeaction",
       aliases: [],
-      ltu: client.constants.perms.staff
+      ltu: client.constants.perms.staff,
+      selfhost: true
     });
   }
 

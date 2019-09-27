@@ -15,6 +15,13 @@ module.exports = class extends Event {
 
     await this.autoModCheck(ctx);
 
+    // [SH] Handle stats if not self-hosted
+    if (
+      !this.client.config['selfhost'] &&
+      ctx.guild.id === this.client.config['servSpec']['modServ'] &&
+      ctx.channel.parent.id === this.client.config['servSpec']['modCat']
+    ) this.client.db.activityStats.inc(ctx.author.id, "messages");
+
     if (!ctx.content.startsWith(this.client.config['discord']['prefix'])) return;
 
     const content = ctx.content.slice(this.client.config['discord']['prefix'].length);
@@ -24,6 +31,8 @@ module.exports = class extends Event {
 
     ctx.perm = this.checkPerm(ctx);
     if (command.ltu > ctx.perm[0]) return;
+
+    if (!command.selfhost && this.client.config['selfhost']) return;
 
     return command.execute(ctx);
   }
@@ -40,14 +49,14 @@ module.exports = class extends Event {
     return this.permissions.fetch(this.client, message);
   }
 
-  async autoModCheck(message) { 
+  async autoModCheck(message) {
     const gSettings = this.client.db.settings.get(message.guild.id);
 
     if (gSettings['automodlist'] && gSettings['automodlist'].length) {
 
       for (const term of gSettings['automodlist']) {
 
-        const checkRegex = new RegExp(`\\b${term}\\b`,'i');
+        const checkRegex = new RegExp(`\\b${term}\\b`, 'i');
 
         if (checkRegex.test(message.content)) {
 

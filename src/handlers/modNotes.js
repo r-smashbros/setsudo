@@ -18,6 +18,10 @@ class ModNotes {
   }
 
   addNote(message, user, mod, note) {
+
+    // [SH] Handle stats if not self-hosted
+    if (!this.client.config['selfhost']) this.client.db.activityStats.inc(message.author.id, "actions");
+
     return new Promise((resolve, reject) => {
       const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init(message, user);
 
@@ -94,6 +98,10 @@ class ModNotes {
   }
 
   addAction(message, user, mod, action, reason) {
+
+    // [SH] Handle stats if not self-hosted
+    if (!this.client.config['selfhost']) this.client.db.activityStats.inc(message.author.id, "actions");
+
     return new Promise((resolve, reject) => {
       const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init(message, user);
 

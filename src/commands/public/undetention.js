@@ -1,4 +1,4 @@
-const Command = require('../structures/command.js');
+const Command = require('../../structures/command.js');
 const moment = require('moment');
 const { MessageEmbed } = require('discord.js');
 
@@ -7,7 +7,8 @@ module.exports = class extends Command {
     super(client, {
       name: "undetention",
       aliases: [],
-      ltu: client.constants.perms.staff
+      ltu: client.constants.perms.staff,
+      selfhost: true
     });
   }
 
