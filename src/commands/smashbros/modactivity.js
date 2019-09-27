@@ -1,5 +1,6 @@
 const Command = require('../../structures/command.js');
 const { Collection, MessageEmbed } = require('discord.js');
+const { inspect } = require('util');
 
 module.exports = class extends Command {
   constructor(client) {
@@ -61,9 +62,11 @@ module.exports = class extends Command {
       let voteMsg = await voteChan.messages.fetch({ limit: 100 });
       voteMsg = voteMsg.filter(m => m.createdTimestamp > Date.now() - 1209600000 && m.reactions.size);
       voteMsg.forEach(msg => {
-        console.log(typeof msg.reactions.map(r => {
+        const _rUsers = msg.reactions.map(r => {
           return r.users.fetch();
-        }));
+        });
+
+        console.log(inspect(_rUsers));
         //rUsers = rUsers.concat();
         console.log(rUsers.size);
       });
