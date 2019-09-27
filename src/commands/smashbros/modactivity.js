@@ -30,7 +30,8 @@ module.exports = class extends Command {
     const rUsers = await this.getVoteUsers();
 
     rUsers.forEach((u) => {
-      vStats[u.id] = vStats[u.id] ? vStats[u.id] + 1 : 1;
+      if (!vStats[u.id]) vStats[u.id] = 0;
+      vStats[u.id] += 1;
       console.log(`Stat added: ${u.id}`);
     });
 
@@ -61,17 +62,14 @@ module.exports = class extends Command {
       const voteChan = this.client.guilds.get(this.client.config['servSpec']['modServ']).channels.get(this.client.config['servSpec']['voteChan']);
       let voteMsg = await voteChan.messages.fetch({ limit: 100 });
       voteMsg = voteMsg.filter(m => m.createdTimestamp > Date.now() - 1209600000 && m.reactions.size);
+
       for (const msg of voteMsg.values()) {
         for (const r of msg.reactions.values()){
           const _rUsers = await r.users.fetch();
           rUsers = rUsers.concat(_rUsers);
         }
-
-        //rUsers = rUsers.concat();
-        console.log(rUsers.size);
       }
 
-      console.log("MAIN: " + rUsers.size);
       res(rUsers);
     });
   }
