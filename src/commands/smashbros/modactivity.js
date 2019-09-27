@@ -1,5 +1,5 @@
 const Command = require('../../structures/command.js');
-const { MessageEmbed } = require('discord.js');
+const { Collection, MessageEmbed } = require('discord.js');
 
 module.exports = class extends Command {
   constructor(client) {
@@ -26,17 +26,12 @@ module.exports = class extends Command {
       mStr += `${user.tag}: ${v['messages']}\n`;
     });
 
-    const voteChan = this.client.guilds.get(this.client.config['servSpec']['modServ']).channels.get(this.client.config['servSpec']['voteChan']);
-    let voteMsg = await voteChan.messages.fetch({ limit: 100 });
-    voteMsg = voteMsg.filter(m => m.createdTimestamp > Date.now() - 1209600000 && m.reactions.size);
-    await voteMsg.forEach(async msg => await msg.reactions.forEach(async r => {
-      const rUsers = await r.users.fetch();
+    const rUsers = await this.getVoteUsers();
 
-      await rUsers.forEach(u => {
-        vStats[u.id] = vStats[u.id] ? vStats[u.id] + 1 : 1;
-        console.log(`Stat added: ${u.id}`);
-      });
-    }));
+    rUsers.forEach((u) => {
+      vStats[u.id] = vStats[u.id] ? vStats[u.id] + 1 : 1;
+      console.log(`Stat added: ${u.id}`);
+    });
 
     console.log(vStats["94197783195561984"]);
 
@@ -56,5 +51,21 @@ module.exports = class extends Command {
     message.channel.send({ embed });
 
     if (!keepStats) this.client.db.activityStats.deleteAll();
+  }
+
+  getVoteUsers() { 
+    let rUsers = new Collection();
+
+    return new Promise(async (res, rej) => {
+      const voteChan = this.client.guilds.get(this.client.config['servSpec']['modServ']).channels.get(this.client.config['servSpec']['voteChan']);
+      let voteMsg = await voteChan.messages.fetch({ limit: 100 });
+      voteMsg = voteMsg.filter(m => m.createdTimestamp > Date.now() - 1209600000 && m.reactions.size);
+      await voteMsg.forEach(async msg => await msg.reactions.forEach(async r => {
+        rUsers = rUsers.concat(await r.users.fetch());
+
+      }));
+
+      res(rUsers);
+    });
   }
 };
