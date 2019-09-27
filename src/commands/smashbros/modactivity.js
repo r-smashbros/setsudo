@@ -31,7 +31,9 @@ module.exports = class extends Command {
 
     for (const u of rUsers.values()) { 
       if (!vStats[u.id]) vStats[u.id] = 0;
+      console.log(vStats[u.id]);
       vStats[u.id] += 1;
+      console.log(vStats[u.id]);
     }
 
     console.log(vStats["94197783195561984"]);
