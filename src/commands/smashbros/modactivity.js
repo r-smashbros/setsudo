@@ -33,9 +33,12 @@ module.exports = class extends Command {
       // Actually get full Message instance
       const m = voteChan.messages.get(msg.id);
 
-      m.reactions.forEach(r => r.users.forEach(u => {
-        vStats[u.id] = vStats[u.id] + 1 || 1;
-      }));
+      m.reactions.forEach(r => {
+        console.log(r);
+        r.users.forEach(u => {
+          vStats[u.id] = vStats[u.id] + 1 || 1;
+        });
+      });
     });
 
     for (const [k, v] of Object.entries(vStats)) {
