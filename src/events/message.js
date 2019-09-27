@@ -20,7 +20,14 @@ module.exports = class extends Event {
       !this.client.config['selfhost'] &&
       ctx.guild.id === this.client.config['servSpec']['modServ'] &&
       ctx.channel.parent.id === this.client.config['servSpec']['modCat']
-    ) this.client.db.activityStats.inc(ctx.author.id, "messages");
+    ) {
+      if (!this.client.db.activityStats.has(ctx.author.id))
+        this.client.db.activityStats.set(ctx.author.id, {
+          "actions": 0,
+          "messages": 1
+        });
+      else this.client.db.activityStats.inc(ctx.author.id, "messages");
+    }
 
     if (!ctx.content.startsWith(this.client.config['discord']['prefix'])) return;
 
