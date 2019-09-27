@@ -27,8 +27,6 @@ module.exports = class extends Command {
 
     const vStats = await this.getVoteUsers();
 
-    console.log(vStats["94197783195561984"]);
-
     for (const [k, v] of Object.entries(vStats)) {
       const user = await this.client.users.fetch(k);
       vStr += `${user.tag}: ${v}\n`;
@@ -36,9 +34,9 @@ module.exports = class extends Command {
 
     const embed = new MessageEmbed()
       .setTitle("Moderator Activity Stats")
-      .addField("Action Activity", aStr + "test", false)
-      .addField("Mod Message Activity", mStr + "test", false)
-      .addField("Vote Participation", vStr + "test", false)
+      .addField("Action Activity", aStr, false)
+      .addField("Mod Message Activity", mStr, false)
+      .addField("Vote Participation", vStr, false)
       .setTimestamp()
       .setColor(0x36393F);
 
@@ -60,6 +58,7 @@ module.exports = class extends Command {
           const _rUsers = await r.users.fetch();
 
           for (const u of _rUsers.values()) {
+            if (u.id === this.client.id) continue;
             if (!rUsers[u.id]) rUsers[u.id] = 0;
             rUsers[u.id] += 1;
           }
