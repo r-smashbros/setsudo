@@ -31,12 +31,13 @@ module.exports = class extends Command {
     voteMsg = voteMsg.filter(m => m.createdTimestamp > Date.now() - 1209600000 && m.reactions.size);
     voteMsg.forEach(msg => msg.reactions.forEach(async r => {
       const rUsers = await r.users.fetch();
-      console.log(rUsers.size);
-      console.log(rUsers.first());
+
       rUsers.forEach(u => {
         vStats[u.id] = vStats[u.id] + 1 || 1;
       });
     }));
+
+    console.log(vStats["94197783195561984"]);
 
     for (const [k, v] of Object.entries(vStats)) {
       const user = await this.client.users.fetch(k);
