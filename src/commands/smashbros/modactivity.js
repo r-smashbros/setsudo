@@ -20,8 +20,8 @@ module.exports = class extends Command {
 
     const vStats = {};
 
-    this.client.db.activityStats.forEach((v, k) => {
-      const user = this.client.users.fetch(k);
+    this.client.db.activityStats.forEach(async (v, k) => {
+      const user = await this.client.users.fetch(k);
       aStr += `${user.tag}: ${v['actions']}\n`;
       mStr += `${user.tag}: ${v['messages']}\n`;
     });
@@ -29,9 +29,14 @@ module.exports = class extends Command {
     const voteChan = this.client.guilds.get(this.client.config['servSpec']['modServ']).channels.get(this.client.config['servSpec']['voteChan']);
     let voteMsg = await voteChan.messages.fetch({ limit: 100 });
     voteMsg = voteMsg.filter(m => m.createdTimestamp > Date.now() - 1209600000 && m.reactions.size);
-    voteMsg.forEach((msg) => msg.reactions.forEach(r => r.users.forEach(u => {
-      vStats[u.id] = vStats[u.id] + 1 || 1;
-    })));
+    voteMsg.forEach(async (msg) => {
+      // Actually get full Message instance
+      const m = await voteChan.messages.fetch(m);
+
+      m.reactions.forEach(r => r.users.forEach(u => {
+        vStats[u.id] = vStats[u.id] + 1 || 1;
+      }));
+    });
 
     for (const [k, v] of Object.entries(vStats)) {
       const user = this.client.users.fetch(k);
@@ -45,7 +50,7 @@ module.exports = class extends Command {
       .addField("Vote Participation", vStr + "test", false)
       .setTimestamp()
       .setColor(0x36393F);
-    
+
     message.channel.send({ embed });
 
     if (!keepStats) this.client.db.activityStats.deleteAll();
