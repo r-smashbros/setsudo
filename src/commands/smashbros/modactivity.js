@@ -29,11 +29,10 @@ module.exports = class extends Command {
 
     const rUsers = await this.getVoteUsers();
 
-    rUsers.forEach((u) => {
+    for (const u of rUsers.values()) { 
       if (!vStats[u.id]) vStats[u.id] = 0;
       vStats[u.id] += 1;
-      console.log(`Stat added: ${u.id}`);
-    });
+    }
 
     console.log(vStats["94197783195561984"]);
 
