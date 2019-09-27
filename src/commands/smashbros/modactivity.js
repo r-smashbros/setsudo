@@ -61,9 +61,9 @@ module.exports = class extends Command {
       let voteMsg = await voteChan.messages.fetch({ limit: 100 });
       voteMsg = voteMsg.filter(m => m.createdTimestamp > Date.now() - 1209600000 && m.reactions.size);
       voteMsg.forEach(msg => {
-        typeof msg.reactions.map(r => {
+        console.log(typeof msg.reactions.map(r => {
           return r.users.fetch();
-        });
+        }));
         //rUsers = rUsers.concat();
         console.log(rUsers.size);
       });
