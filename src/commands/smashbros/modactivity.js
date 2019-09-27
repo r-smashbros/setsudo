@@ -64,7 +64,7 @@ module.exports = class extends Command {
       voteMsg.forEach(msg => {
         msg.reactions.map(async r => {
           const _rUsers = await r.users.fetch();
-          console.log(inspect(_rUsers));
+          rUsers = rUsers.concat(_rUsers);
         });
 
         //rUsers = rUsers.concat();
