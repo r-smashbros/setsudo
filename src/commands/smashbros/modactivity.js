@@ -32,15 +32,13 @@ module.exports = class extends Command {
       vStr += `${user.tag}: ${v}\n`;
     }
 
-    const embed = new MessageEmbed()
-      .setTitle("Moderator Activity Stats")
-      .addField("Action Activity", aStr, false)
-      .addField("Mod Message Activity", mStr, false)
-      .addField("Vote Participation", vStr, false)
-      .setTimestamp()
-      .setColor(0x36393F);
+    const aEmbed = new MessageEmbed().setTitle("Moderator Action Activity").setDescription(aStr).setColor(0xF00);
+    const mEmbed = new MessageEmbed().setTitle("Moderator Message Activity").setDescription(mStr).setColor(0x0F0);
+    const vEmbed = new MessageEmbed().setTitle("Moderator Vote Participation").setDescription(vStr).setColor(0x00F).setTimestamp();
 
-    message.channel.send({ embed });
+    await message.channel.send({ embed: aEmbed });
+    await message.channel.send({ embed: mEmbed });
+    await message.channel.send({ embed: vEmbed });
 
     if (!keepStats) this.client.db.activityStats.deleteAll();
   }
