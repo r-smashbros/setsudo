@@ -16,14 +16,33 @@ module.exports = class extends Command {
     const keepStats = /--keep/.test(message.content);
 
     let aStr = "";
+    const aObj = {}, aArr = [];
     let mStr = "";
+    const mObj = {}, mArr = [];
     let vStr = "";
 
-    this.client.db.activityStats.forEach(async (v, k) => {
-      const user = await this.client.users.fetch(k);
-      aStr += `${user.tag}: ${v['actions']}\n`;
-      mStr += `${user.tag}: ${v['messages']}\n`;
+    this.client.db.activityStats.forEach((v, k) => {
+      aArr.push([k, v['actions']]);
+      mArr.push([k, v['messages']]);
+      
+      //const user = await this.client.users.fetch(k);
+      //aStr += `${user.tag}: ${v['actions']}\n`;
+      //mStr += `${user.tag}: ${v['messages']}\n`;
     });
+
+    // Sort action and message counts
+    aArr.sort((a, b) => b[1] - a[1]);
+    mArr.sort((a, b) => b[1] - a[1]);
+    for (const entry of aArr) aObj[entry[0]] = entry[1];
+    for (const entry of mArr) mObj[entry[0]] = entry[1];
+    for (const entry of aObj) { 
+      const user = await this.client.users.fetch(entry);
+      aStr += `${user.tag}: ${aObj[entry]}\n`;
+    }
+    for (const entry of mObj) {
+      const user = await this.client.users.fetch(entry);
+      mStr += `${user.tag}: ${mObj[entry]}\n`;
+    }
 
     const vStats = await this.getVoteUsers();
 
