@@ -32,9 +32,9 @@ module.exports = class extends Command {
       vStr += `${user.tag}: ${v}\n`;
     }
 
-    const aEmbed = new MessageEmbed().setTitle("Moderator Action Activity").setDescription(aStr).setColor(0xF00);
-    const mEmbed = new MessageEmbed().setTitle("Moderator Message Activity").setDescription(mStr).setColor(0x0F0);
-    const vEmbed = new MessageEmbed().setTitle("Moderator Vote Participation").setDescription(vStr).setColor(0x00F).setTimestamp();
+    const aEmbed = new MessageEmbed().setTitle("Moderator Action Activity").setDescription(aStr).setColor(0xFF0000);
+    const mEmbed = new MessageEmbed().setTitle("Moderator Message Activity").setDescription(mStr).setColor(0x00FF00);
+    const vEmbed = new MessageEmbed().setTitle("Moderator Vote Participation").setDescription(vStr).setColor(0x0000FF).setTimestamp();
 
     await message.channel.send({ embed: aEmbed });
     await message.channel.send({ embed: mEmbed });
@@ -45,7 +45,7 @@ module.exports = class extends Command {
 
   getVoteUsers() { 
     return new Promise(async (res, rej) => {
-      const rUsers = {};
+      let rUsers = {};
 
       const voteChan = this.client.guilds.get(this.client.config['servSpec']['modServ']).channels.get(this.client.config['servSpec']['voteChan']);
       let voteMsg = await voteChan.messages.fetch({ limit: 100 });
@@ -62,6 +62,13 @@ module.exports = class extends Command {
           }
         }
       }
+
+      // Sort voting participation
+      const _rUsers = [];
+      for (const key in rUsers) _rUsers.push([key, rUsers[key]]);
+      _rUsers.sort((a, b) => b[1] - a[1]);
+      rUsers = {};
+      for (const entry of _rUsers) rUsers[entry[0]] = entry[1];
 
       res(rUsers);
     });
