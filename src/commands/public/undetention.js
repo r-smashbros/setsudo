@@ -20,7 +20,6 @@ module.exports = class extends Command {
     const user = /(\d{17,20})/.exec(message.content);
 
     if (!detRole || !message.guild.roles.get(detRole)) return message.reply('The detention role is either not set or no longer exists');
-    // TODO: Handle if user left server before detention ended
     if (!user || !message.guild.members.get(user[1])) return message.reply('Either a user was not supplied, or the user is no longer a member of the guild.');
 
     const detUser = this.client.users.get(user[1]);

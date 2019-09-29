@@ -15,8 +15,20 @@ module.exports = class extends Command {
     const removeRegex = /(?:remove)(?:\s+(\d+))/.exec(message.content);
     const listRegex = /(?:list)/.exec(message.content);
 
-    // TODO: Come up with a way to display all usages
-    if (!addRegex && !removeRegex && !listRegex) return;
+    if (!addRegex && !removeRegex && !listRegex) { 
+      let toReturn = "";
+      toReturn += "Invalid Command Usage\n";
+      toReturn += "```asciidoc\n";
+      toReturn += "= Command Syntax\n";
+      toReturn += `*:: ${this.client.config['discord']['prefix']}automod <add|remove|list> [term|term-number]\n`;
+      toReturn += "= Command Examples\n";
+      toReturn += `*:: ${this.client.config['discord']['prefix']}automod add arse\n`;
+      toReturn += `*:: ${this.client.config['discord']['prefix']}automod remove 1\n`;
+      toReturn += `*:: ${this.client.config['discord']['prefix']}automod list`;
+      toReturn += "```";
+
+      return message.channel.send(toReturn);
+    }
 
     if (addRegex) {
       return this.client.handlers.autoMod.addWord(message, addRegex[1])

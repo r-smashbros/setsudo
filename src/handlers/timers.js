@@ -28,7 +28,7 @@ class Timers {
           if (!muteRole || !guild.roles.get(muteRole)) return;
           muteRole = guild.roles.get(muteRole);
 
-          member.roles.remove(muteRole);
+          if (member) member.roles.remove(muteRole);
 
           if (dbEntry['action'] === "mute") {
             let muteChan = this.client.db.detention.get(`${guild.id}-${user.id}`);

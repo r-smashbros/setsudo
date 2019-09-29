@@ -21,7 +21,6 @@ module.exports = class extends Command {
 
     if (!detCat || !message.guild.channels.get(detCat)) return message.reply('The detention category is either not set or no longer exists.');
     if (!muteRole || !message.guild.roles.get(muteRole)) return message.reply('The muted role is either not set or no longer exists');
-    // TODO: Handle if user left server before detention ended
     if (!match[1] || !message.guild.members.get(match[1])) return message.reply('Either a user was not supplied, or the user is no longer a member of the guild.');
 
     const muteUser = this.client.users.get(match[1]);

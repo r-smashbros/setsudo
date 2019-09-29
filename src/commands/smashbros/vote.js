@@ -24,7 +24,6 @@ module.exports = class extends Command {
         await toReact.react(emoji).catch(e => console.error(e.stack));
       }
     } else {
-      // TODO: Find a way to not hardcode this
       const yesEmoji = this.client.guilds.get("553311497279897601").emojis.get("556164445794074657");
       const noEmoji = this.client.guilds.get("553311497279897601").emojis.get("556164445491953679");
 
