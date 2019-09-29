@@ -29,12 +29,12 @@ module.exports = class extends Command {
 
     for (const [k, v] of Object.entries(vStats)) {
       const user = await this.client.users.fetch(k);
-      vStr += `${user.tag}: ${v}\n`;
+      vStr += `${user.tag}:: ${v}\n`;
     }
 
     const aEmbed = new MessageEmbed().setTitle("Moderator Action Activity").setDescription(aStr).setColor(0xFF0000);
     const mEmbed = new MessageEmbed().setTitle("Moderator Message Activity").setDescription(mStr).setColor(0x00FF00);
-    const vEmbed = new MessageEmbed().setTitle("Moderator Vote Participation").setDescription(vStr).setColor(0x0000FF).setTimestamp();
+    const vEmbed = new MessageEmbed().setTitle("Moderator Vote Participation").setDescription(`\`\`\`asciidoc\n${vStr}\`\`\``).setColor(0x0000FF).setTimestamp();
 
     await message.channel.send({ embed: aEmbed });
     await message.channel.send({ embed: mEmbed });
