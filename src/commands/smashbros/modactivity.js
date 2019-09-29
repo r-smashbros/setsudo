@@ -24,7 +24,7 @@ module.exports = class extends Command {
     this.client.db.activityStats.forEach((v, k) => {
       aArr.push([k, v['actions']]);
       mArr.push([k, v['messages']]);
-      
+
       //const user = await this.client.users.fetch(k);
       //aStr += `${user.tag}: ${v['actions']}\n`;
       //mStr += `${user.tag}: ${v['messages']}\n`;
@@ -35,13 +35,13 @@ module.exports = class extends Command {
     mArr.sort((a, b) => b[1] - a[1]);
     for (const entry of aArr) aObj[entry[0]] = entry[1];
     for (const entry of mArr) mObj[entry[0]] = entry[1];
-    for (const entry of aObj) { 
-      const user = await this.client.users.fetch(entry);
-      aStr += `${user.tag}: ${aObj[entry]}\n`;
+    for (const [k, v] of Object.entries(aObj)) {
+      const user = await this.client.users.fetch(k);
+      aStr += `${user.tag}:: ${v}\n`;
     }
-    for (const entry of mObj) {
-      const user = await this.client.users.fetch(entry);
-      mStr += `${user.tag}: ${mObj[entry]}\n`;
+    for (const [k, v] of Object.entries(mObj)) {
+      const user = await this.client.users.fetch(k);
+      mStr += `${user.tag}:: ${v}\n`;
     }
 
     const vStats = await this.getVoteUsers();
@@ -51,8 +51,8 @@ module.exports = class extends Command {
       vStr += `${user.tag}:: ${v}\n`;
     }
 
-    const aEmbed = new MessageEmbed().setTitle("Moderator Action Activity").setDescription(aStr).setColor(0xFF0000);
-    const mEmbed = new MessageEmbed().setTitle("Moderator Message Activity").setDescription(mStr).setColor(0x00FF00);
+    const aEmbed = new MessageEmbed().setTitle("Moderator Action Activity").setDescription(`\`\`\`asciidoc\n${aStr}\`\`\``).setColor(0xFF0000);
+    const mEmbed = new MessageEmbed().setTitle("Moderator Message Activity").setDescription(`\`\`\`asciidoc\n${mStr}\`\`\``).setColor(0x00FF00);
     const vEmbed = new MessageEmbed().setTitle("Moderator Vote Participation").setDescription(`\`\`\`asciidoc\n${vStr}\`\`\``).setColor(0x0000FF).setTimestamp();
 
     await message.channel.send({ embed: aEmbed });
@@ -62,7 +62,7 @@ module.exports = class extends Command {
     if (!keepStats) this.client.db.activityStats.deleteAll();
   }
 
-  getVoteUsers() { 
+  getVoteUsers() {
     return new Promise(async (res, rej) => {
       let rUsers = {};
 
@@ -71,7 +71,7 @@ module.exports = class extends Command {
       voteMsg = voteMsg.filter(m => m.createdTimestamp > Date.now() - 1209600000 && m.reactions.size);
 
       for (const msg of voteMsg.values()) {
-        for (const r of msg.reactions.values()){
+        for (const r of msg.reactions.values()) {
           const _rUsers = await r.users.fetch();
 
           for (const u of _rUsers.values()) {
