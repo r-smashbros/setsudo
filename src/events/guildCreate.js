@@ -8,6 +8,7 @@ module.exports = class extends Event {
   }
 
   execute(ctx = null) {
+    if (!ctx.available) return;
     this.client.db.settings.set(ctx.id, this.client.constants.defaultSettings);
   }
 };
