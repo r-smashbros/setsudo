@@ -36,7 +36,8 @@ module.exports = class extends Command {
       `detention-${detUser.username.replace(/\s/, '-')}`,
       {
         parent: detCat,
-        reason: `${message.author.tag} detentioned ${detUser.tag}`
+        reason: `${message.author.tag} detentioned ${detUser.tag}`,
+        type: 0
       }
     );
 
