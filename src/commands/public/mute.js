@@ -38,7 +38,8 @@ module.exports = class extends Command {
       `mute-${muteUser.username.replace(/\s/, '-')}`,
       {
         parent: detCat,
-        reason: `${message.author.tag} detentioned ${muteUser.tag}`
+        reason: `${message.author.tag} muted ${muteUser.tag}`,
+        type: "text"
       }
     );
 
