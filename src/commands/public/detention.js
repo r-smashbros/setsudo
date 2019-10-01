@@ -37,7 +37,7 @@ module.exports = class extends Command {
       {
         parent: detCat,
         reason: `${message.author.tag} detentioned ${detUser.tag}`,
-        type: 0
+        type: "text"
       }
     );
 
