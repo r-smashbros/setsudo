@@ -19,7 +19,10 @@ module.exports = class extends Event {
     if (
       !this.client.config['selfhost'] &&
       ctx.guild.id === this.client.config['servSpec']['modServ'] &&
-      ctx.channel.parent.id === this.client.config['servSpec']['modCat']
+      (
+        ctx.channel.parent.id === this.client.config['servSpec']['modCat'] ||
+        ctx.channel.parent.id === this.client.config['servSpec']['voteCat']
+      )
     ) {
       if (!this.client.db.activityStats.has(ctx.author.id))
         this.client.db.activityStats.set(ctx.author.id, {
