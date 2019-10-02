@@ -13,7 +13,7 @@ module.exports = class extends Command {
   }
 
   async execute(message) {
-    const keepStats = /--keep/.test(message.content);
+    const clearStats = /--clear/.test(message.content);
 
     let aStr = "";
     const aObj = {}, aArr = [];
@@ -59,7 +59,7 @@ module.exports = class extends Command {
     await message.channel.send({ embed: mEmbed });
     await message.channel.send({ embed: vEmbed });
 
-    if (!keepStats) this.client.db.activityStats.deleteAll();
+    if (clearStats) this.client.db.activityStats.deleteAll();
   }
 
   getVoteUsers() {
