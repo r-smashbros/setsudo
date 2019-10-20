@@ -66,7 +66,7 @@ new class extends Client {
 
       while (lastMsgCount >= 100) { 
         const tempColl = await channel.messages.fetch({ limit: 100, after: lastMsgID }).catch(reject);
-        if (!tempColl) break;
+        if (!tempColl.size) break;
         lastMsgCount = tempColl.size;
         lastMsgID = tempColl.last().id;
         msgCollection = msgCollection.concat(tempColl);
