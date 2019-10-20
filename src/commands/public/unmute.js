@@ -17,7 +17,7 @@ module.exports = class extends Command {
     if (!match) return message.reply("Invalid Syntax: unmute <user-id/mention> <reason>");
 
     const user = await this.client.users.fetch(match[1]);
-    const member = await message.guild.members.fetch(user);
+    const member = await message.guild.members.fetch(user).catch(() => null);
 
     const gSettings = this.client.db.settings.get(message.guild.id);
     let muteChan = this.client.db.detention.get(`${message.guild.id}-${user.id}`);
@@ -26,7 +26,7 @@ module.exports = class extends Command {
 
     if (!muteRole || !message.guild.roles.get(muteRole)) return message.reply('The muted role is either not set or no longer exists');
     muteRole = message.guild.roles.get(muteRole);
-    member.roles.remove(muteRole);
+    if (member) member.roles.remove(muteRole);
 
     await user.send({ embed: this.client.constants.embedTemplates.dm(message, `Unmuted`, match[2]) })
       .catch(() => message.reply('Unable to DM user.'));
