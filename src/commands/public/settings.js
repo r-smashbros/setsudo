@@ -66,6 +66,12 @@ module.exports = class extends Command {
             this.client.db.settings.set(message.guild.id, gSettings);
             return message.reply(`Setting \`${match[1]}\` set to \`${match[2]}\``);
           } else return message.reply(`The provided value is not a valid channel ID: ${match[2]}`);
+        case ("helperrole"):
+          if (message.guild.roles.get(match[2])) {
+            gSettings['helperrole'] = match[2];
+            this.client.db.settings.set(message.guild.id, gSettings);
+            return message.reply(`Setting \`${match[1]}\` set to \`${match[2]}\``);
+          } else return message.reply(`The provided value is not a valid role ID: ${match[2]}`);
         default:
           message.channel.reply(`Invalid seting provided: \`${match[1]}\`. ${this.possibleSettings}`);
           break;

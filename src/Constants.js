@@ -5,6 +5,7 @@ module.exports = {
     // To Protect Eval
     "dev": 10,
     "staff": 9,
+    "helper": 8,
     "user": 1,
     "blacklist": 0
   },
@@ -28,7 +29,9 @@ module.exports = {
     // Array of strings
     "automodlist": [],
     // Channel ID
-    "automodchannel": null
+    "automodchannel": null,
+    // Role ID
+    "helperrole": null
   },
   "defaultNotes": {
     "actions": [],

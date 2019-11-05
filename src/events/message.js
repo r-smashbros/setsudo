@@ -15,21 +15,24 @@ module.exports = class extends Event {
 
     await this.autoModCheck(ctx);
 
-    // [SH] Handle stats if not self-hosted
-    if (
-      !this.client.config['selfhost'] &&
-      ctx.guild.id === this.client.config['servSpec']['modServ'] &&
-      (
-        ctx.channel.parent.id === this.client.config['servSpec']['modCat'] ||
-        ctx.channel.parent.id === this.client.config['servSpec']['voteCat']
-      )
-    ) {
-      if (!this.client.db.activityStats.has(ctx.author.id))
-        this.client.db.activityStats.set(ctx.author.id, {
-          "actions": 0,
-          "messages": 1
-        });
-      else this.client.db.activityStats.inc(ctx.author.id, "messages");
+    // [SH] Handle r/smashbros related data
+    if (!this.client.config["selfhost"]) { 
+      
+      // Mod Stats
+      if (
+        ctx.guild.id === this.client.config['servSpec']['modServ'] &&
+        (ctx.channel.parent.id === this.client.config['servSpec']['modCat'] || ctx.channel.parent.id === this.client.config['servSpec']['voteCat'])
+      ) {
+        if (!this.client.db.activityStats.has(ctx.author.id))
+          this.client.db.activityStats.set(ctx.author.id, { "actions": 0, "messages": 1 });
+        else this.client.db.activityStats.inc(ctx.author.id, "messages");
+      }
+
+      // Focused Opt-In
+      if (ctx.channel.id === "637828052050509835") { 
+        if (ctx.content.toLowerCase() === "i agree") ctx.member.roles.add(ctx.guild.roles.get("638120671368445953"));
+        return ctx.delete();
+      }
     }
 
     if (!ctx.content.startsWith(this.client.config['discord']['prefix'])) return;
