@@ -57,7 +57,7 @@ module.exports = class extends Event {
     const sbChan = this.client.channels.get(sbChanID);
 
     const msg = await sbChan.send(
-      `${emojiData['unicode'] ? emojiData['name'] : `:${emojiData['name']}:`} 1 <#${message.channel.id}> ID: ${message.id}`, { embed }
+      `${emojiData['unicode'] ? emojiData['name'] : `:${emojiData['name']}:`} ${sbSet['limit']} <#${message.channel.id}> ID: ${message.id}`, { embed }
     );
 
     this.client.db.starboard.set(`${message.channel.id}-${message.id}`,
