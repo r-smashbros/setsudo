@@ -42,7 +42,8 @@ module.exports = class extends Event {
   async _handleNew(message, sbChanID, sbSet) {
     const emojiData = sbSet['emoji'];
 
-    if (sbSet['limit'] > message.reactions.filter(r => r._emoji.name === emojiData['name']).first().count) return;
+    const reactions = message.reactions.filter(r => r._emoji.name === emojiData['name']);
+    if (reactions.size < 1 || sbSet['limit'] > reactions.first().count) return;
 
     const embed = new MessageEmbed()
       .setAuthor(`${message.author.tag} (${message.author.id})`, message.author.avatarURL())
@@ -62,7 +63,7 @@ module.exports = class extends Event {
     this.client.db.starboard.set(`${message.channel.id}-${message.id}`,
       {
         "sbEntryID": `${sbChanID}-${msg.id}`,
-        "count": 1
+        "count": sbSet['limit']
       }
     );
 
