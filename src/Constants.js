@@ -16,26 +16,33 @@ module.exports = {
     "success": "0x00FF00"
   },
   "defaultSettings": {
-    // Role ID
-    "staffrole": null,
+    // Channel ID
+    "automodchannel": null,
+    // Array of strings
+    "automodlist": [],
     // Category ID
     "detentioncategory": null,
+    // Role ID
+    "detentionrole": null,
+    // Role ID
+    "helperrole": null,
     // Channel ID
     "logschannel": null,
     // Role ID
     "mutedrole": null,
     // Role ID
-    "detentionrole": null,
-    // Array of strings
-    "automodlist": [],
-    // Channel ID
-    "automodchannel": null,
-    // Role ID
-    "helperrole": null
+    "staffrole": null,
+    // Object
+    "starboard": null
   },
   "defaultNotes": {
     "actions": [],
     "notes": []
+  },
+  "defaultStarboard": {
+    // chan-msg
+    "sbEntryID": null,
+    "count": 0
   },
   "banAppealURL": "https://docs.google.com/forms/d/1t9lQxW-E-CAtDPBRqj2yMvqO0cSe_4bPlGvxrmvtWyA/viewform",
   "embedTemplates": {

@@ -1,5 +1,3 @@
-const { MessageEmbed } = require('discord.js');
-
 class AutoMod {
   constructor(client) {
     this.client = client;
