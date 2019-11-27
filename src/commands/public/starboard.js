@@ -38,7 +38,7 @@ module.exports = class extends Command {
       if (!message.guild.channels.get(addRegex[1])) return message.channel.send("ERR: Invalid channel ID given.");
       if (!addRegex[2]) return message.channel.send("Emoji must be escaped when using this comamnd. Add a `\\` in front of the emoji and try again.");
       
-      return this.client.handlers.starboard.addSB(message, addRegex[1], !!addRegex[5], addRegex[3], addRegex[4], addRegex[6])
+      return this.client.handlers.starboard.addSB(message, addRegex[1], !!addRegex[5], addRegex[5] || addRegex[3], addRegex[4] || null, addRegex[6])
         .then(() => message.channel.send("Starboard added!"))
         .catch(e => message.channel.send(`ERR: ${e}`));
     } else if (removeRegex) {
