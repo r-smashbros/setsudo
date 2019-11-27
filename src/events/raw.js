@@ -57,7 +57,7 @@ module.exports = class extends Event {
     const sbChan = this.client.channels.get(sbChanID);
 
     const msg = await sbChan.send(
-      `${emojiData['unicode'] ? emojiData['name'] : `:${emojiData['name']}:`} ${sbSet['limit']} <#${message.channel.id}> ID: ${message.id}`, { embed }
+      `${emojiData['unicode'] ? emojiData['name'] : `<:${emojiData['name']}:${emojiData['id']}>`} ${sbSet['limit']} <#${message.channel.id}> ID: ${message.id}`, { embed }
     );
 
     this.client.db.starboard.set(`${message.channel.id}-${message.id}`,
@@ -108,7 +108,7 @@ module.exports = class extends Event {
       return;
     }
 
-    msg.edit(`${emojiData['unicode'] ? emojiData['name'] : `:${emojiData['name']}:`} ${sbData['count']} <#${message.channel.id}> ID: ${message.id}`, { embed: message.embeds[0] });
+    msg.edit(`${emojiData['unicode'] ? emojiData['name'] : `<:${emojiData['name']}:${emojiData['id']}>`} ${sbData['count']} <#${message.channel.id}> ID: ${message.id}`, { embed: message.embeds[0] });
 
     this.client.db.starboard.set(`${message.channel.id}-${message.id}`,
       {
