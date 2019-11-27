@@ -76,7 +76,7 @@ module.exports = class extends Event {
     const reactions = message.reactions.filter(r => r._emoji.name === emojiData['name']);
     if (reactions.size < 1 || sbSet['limit'] > reactions.first().count) {
       this.client.db.starboard.delete(`${message.channel.id}-${message.id}`);
-      return msg ? msg.delete : null;
+      return msg.delete();
     }
 
     action ? sbData['count']++ : sbData['count']--;
