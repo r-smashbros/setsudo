@@ -32,14 +32,14 @@ module.exports = class extends Event {
         (!val['emoji']['unicode'] && reaction.emoji.id === val['emoji']['id'])
       ) {
         if (this.client.db.starboard.has(`${channel.id}-${message.id}`))
-          return this._handleUpdate();
+          return this._handleUpdate(message, id, gSettings['starboard'], val, action);
         else
-          return this._handleNew();
+          return this._handleNew(message, id, gSettings['starboard']);
       }
     }
   }
 
-  async _handleNew(message, sbChanID, sbSet, sbData) {
+  async _handleNew(message, sbChanID, sbSet) {
     const emojiData = sbSet['emoji'];
 
     if (sbSet['limit'] > message.reactions.filter(r => r._emoji.name === emojiData['name']).first().count) return;
