@@ -24,7 +24,7 @@ module.exports = class extends Event {
     const member = await message.guild.members.fetch(user.id);
 
     const gSettings = this.client.db.settings.get(message.guild.id);
-    if (!gSettings['starboard'].size) return;
+    if (!Object.keys(gSettings['starboard']).length) return;
 
     for (const [id, val] of Object.entries(gSettings['starboard'])) {
       if (
@@ -106,7 +106,7 @@ module.exports = class extends Event {
       return;
     }
 
-    msg.edit(`${emojiData['unicode'] ? emojiData['name'] : `:${emojiData['name']}:`} ${sbData['count']} <#${message.channel.id}> ID: ${message.id}`, { embed: message.embeds[0] })
+    msg.edit(`${emojiData['unicode'] ? emojiData['name'] : `:${emojiData['name']}:`} ${sbData['count']} <#${message.channel.id}> ID: ${message.id}`, { embed: message.embeds[0] });
 
     this.client.db.starboard.set(`${message.channel.id}-${message.id}`,
       {

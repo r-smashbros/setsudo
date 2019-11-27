@@ -41,7 +41,7 @@ module.exports = class extends Command {
         .then(() => message.channel.send("Starboard added!"))
         .catch(e => message.channel.send(`ERR: ${e}`));
     } else if (removeRegex) {
-      return this.client.handlers.autoMod.removeWord(message, removeRegex[1])
+      return this.client.handlers.starboard.removeSB(message, removeRegex[1])
         .then(() => message.channel.send("Starboard removed!"))
         .catch(e => message.channel.send(`ERR: ${e}`));
     } else {
