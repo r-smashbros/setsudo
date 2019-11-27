@@ -33,7 +33,7 @@ module.exports = {
     // Role ID
     "staffrole": null,
     // Object
-    "starboard": null
+    "starboard": {}
   },
   "defaultNotes": {
     "actions": [],
