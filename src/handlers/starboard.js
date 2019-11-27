@@ -6,12 +6,11 @@ class Starboard {
   addSB(message, channelID, emojiUnicode, emojiName, emojiID, limit) {
     return new Promise((resolve, reject) => {
       const gSettings = this.client.db.settings.get(message.guild.id);
-      const sbSet = gSettings['starboard'];
 
-      if (sbSet[channelID])
+      if (gSettings['starboard'][channelID])
         return reject(`${channelID} already has a starboard set. Starboards are limited to one per channel. Remove it and try again.`);
 
-      sbSet[channelID] = { "emoji": { "unicode": emojiUnicode, "name": emojiName, "id": emojiID }, limit: Number(limit) };
+      gSettings['starboard'][channelID] = { "emoji": { "unicode": emojiUnicode, "name": emojiName, "id": emojiID }, limit: Number(limit) };
 
       this.client.db.settings.set(message.guild.id, gSettings);
 
