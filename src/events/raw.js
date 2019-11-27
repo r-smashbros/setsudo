@@ -32,9 +32,9 @@ module.exports = class extends Event {
         (!val['emoji']['unicode'] && reaction.emoji.id === val['emoji']['id'])
       ) {
         if (this.client.db.starboard.has(`${channel.id}-${message.id}`))
-          return this._handleUpdate(message, id, gSettings['starboard'], val, action);
+          return this._handleUpdate(message, id, val, this.client.db.starboard.get(`${channel.id}-${message.id}`), action);
         else
-          return this._handleNew(message, id, gSettings['starboard']);
+          return this._handleNew(message, id, val);
       }
     }
   }
