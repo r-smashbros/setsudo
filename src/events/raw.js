@@ -45,7 +45,7 @@ module.exports = class extends Event {
     if (sbSet['limit'] > message.reactions.filter(r => r._emoji.name === emojiData['name']).first().count) return;
 
     const embed = new MessageEmbed()
-      .setAuthor(`${message.author.tag} (${message.author.id})`)
+      .setAuthor(`${message.author.tag} (${message.author.id})`, message.author.avatarURL())
       .setFooter(message.channel.name)
       .setTimestamp()
       .setColor(0xffff00);
@@ -73,7 +73,8 @@ module.exports = class extends Event {
     
     const msg = await this.client.channels.get(sbData['sbEntryID'].split('-')[0]).messages.fetch(sbData['sbEntryID'].split('-')[1]);
 
-    if (sbSet['limit'] > message.reactions.filter(r => r._emoji.name === emojiData['name']).first().count) {
+    const reactions = message.reactions.filter(r => r._emoji.name === emojiData['name']);
+    if (reactions.size && sbSet['limit'] > reactions.first().count) {
       this.client.db.starboard.delete(`${message.channel.id}-${message.id}`);
       return msg ? msg.delete : null;
     }
@@ -82,7 +83,7 @@ module.exports = class extends Event {
 
     if (!msg) {
       const embed = new MessageEmbed()
-        .setAuthor(`${message.author.tag} (${message.author.id})`)
+        .setAuthor(`${message.author.tag} (${message.author.id})`, message.author.avatarURL())
         .setFooter(message.channel.name)
         .setTimestamp()
         .setColor(0xffff00);
