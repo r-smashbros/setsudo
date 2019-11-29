@@ -1,6 +1,5 @@
 const Command = require('../../structures/command.js');
-const { Collection, MessageEmbed } = require('discord.js');
-const { inspect } = require('util');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends Command {
   constructor(client) {
@@ -63,7 +62,8 @@ module.exports = class extends Command {
   }
 
   getVoteUsers() {
-    return new Promise(async (res, rej) => {
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise(async (resolve, reject) => {
       let rUsers = {};
 
       const voteChan = this.client.guilds.get(this.client.config['servSpec']['modServ']).channels.get(this.client.config['servSpec']['voteChan']);
@@ -89,7 +89,7 @@ module.exports = class extends Command {
       rUsers = {};
       for (const entry of _rUsers) rUsers[entry[0]] = entry[1];
 
-      res(rUsers);
+      resolve(rUsers);
     });
   }
 };

@@ -55,12 +55,13 @@ new class extends Client {
   }
 
   async hastebin(data) {
-    const { body } = await fetch.post(`${this.config.hastebinURL}/documents`).send(data).catch(e => { return false; });
+    const { body } = await fetch.post(`${this.config.hastebinURL}/documents`).send(data).catch(() => { return false; });
     if (!body || !body.key) return false;
     return `${this.config.hastebinURL}/${body.key}`;
   }
 
   getChanMsg(channel) { 
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       let lastMsgID = 0;
       let lastMsgCount = 100;

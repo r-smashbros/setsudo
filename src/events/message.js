@@ -42,6 +42,7 @@ module.exports = class extends Event {
     const command = await this.fetchCommand(content.split(' ')[0]);
     if (!command) return;
 
+    // eslint-disable-next-line require-atomic-updates
     ctx.perm = this.checkPerm(ctx);
     if (command.ltu > ctx.perm[0]) return;
 

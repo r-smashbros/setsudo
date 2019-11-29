@@ -11,7 +11,7 @@ module.exports = class extends Command {
   }
 
   async execute(message) {
-    await message.delete().catch(e => null);
+    await message.delete().catch(() => null);
     const toReact = (await message.channel.messages.fetch({ limit: 1 })).last();
 
     const num = /([1-9])/.exec(message.content);
@@ -28,7 +28,7 @@ module.exports = class extends Command {
       const noEmoji = this.client.guilds.get("553311497279897601").emojis.get("556164445491953679");
 
       await toReact.react(yesEmoji).catch(e => console.error(e.stack));
-      await toReact.react(noEmoji).catch(e => message.channel.send("ERROR: I cannot react to the message."));
+      await toReact.react(noEmoji).catch(() => message.channel.send("ERROR: I cannot react to the message."));
     }
   }
 };

@@ -60,5 +60,14 @@ typings/
 # next.js build output
 .next
 
+# Editor-specific settings
+.vscode
+
+# Config file
 config.json
+
+# Enmap files
 data
+
+# ESLint config
+.eslintrc.json

@@ -13,7 +13,7 @@ module.exports = class extends Command {
   async execute(message) {
     await this.client.db.settings.forEach(async (gSet, gID, map) => {
       for (const defVal of Object.keys(this.client.constants.defaultSettings)) {
-        if (!gSet.hasOwnProperty(defVal)) {
+        if (!Object.prototype.hasOwnProperty.call(gSet, defVal)) {
           message.channel.send(`${gID} does not have setting ${defVal}. Setting...`);
           gSet[defVal] = this.client.constants.defaultSettings[defVal];
           this.client.db.settings.set(gID, gSet);

@@ -21,7 +21,6 @@ module.exports = class extends Event {
     const channel = this.client.channels.get(reaction.channel_id);
     if (!channel || channel.type !== "text" || channel.permissionsFor(this.client.user).has("VIEW_CHANNEL") === false) return;
     const message = await channel.messages.fetch(reaction.message_id);
-    const member = await message.guild.members.fetch(user.id);
 
     const gSettings = this.client.db.settings.get(message.guild.id);
     if (!Object.keys(gSettings['starboard']).length) return;

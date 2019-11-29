@@ -22,7 +22,7 @@ module.exports = class extends Command {
 
     if (!match[1]) return message.reply(`No setting provided. ${this.possibleSettings}`);
     if (match[1] && !match[2]) {
-      if (!gSettings.hasOwnProperty(match[1])) return message.reply(`Invalid seting provided: \`${match[1]}\`. ${this.possibleSettings}`);
+      if (!Object.prototype.hasOwnProperty.call(gSettings, match[1])) return message.reply(`Invalid seting provided: \`${match[1]}\`. ${this.possibleSettings}`);
       return message.reply(`\`${match[1].toLowerCase()}\` is ${!gSettings[match[1]] ? "not set" : `set to ${gSettings[match[1]]}`}`);
     }
     if (match[1] && match[2]) {
