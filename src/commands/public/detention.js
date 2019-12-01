@@ -55,7 +55,6 @@ module.exports = class extends Command {
     }
 
     this.client.db.detention.set(`${message.guild.id}-${detUser.id}`, detChan.id);
-    this.client.handlers.modNotes.addAction(message, user, message.author, "Detention", "Ask Moderator");
 
     return message.reply(`${detUser.tag} has been detentioned.`);
   }
