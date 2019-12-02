@@ -1,4 +1,4 @@
-const Command = require('../../structures/command.js');
+const Command = require("../../structures/command.js");
 
 module.exports = class extends Command {
   constructor(client) {
@@ -18,7 +18,7 @@ module.exports = class extends Command {
     const user = await this.client.users.fetch(match[1]);
 
     await user.send({ embed: this.client.constants.embedTemplates.dm(message, "Banned", match[2]) })
-      .catch(() => message.reply('Unable to DM user.'));
+      .catch(() => message.reply("Unable to DM user."));
     await user.send(`You may appeal at the URL below.\n<${this.client.constants.banAppealURL}>`)
       .catch(() => null);
 

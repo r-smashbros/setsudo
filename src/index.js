@@ -1,8 +1,8 @@
-const path = require('path');
-const klaw = require('klaw');
-const fetch = require('snekfetch');
+const path = require("path");
+const klaw = require("klaw");
+const fetch = require("snekfetch");
 const Enmap = require("enmap");
-const { Client, Collection } = require('discord.js');
+const { Client, Collection } = require("discord.js");
 
 const commandsPath = path.join(__dirname, "commands");
 const eventsPath = path.join(__dirname, "events");
@@ -20,7 +20,7 @@ new class extends Client {
     // Init Global Vars
     this.commands = new Collection();
     this.events = new Collection();
-    this.constants = require('./Constants.js');
+    this.constants = require("./Constants.js");
 
     // Init Database Tables (Enmap)
     this.db = {};
@@ -33,10 +33,10 @@ new class extends Client {
     
     // Load Global Handlers
     this.handlers = {};
-    this.handlers.autoMod = new (require('./handlers/autoMod.js'))(this);
-    this.handlers.modNotes = new (require('./handlers/modNotes.js'))(this);
-    this.handlers.starboard = new (require('./handlers/starboard.js'))(this);
-    this.handlers.timers = new (require('./handlers/timers.js'))(this);
+    this.handlers.autoMod = new (require("./handlers/autoMod.js"))(this);
+    this.handlers.modNotes = new (require("./handlers/modNotes.js"))(this);
+    this.handlers.starboard = new (require("./handlers/starboard.js"))(this);
+    this.handlers.timers = new (require("./handlers/timers.js"))(this);
 
     // [SH] Init r/smashbros Specific DB Tables / Handlers
     if (!this.config["selfhost"]) { 
@@ -46,7 +46,7 @@ new class extends Client {
     // Run Init Functions
     this.init();
 
-    this.login(this.config['discord']['token']);
+    this.login(this.config["discord"]["token"]);
   }
 
   init() {

@@ -1,12 +1,12 @@
-const Event = require('../structures/event.js');
-const { Collection, MessageEmbed } = require('discord.js');
+const Event = require("../structures/event.js");
+const { Collection, MessageEmbed } = require("discord.js");
 module.exports = class extends Event {
   constructor(client) {
     super(client, {
       name: "message"
     });
 
-    this.permissions = new (require('../handlers/permission.js'))();
+    this.permissions = new (require("../handlers/permission.js"))();
   }
 
   async execute(ctx = null) {
@@ -20,8 +20,8 @@ module.exports = class extends Event {
       
       // Mod Stats
       if (
-        ctx.guild.id === this.client.config['servSpec']['modServ'] &&
-        (ctx.channel.parent.id === this.client.config['servSpec']['modCat'] || ctx.channel.parent.id === this.client.config['servSpec']['voteCat'])
+        ctx.guild.id === this.client.config["servSpec"]["modServ"] &&
+        (ctx.channel.parent.id === this.client.config["servSpec"]["modCat"] || ctx.channel.parent.id === this.client.config["servSpec"]["voteCat"])
       ) {
         if (!this.client.db.activityStats.has(ctx.author.id))
           this.client.db.activityStats.set(ctx.author.id, { "actions": 0, "messages": 1 });
@@ -35,18 +35,18 @@ module.exports = class extends Event {
       }
     }
 
-    if (!ctx.content.startsWith(this.client.config['discord']['prefix'])) return;
+    if (!ctx.content.startsWith(this.client.config["discord"]["prefix"])) return;
 
-    const content = ctx.content.slice(this.client.config['discord']['prefix'].length);
+    const content = ctx.content.slice(this.client.config["discord"]["prefix"].length);
 
-    const command = await this.fetchCommand(content.split(' ')[0]);
+    const command = await this.fetchCommand(content.split(" ")[0]);
     if (!command) return;
 
     // eslint-disable-next-line require-atomic-updates
     ctx.perm = this.checkPerm(ctx);
     if (command.ltu > ctx.perm[0]) return;
 
-    if (!command.selfhost && this.client.config['selfhost']) return;
+    if (!command.selfhost && this.client.config["selfhost"]) return;
 
     return command.execute(ctx);
   }
@@ -66,11 +66,11 @@ module.exports = class extends Event {
   async autoModCheck(message) {
     const gSettings = this.client.db.settings.get(message.guild.id);
 
-    if (gSettings['automodlist'] && gSettings['automodlist'].length) {
+    if (gSettings["automodlist"] && gSettings["automodlist"].length) {
 
-      for (const term of gSettings['automodlist']) {
+      for (const term of gSettings["automodlist"]) {
 
-        const checkRegex = new RegExp(`\\b${term}\\b`, 'i');
+        const checkRegex = new RegExp(`\\b${term}\\b`, "i");
 
         if (checkRegex.test(message.content)) {
 
@@ -79,8 +79,8 @@ module.exports = class extends Event {
 
           await message.delete();
 
-          if (gSettings['automodchannel'] && message.guild.channels.get(gSettings['automodchannel'])) {
-            const amChan = message.guild.channels.get(gSettings['automodchannel']);
+          if (gSettings["automodchannel"] && message.guild.channels.get(gSettings["automodchannel"])) {
+            const amChan = message.guild.channels.get(gSettings["automodchannel"]);
 
             const embed = new MessageEmbed()
               .setDescription(`**Potential trouble found in <#${message.channel.id}>**`)

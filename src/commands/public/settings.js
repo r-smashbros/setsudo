@@ -1,4 +1,4 @@
-const Command = require('../../structures/command.js');
+const Command = require("../../structures/command.js");
 
 module.exports = class extends Command {
   constructor(client) {
@@ -32,43 +32,43 @@ module.exports = class extends Command {
       switch (match[1]) {
         case ("automodchannel"):
           if (message.guild.channels.get(match[2]) && message.guild.channels.get(match[2]).type === "text") {
-            gSettings['automodchannel'] = match[2];
+            gSettings["automodchannel"] = match[2];
             this.client.db.settings.set(message.guild.id, gSettings);
             return message.reply(`Setting \`${match[1]}\` set to \`${match[2]}\``);
           } else return message.reply(`The provided value is not a valid channel ID: ${match[2]}`);
         case ("detentioncategory"):
           if (message.guild.channels.get(match[2]) && message.guild.channels.get(match[2]).type === "category") {
-            gSettings['detentioncategory'] = match[2];
+            gSettings["detentioncategory"] = match[2];
             this.client.db.settings.set(message.guild.id, gSettings);
             return message.reply(`Setting \`${match[1]}\` set to \`${match[2]}\``);
           } else return message.reply(`The provided value is not a valid category ID: ${match[2]}`);
         case ("detentionrole"):
           if (message.guild.roles.get(match[2])) {
-            gSettings['detentionrole'] = match[2];
+            gSettings["detentionrole"] = match[2];
             this.client.db.settings.set(message.guild.id, gSettings);
             return message.reply(`Setting \`${match[1]}\` set to \`${match[2]}\``);
           } else return message.reply(`The provided value is not a valid role ID: ${match[2]}`);
         case ("helperrole"):
           if (message.guild.roles.get(match[2])) {
-            gSettings['helperrole'] = match[2];
+            gSettings["helperrole"] = match[2];
             this.client.db.settings.set(message.guild.id, gSettings);
             return message.reply(`Setting \`${match[1]}\` set to \`${match[2]}\``);
           } else return message.reply(`The provided value is not a valid role ID: ${match[2]}`);
         case ("logschannel"):
             if (message.guild.channels.get(match[2]) && message.guild.channels.get(match[2]).type === "text"){
-              gSettings['logschannel'] = match[2];
+              gSettings["logschannel"] = match[2];
               this.client.db.settings.set(message.guild.id, gSettings);
               return message.reply(`Setting \`${match[1]}\` set to \`${match[2]}\``);
             } else return message.reply(`The provided value is not a valid channel ID: ${match[2]}`);
         case ("mutedrole"):
           if (message.guild.roles.get(match[2])) {
-            gSettings['mutedrole'] = match[2];
+            gSettings["mutedrole"] = match[2];
             this.client.db.settings.set(message.guild.id, gSettings);
             return message.reply(`Setting \`${match[1]}\` set to \`${match[2]}\``);
           } else return message.reply(`The provided value is not a valid role ID: ${match[2]}`);
         case ("staffrole"):
           if (message.guild.roles.get(match[2])) {
-            gSettings['staffrole'] = match[2];
+            gSettings["staffrole"] = match[2];
             this.client.db.settings.set(message.guild.id, gSettings);
             return message.reply(`Setting \`${match[1]}\` set to \`${match[2]}\``);
           } else return message.reply(`The provided value is not a valid role ID: ${match[2]}`);

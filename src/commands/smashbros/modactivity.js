@@ -1,5 +1,5 @@
-const Command = require('../../structures/command.js');
-const { MessageEmbed } = require('discord.js');
+const Command = require("../../structures/command.js");
+const { MessageEmbed } = require("discord.js");
 
 module.exports = class extends Command {
   constructor(client) {
@@ -21,12 +21,12 @@ module.exports = class extends Command {
     let vStr = "";
 
     this.client.db.activityStats.forEach((v, k) => {
-      aArr.push([k, v['actions']]);
-      mArr.push([k, v['messages']]);
+      aArr.push([k, v["actions"]]);
+      mArr.push([k, v["messages"]]);
 
       //const user = await this.client.users.fetch(k);
-      //aStr += `${user.tag}: ${v['actions']}\n`;
-      //mStr += `${user.tag}: ${v['messages']}\n`;
+      //aStr += `${user.tag}: ${v["actions"]}\n`;
+      //mStr += `${user.tag}: ${v["messages"]}\n`;
     });
 
     // Sort action and message counts
@@ -66,7 +66,7 @@ module.exports = class extends Command {
     return new Promise(async (resolve, reject) => {
       let rUsers = {};
 
-      const voteChan = this.client.guilds.get(this.client.config['servSpec']['modServ']).channels.get(this.client.config['servSpec']['voteChan']);
+      const voteChan = this.client.guilds.get(this.client.config["servSpec"]["modServ"]).channels.get(this.client.config["servSpec"]["voteChan"]);
       let voteMsg = await voteChan.messages.fetch({ limit: 100 });
       voteMsg = voteMsg.filter(m => m.createdTimestamp > Date.now() - 1209600000 && m.reactions.size);
 

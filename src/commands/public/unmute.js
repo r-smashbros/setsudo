@@ -1,6 +1,6 @@
-const Command = require('../../structures/command.js');
-const moment = require('moment');
-const { MessageEmbed, TextChannel } = require('discord.js');
+const Command = require("../../structures/command.js");
+const moment = require("moment");
+const { MessageEmbed, TextChannel } = require("discord.js");
 
 module.exports = class extends Command {
   constructor(client) {
@@ -21,15 +21,15 @@ module.exports = class extends Command {
 
     const gSettings = this.client.db.settings.get(message.guild.id);
     let muteChan = this.client.db.detention.get(`${message.guild.id}-${user.id}`);
-    let logsChan = gSettings['logschannel'];
-    let muteRole = gSettings['mutedrole'];
+    let logsChan = gSettings["logschannel"];
+    let muteRole = gSettings["mutedrole"];
 
-    if (!muteRole || !message.guild.roles.get(muteRole)) return message.reply('The muted role is either not set or no longer exists');
+    if (!muteRole || !message.guild.roles.get(muteRole)) return message.reply("The muted role is either not set or no longer exists");
     muteRole = message.guild.roles.get(muteRole);
     if (member) member.roles.remove(muteRole);
 
     await user.send({ embed: this.client.constants.embedTemplates.dm(message, `Unmuted`, match[2]) })
-      .catch(() => message.reply('Unable to DM user.'));
+      .catch(() => message.reply("Unable to DM user."));
 
     if (muteChan && message.guild.channels.get(muteChan) && logsChan && message.guild.channels.get(logsChan)) {
       muteChan = message.guild.channels.get(muteChan);

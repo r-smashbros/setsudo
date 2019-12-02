@@ -1,4 +1,4 @@
-const Command = require('../../structures/command.js');
+const Command = require("../../structures/command.js");
 
 module.exports = class extends Command {
   constructor(client) {
@@ -16,8 +16,8 @@ module.exports = class extends Command {
     if (!match) return message.reply("Invalid Syntax: silence <user-id/mention> <time-in-minutes> <reason>");
 
     const gSettings = this.client.db.settings.get(message.guild.id);
-    let muteRole = gSettings['mutedrole'];
-    if (!muteRole || !message.guild.roles.get(muteRole)) return message.reply('The muted role is either not set or no longer exists');
+    let muteRole = gSettings["mutedrole"];
+    if (!muteRole || !message.guild.roles.get(muteRole)) return message.reply("The muted role is either not set or no longer exists");
     muteRole = message.guild.roles.get(muteRole);
 
     const user = await this.client.users.fetch(match[1]);
@@ -27,7 +27,7 @@ module.exports = class extends Command {
     const endTime = Date.now() + (Number(match[2]) * 60 * 1000);
 
     await user.send({ embed: this.client.constants.embedTemplates.dm(message, `Muted (${match[2]} minutes)`, match[3]) })
-      .catch(() => message.reply('Unable to DM user.'));
+      .catch(() => message.reply("Unable to DM user."));
 
     let logsChan = this.client.db.settings.get(message.guild.id, "logschannel");
     if (logsChan && message.guild.channels.get(logsChan)) {

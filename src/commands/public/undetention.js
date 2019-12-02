@@ -1,6 +1,6 @@
-const Command = require('../../structures/command.js');
-const moment = require('moment');
-const { MessageEmbed } = require('discord.js');
+const Command = require("../../structures/command.js");
+const moment = require("moment");
+const { MessageEmbed } = require("discord.js");
 
 module.exports = class extends Command {
   constructor(client) {
@@ -15,13 +15,13 @@ module.exports = class extends Command {
   async execute(message) {
     const gSettings = this.client.db.settings.get(message.guild.id);
 
-    let detRole = gSettings['detentionrole'];
+    let detRole = gSettings["detentionrole"];
 
     const match = /(?:undetention)\s+(?:(?:<@!?)?(\d{17,20})>?)(?:\s+([\w\W]+))/.exec(message.content);
 
-    if (!detRole || !message.guild.roles.get(detRole)) return message.reply('The detention role is either not set or no longer exists');
+    if (!detRole || !message.guild.roles.get(detRole)) return message.reply("The detention role is either not set or no longer exists");
     if (!match) return message.reply("Invalid Syntax: undetention <user-id/mention> <reason>");
-    if (!message.guild.members.get(match[1])) return message.reply('The supplied user is no longer a member of the guild.');
+    if (!message.guild.members.get(match[1])) return message.reply("The supplied user is no longer a member of the guild.");
 
     const detUser = this.client.users.get(match[1]);
     const detMember = message.guild.members.get(match[1]);
@@ -41,8 +41,8 @@ module.exports = class extends Command {
 
     const hastebinURL = await this.client.hastebin(muteChanMsg);
 
-    if (gSettings['logschannel'] && message.guild.channels.get(gSettings['logschannel'])) {
-      const logsChan = message.guild.channels.get(gSettings['logschannel']);
+    if (gSettings["logschannel"] && message.guild.channels.get(gSettings["logschannel"])) {
+      const logsChan = message.guild.channels.get(gSettings["logschannel"]);
       
       const embed = new MessageEmbed()
         .setAuthor(`${detUser.tag} (${detUser.id})`, detUser.displayAvatarURL())
