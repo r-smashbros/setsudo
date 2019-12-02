@@ -17,12 +17,12 @@ module.exports = class extends Command {
   }
 
   execute(message) {
-    const code = message.content.slice(message.content.search(' ') + 1);
-    if (!code.length) return message.channel.send('No code input.');
+    const code = message.content.slice(message.content.search(" ") + 1);
+    if (!code.length) return message.channel.send("No code input.");
 
     if (code.match(/token/gi)) return message.channel.send("The input requests the user token.");
 
-    if (!message.channel.permissionsFor(message.guild.me).has('EMBED_LINKS')) {
+    if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) {
       try {
         return message.channel.send(`\`INPUT:\`\n\`\`\`\n${code}\n\`\`\`\n\`OUTPUT:\`\n\`\`\`\n${eval(code)}\n\`\`\``);
       } catch (err) {

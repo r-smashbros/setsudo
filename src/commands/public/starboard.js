@@ -1,4 +1,4 @@
-const Command = require('../../structures/command.js');
+const Command = require("../../structures/command.js");
 
 module.exports = class extends Command {
   constructor(client) {
@@ -22,13 +22,13 @@ module.exports = class extends Command {
       toReturn += "Invalid Command Usage\n";
       toReturn += "```asciidoc\n";
       toReturn += "= Command Syntax\n";
-      toReturn += `*:: ${this.client.config['discord']['prefix']}starboard add <channel-id/mention> <emoji> <limit>\n`;
-      toReturn += `*:: ${this.client.config['discord']['prefix']}starboard remove <channel-id/mention>\n`;
-      toReturn += `*:: ${this.client.config['discord']['prefix']}starboard list\n`;
+      toReturn += `*:: ${this.client.config["discord"]["prefix"]}starboard add <channel-id/mention> <emoji> <limit>\n`;
+      toReturn += `*:: ${this.client.config["discord"]["prefix"]}starboard remove <channel-id/mention>\n`;
+      toReturn += `*:: ${this.client.config["discord"]["prefix"]}starboard list\n`;
       toReturn += "= Command Examples\n";
-      toReturn += `*:: ${this.client.config['discord']['prefix']}starboard add #starboard ⭐ 5\n`;
-      toReturn += `*:: ${this.client.config['discord']['prefix']}starboard remove #starboard\n`;
-      toReturn += `*:: ${this.client.config['discord']['prefix']}starboard list`;
+      toReturn += `*:: ${this.client.config["discord"]["prefix"]}starboard add #starboard ⭐ 5\n`;
+      toReturn += `*:: ${this.client.config["discord"]["prefix"]}starboard remove #starboard\n`;
+      toReturn += `*:: ${this.client.config["discord"]["prefix"]}starboard list`;
       toReturn += "```";
 
       return message.channel.send(toReturn);

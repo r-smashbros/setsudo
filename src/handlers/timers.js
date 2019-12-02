@@ -1,5 +1,5 @@
-const moment = require('moment');
-const { MessageEmbed } = require('discord.js');
+const moment = require("moment");
+const { MessageEmbed } = require("discord.js");
 class Timers {
   constructor(client) {
     this.client = client;
@@ -15,24 +15,24 @@ class Timers {
       for (const key of toExecute.keyArray()) {
         const dbEntry = this.client.db.tempModActions.get(key);
 
-        const user = await this.client.users.fetch(key.split('-')[1]).catch(() => null);
+        const user = await this.client.users.fetch(key.split("-")[1]).catch(() => null);
         if (!user) return;
 
-        const guild = this.client.guilds.get(key.split('-')[0]);
+        const guild = this.client.guilds.get(key.split("-")[0]);
         if (!guild) return;
         const member = await guild.members.fetch(user).catch(() => null);
 
-        if (dbEntry['action'] === "silence" && member) {
+        if (dbEntry["action"] === "silence" && member) {
           const gSettings = this.client.db.settings.get(guild.id);
-          let muteRole = gSettings['mutedrole'];
+          let muteRole = gSettings["mutedrole"];
           if (!muteRole || !guild.roles.get(muteRole)) return;
           muteRole = guild.roles.get(muteRole);
           member.roles.remove(muteRole);
         }
 
-        if (dbEntry['action'] === "mute") {
+        if (dbEntry["action"] === "mute") {
           const gSettings = this.client.db.settings.get(guild.id);
-          let muteRole = gSettings['mutedrole'];
+          let muteRole = gSettings["mutedrole"];
           if (!muteRole || !guild.roles.get(muteRole)) return;
           muteRole = guild.roles.get(muteRole);
           if (member) member.roles.remove(muteRole);
@@ -42,9 +42,9 @@ class Timers {
 
             muteChan = guild.channels.get(muteChan);
             if (muteChan) {
-              if (gSettings['logschannel'] && guild.channels.get(gSettings['logschannel'])) {
+              if (gSettings["logschannel"] && guild.channels.get(gSettings["logschannel"])) {
 
-                const logsChan = guild.channels.get(gSettings['logschannel']);
+                const logsChan = guild.channels.get(gSettings["logschannel"]);
                 if (logsChan) {
                   let muteChanMsg = await this.client.getChanMsg(muteChan);
                   muteChanMsg = muteChanMsg
@@ -68,7 +68,7 @@ class Timers {
           this.client.db.detention.delete(`${guild.id}-${user.id}`);
         }
 
-        if (dbEntry['action'] === "tempban") {
+        if (dbEntry["action"] === "tempban") {
           guild.members.unban(user);
         }
 

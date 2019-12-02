@@ -1,4 +1,4 @@
-const Command = require('../../structures/command.js');
+const Command = require("../../structures/command.js");
 
 module.exports = class extends Command {
   constructor(client) {
@@ -17,12 +17,12 @@ module.exports = class extends Command {
 
     const gSettings = this.client.db.settings.get(message.guild.id);
 
-    let detCat = gSettings['detentioncategory'];
-    let muteRole = gSettings['mutedrole'];
+    let detCat = gSettings["detentioncategory"];
+    let muteRole = gSettings["mutedrole"];
 
-    if (!detCat || !message.guild.channels.get(detCat)) return message.reply('The detention category is either not set or no longer exists.');
-    if (!muteRole || !message.guild.roles.get(muteRole)) return message.reply('The muted role is either not set or no longer exists');
-    if (!match[1] || !message.guild.members.get(match[1])) return message.reply('Either a user was not supplied, or the user is no longer a member of the guild.');
+    if (!detCat || !message.guild.channels.get(detCat)) return message.reply("The detention category is either not set or no longer exists.");
+    if (!muteRole || !message.guild.roles.get(muteRole)) return message.reply("The muted role is either not set or no longer exists");
+    if (!match[1] || !message.guild.members.get(match[1])) return message.reply("Either a user was not supplied, or the user is no longer a member of the guild.");
 
     const muteUser = this.client.users.get(match[1]);
     const muteMember = await message.guild.members.fetch(match[1]);
@@ -43,7 +43,7 @@ module.exports = class extends Command {
     const endTime = Date.now() + muteLengthMS;
 
     const muteChan = await message.guild.channels.create(
-      `mute-${muteUser.username.replace(/\s/, '-')}`,
+      `mute-${muteUser.username.replace(/\s/, "-")}`,
       {
         parent: detCat,
         reason: `${message.author.tag} muted ${muteUser.tag}`,

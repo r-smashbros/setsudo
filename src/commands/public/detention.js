@@ -1,4 +1,4 @@
-const Command = require('../../structures/command.js');
+const Command = require("../../structures/command.js");
 
 module.exports = class extends Command {
   constructor(client) {
@@ -13,14 +13,14 @@ module.exports = class extends Command {
   async execute(message) {
     const gSettings = this.client.db.settings.get(message.guild.id);
 
-    let detCat = gSettings['detentioncategory'];
-    let detRole = gSettings['detentionrole'];
+    let detCat = gSettings["detentioncategory"];
+    let detRole = gSettings["detentionrole"];
 
     const user = /(\d{17,20})/.exec(message.content);
 
-    if (!detCat || !message.guild.channels.get(detCat)) return message.reply('The detention category is either not set or no longer exists.');
-    if (!detRole || !message.guild.roles.get(detRole)) return message.reply('The detention role is either not set or no longer exists');
-    if (!user || !message.guild.members.get(user[1])) return message.reply('Either a user was not supplied, or the user is no longer a member of the guild.');
+    if (!detCat || !message.guild.channels.get(detCat)) return message.reply("The detention category is either not set or no longer exists.");
+    if (!detRole || !message.guild.roles.get(detRole)) return message.reply("The detention role is either not set or no longer exists");
+    if (!user || !message.guild.members.get(user[1])) return message.reply("Either a user was not supplied, or the user is no longer a member of the guild.");
 
     const detUser = this.client.users.get(user[1]);
     const detMember = await message.guild.members.fetch(user[1]);

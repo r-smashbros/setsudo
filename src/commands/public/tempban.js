@@ -1,4 +1,4 @@
-const Command = require('../../structures/command.js');
+const Command = require("../../structures/command.js");
 
 module.exports = class extends Command {
   constructor(client) {
@@ -21,7 +21,7 @@ module.exports = class extends Command {
     const endTime = Date.now() + (Number(match[2]) * 24 * 60 * 60 * 1000);
 
     await user.send({ embed: this.client.constants.embedTemplates.dm(message, `Tempbanned (${match[2]} days)`, match[3]) })
-      .catch(() => message.reply('Unable to DM user.'));
+      .catch(() => message.reply("Unable to DM user."));
     
     await member.ban();
 

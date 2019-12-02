@@ -1,6 +1,6 @@
-const Event = require('../structures/event.js');
-const moment = require('moment');
-const { MessageEmbed } = require('discord.js');
+const Event = require("../structures/event.js");
+const moment = require("moment");
+const { MessageEmbed } = require("discord.js");
 
 module.exports = class extends Event {
   constructor(client) {
@@ -18,8 +18,8 @@ module.exports = class extends Event {
     
     const gSettings = this.client.db.settings.get(guild.id);
 
-    if (gSettings['logschannel'] && guild.channels.get(gSettings['logschannel'])) {
-      const logsChan = guild.channels.get(gSettings['logschannel']);
+    if (gSettings["logschannel"] && guild.channels.get(gSettings["logschannel"])) {
+      const logsChan = guild.channels.get(gSettings["logschannel"]);
 
       let detChanMsg = await this.client.getChanMsg(detChan);
       detChanMsg = detChanMsg

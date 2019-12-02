@@ -1,4 +1,4 @@
-const Command = require('../../structures/command.js');
+const Command = require("../../structures/command.js");
 
 module.exports = class extends Command {
   constructor(client) {
@@ -20,11 +20,11 @@ module.exports = class extends Command {
       toReturn += "Invalid Command Usage\n";
       toReturn += "```asciidoc\n";
       toReturn += "= Command Syntax\n";
-      toReturn += `*:: ${this.client.config['discord']['prefix']}automod <add|remove|list> [term|term-number]\n`;
+      toReturn += `*:: ${this.client.config["discord"]["prefix"]}automod <add|remove|list> [term|term-number]\n`;
       toReturn += "= Command Examples\n";
-      toReturn += `*:: ${this.client.config['discord']['prefix']}automod add arse\n`;
-      toReturn += `*:: ${this.client.config['discord']['prefix']}automod remove 1\n`;
-      toReturn += `*:: ${this.client.config['discord']['prefix']}automod list`;
+      toReturn += `*:: ${this.client.config["discord"]["prefix"]}automod add arse\n`;
+      toReturn += `*:: ${this.client.config["discord"]["prefix"]}automod remove 1\n`;
+      toReturn += `*:: ${this.client.config["discord"]["prefix"]}automod list`;
       toReturn += "```";
 
       return message.channel.send(toReturn);
