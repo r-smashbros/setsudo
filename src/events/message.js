@@ -13,6 +13,8 @@ module.exports = class extends Event {
     if (ctx.author.bot) return;
     if (ctx.channel.type !== "text") return;
 
+    if (!this.client.db.settings.has(ctx.guild.id)) this.client.db.settings.set(ctx.guild.id, this.client.constants.defaultSettings);
+
     await this.autoModCheck(ctx);
 
     // [SH] Handle r/smashbros related data
