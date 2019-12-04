@@ -38,7 +38,7 @@ module.exports = class extends Event {
     }
 
     const emojiRegex = /(?:<a?:)(\w+)(?::)(\d+)(?:>)/g;
-    if (ctx.content.test(emojiRegex)) {
+    if (emojiRegex.test(ctx.content)) {
       while ([content, name, id] = emojiRegex.exec(ctx.content)) {
         if (!ctx.guild.emojis.has(id)) continue;
 
