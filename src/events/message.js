@@ -37,6 +37,16 @@ module.exports = class extends Event {
       }
     }
 
+    const emojiRegex = /(?:<a?:)(\w+)(?::)(\d+)(?:>)/g;
+    if (ctx.content.test(emojiRegex)) {
+      while ([content, name, id] = emojiRegex.exec(ctx.content)) {
+        if (!ctx.guild.emojis.has(id)) continue;
+
+        if (!this.client.db.emojiStats.has(id)) this.client.db.emojiStats.set(id, 1);
+        else this.client.db.emojiStats.set(id, Number(this.client.db.emojiStats.get(id)) + 1);
+      }
+    } 
+
     if (!ctx.content.startsWith(this.client.config["discord"]["prefix"])) return;
 
     const content = ctx.content.slice(this.client.config["discord"]["prefix"].length);
