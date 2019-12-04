@@ -38,14 +38,15 @@ module.exports = class extends Event {
     }
 
     const emojiRegex = /(?:<a?:)(\w+)(?::)(\d+)(?:>)/g;
+    let emojiArray;
     if (emojiRegex.test(ctx.content)) {
-      while ([content, name, id] = emojiRegex.exec(ctx.content)) {
-        if (!ctx.guild.emojis.has(id)) continue;
+      while (emojiArray = emojiRegex.exec(ctx.content)) {
+        if (!ctx.guild.emojis.has(emojiArray[2])) continue;
 
-        if (!this.client.db.emojiStats.has(id)) this.client.db.emojiStats.set(id, 1);
-        else this.client.db.emojiStats.set(id, Number(this.client.db.emojiStats.get(id)) + 1);
+        if (!this.client.db.emojiStats.has(emojiArray[2])) this.client.db.emojiStats.set(emojiArray[2], 1);
+        else this.client.db.emojiStats.set(emojiArray[2], Number(this.client.db.emojiStats.get(emojiArray[2])) + 1);
       }
-    } 
+    }
 
     if (!ctx.content.startsWith(this.client.config["discord"]["prefix"])) return;
 
