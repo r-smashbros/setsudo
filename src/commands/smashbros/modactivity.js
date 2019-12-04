@@ -50,9 +50,9 @@ module.exports = class extends Command {
       vStr += `${user.tag}:: ${v}\n`;
     }
 
-    const aEmbed = new MessageEmbed().setTitle("Moderator Action Activity").setDescription(`\`\`\`asciidoc\n${aStr}\`\`\``).setColor(0xFF0000);
-    const mEmbed = new MessageEmbed().setTitle("Moderator Message Activity").setDescription(`\`\`\`asciidoc\n${mStr}\`\`\``).setColor(0x00FF00);
-    const vEmbed = new MessageEmbed().setTitle("Moderator Vote Participation").setDescription(`\`\`\`asciidoc\n${vStr}\`\`\``).setColor(0x0000FF).setTimestamp();
+    const aEmbed = new MessageEmbed().setTitle("Action Activity").setDescription(`\`\`\`asciidoc\n${aStr}\`\`\``).setColor(0xFF0000);
+    const mEmbed = new MessageEmbed().setTitle("Message Activity").setDescription(`\`\`\`asciidoc\n${mStr}\`\`\``).setColor(0x00FF00);
+    const vEmbed = new MessageEmbed().setTitle("Missed Votes").setDescription(`\`\`\`asciidoc\n${vStr}\`\`\``).setColor(0x0000FF).setTimestamp();
 
     await message.channel.send({ embed: aEmbed });
     await message.channel.send({ embed: mEmbed });
@@ -75,14 +75,19 @@ module.exports = class extends Command {
           const _rUsers = await r.users.fetch();
 
           for (const u of _rUsers.values()) {
-            if (u.id === this.client.id) continue;
+            if (u.id === this.client.user.id) continue;
             if (!rUsers[u.id]) rUsers[u.id] = 0;
             rUsers[u.id] += 1;
           }
         }
       }
 
-      // Sort voting participation
+      for (const val of Object.keys(rUsers)) { 
+        if (rUsers[val] >= voteMsg.size) { rUsers[val] = 0; continue; }
+        rUsers[val] = voteMsg.size - rUsers[val];
+      }
+
+      // Sort missing voting participation
       const _rUsers = [];
       for (const key in rUsers) _rUsers.push([key, rUsers[key]]);
       _rUsers.sort((a, b) => b[1] - a[1]);
