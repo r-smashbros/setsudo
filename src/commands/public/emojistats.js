@@ -19,6 +19,6 @@ module.exports = class extends Command {
       embedDescription += `<:${emojiName}:${emojiID}> \`${emojiName}: ${usageCount.toLocaleString()} usages\` \n`;
     });
     const embed = new MessageEmbed().setTitle("Emoji Stats").setDescription(`${embedDescription}`).setColor(0x00FFFF);
-    await message.channel.send({ embed: embed });
+    await message.channel.send({embed});
   }
 };
