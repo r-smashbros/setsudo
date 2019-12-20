@@ -13,12 +13,11 @@ module.exports = class extends Command {
 
   async execute(message) {
     const sorted = new Map([...this.client.db.emojiStats.entries()].sort((a, b) => b[1] - a[1]));
-    let embedDescription = "";
+    let emojiStats = `__**Emoji Stats for ${message.guild.name}**__\n`;
     sorted.forEach((usageCount, emojiID) => {
-      let emojiName = message.guild.emojis.get(emojiID).name;
-      embedDescription += `<:${emojiName}:${emojiID}> \`${emojiName}: ${usageCount.toLocaleString()} usages\` \n`;
+      const emojiName = message.guild.emojis.get(emojiID).name;
+      emojiStats += `<:${emojiName}:${emojiID}> \`${emojiName}: ${usageCount.toLocaleString()} usages\` \n`;
     });
-    const embed = new MessageEmbed().setTitle("Emoji Stats").setDescription(`${embedDescription}`).setColor(0x00FFFF);
-    await message.channel.send({embed});
+    message.channel.send(emojiStats, { split: true });
   }
 };
