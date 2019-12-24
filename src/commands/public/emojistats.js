@@ -13,7 +13,7 @@ module.exports = class extends Command {
 
   async execute(message) {
     const sorted = new Map([...this.client.db.emojiStats.entries()].sort((a, b) => b[1] - a[1]));
-    let embed = `\`\`\`asciidoc\n= Emoji Stats for r/smashbros\n`;
+    let embed = `\`\`\`asciidoc\n= Emoji stats for ${message.guild.name}\n`;
     sorted.forEach((usageCount, emojiID) => {
       const emoji = message.guild.emojis.get(emojiID);
       const emojiList = message.guild.emojis.map(e => e.name);
