@@ -13,11 +13,13 @@ module.exports = class extends Command {
 
   async execute(message) {
     const sorted = new Map([...this.client.db.emojiStats.entries()].sort((a, b) => b[1] - a[1]));
-    let emojiStats = `__**Emoji Stats for ${message.guild.name}**__\n`;
+    let embed = `\`\`\`asciidoc\n= Emoji stats for ${message.guild.name}\n`;
     sorted.forEach((usageCount, emojiID) => {
       const emoji = message.guild.emojis.get(emojiID);
-      if (emoji) emojiStats += `<:${emoji.name}:${emojiID}> \`${emoji.name}: ${usageCount.toLocaleString()} usages\` \n`;
+      const emojiList = message.guild.emojis.map(e => e.name);
+      if (emoji) embed += `${emoji.name}${" ".repeat(Math.max(...(emojiList.map(el => el.length))) - emoji.name.length + 1)}:: ${usageCount.toLocaleString()} usages\n`;
     });
-    message.channel.send(emojiStats, { split: true });
+    embed += `\`\`\``;
+    message.channel.send(embed, { split: true });
   }
 };
