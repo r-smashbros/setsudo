@@ -20,6 +20,6 @@ module.exports = class extends Command {
       if (emoji) embed += `${emoji.name}${" ".repeat(Math.max(...(emojiList.map(el => el.length))) - emoji.name.length + 1)}:: ${usageCount.toLocaleString()} usages\n`;
     });
     embed += `\`\`\``;
-    message.channel.send(embed, { split: true });
+    message.channel.send(embed, { split: { prepend: "```asciidoc\n", append: "```" } });
   }
 };
