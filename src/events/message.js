@@ -18,8 +18,8 @@ module.exports = class extends Event {
     await this.autoModCheck(ctx);
 
     // [SH] Handle r/smashbros related data
-    if (!this.client.config["selfhost"]) { 
-      
+    if (!this.client.config["selfhost"]) {
+
       // Mod Stats
       if (
         ctx.guild.id === this.client.config["servSpec"]["modServ"] &&
@@ -31,7 +31,7 @@ module.exports = class extends Event {
       }
 
       // Focused Opt-In
-      if (ctx.channel.id === "637828052050509835") { 
+      if (ctx.channel.id === "637828052050509835") {
         if (ctx.content.toLowerCase() === "i agree") ctx.member.roles.add(ctx.guild.roles.get("638120671368445953"));
         return ctx.delete();
       }

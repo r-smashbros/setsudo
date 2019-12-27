@@ -49,7 +49,7 @@ module.exports = class extends Event {
       .setFooter(message.channel.name)
       .setTimestamp()
       .setColor(0xffff00);
-    
+
     if (message.content) embed.setDescription(message.content);
     if (message.attachments.size) embed.setImage(message.attachments.first().url);
 
@@ -70,7 +70,7 @@ module.exports = class extends Event {
 
   async _handleUpdate(message, sbChanID, sbSet, sbData, action) {
     const emojiData = sbSet["emoji"];
-    
+
     const msg = await this.client.channels.get(sbData["sbEntryID"].split("-")[0]).messages.fetch(sbData["sbEntryID"].split("-")[1]);
 
     const reactions = message.reactions.filter(r => r._emoji.name === emojiData["name"]);

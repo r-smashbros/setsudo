@@ -30,7 +30,7 @@ new class extends Client {
     this.db.settings = new Enmap({ name: "settings", fetchAll: true });
     this.db.starboard = new Enmap({ name: "starboard", fetchAll: true });
     this.db.tempModActions = new Enmap({ name: "tempModActions", fetchAll: true });
-    
+
     // Load Global Handlers
     this.handlers = {};
     this.handlers.autoMod = new (require("./handlers/autoMod.js"))(this);
@@ -39,7 +39,7 @@ new class extends Client {
     this.handlers.timers = new (require("./handlers/timers.js"))(this);
 
     // [SH] Init r/smashbros Specific DB Tables / Handlers
-    if (!this.config["selfhost"]) { 
+    if (!this.config["selfhost"]) {
       this.db.activityStats = new Enmap({ name: "activityStats", fetchAll: true });
     }
 
@@ -60,21 +60,21 @@ new class extends Client {
     return `${this.config.hastebinURL}/${body.key}`;
   }
 
-  getChanMsg(channel) { 
+  getChanMsg(channel) {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       let lastMsgID = 0;
       let lastMsgCount = 100;
       let msgCollection = new Collection();
 
-      while (lastMsgCount >= 100) { 
+      while (lastMsgCount >= 100) {
         const tempColl = await channel.messages.fetch({ limit: 100, after: lastMsgID }).catch(reject);
         if (!tempColl.size) break;
         lastMsgCount = tempColl.size;
         lastMsgID = tempColl.last().id;
         msgCollection = msgCollection.concat(tempColl);
       }
-      
+
       msgCollection = new Collection([...msgCollection].reverse());
       resolve(msgCollection);
     });

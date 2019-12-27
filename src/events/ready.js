@@ -9,7 +9,7 @@ module.exports = class extends Event {
 
   execute(ctx = null) {
     console.log('Ready');
-    
+
     this.client.user.setActivity("*sips tea*");
     this.client.gameInterval = setInterval(() => {
       this.client.user.setActivity("*sips tea*");

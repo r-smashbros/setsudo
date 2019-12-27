@@ -32,7 +32,7 @@ class AutoMod {
       return resolve(toSend);
     });
   }
-  removeWord(message, number) { 
+  removeWord(message, number) {
     number = Number(number) - 1;
     return new Promise((resolve, reject) => {
       const gSettings = this.client.db.settings.get(message.guild.id);

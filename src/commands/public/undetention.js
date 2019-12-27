@@ -43,7 +43,7 @@ module.exports = class extends Command {
 
     if (gSettings["logschannel"] && message.guild.channels.get(gSettings["logschannel"])) {
       const logsChan = message.guild.channels.get(gSettings["logschannel"]);
-      
+
       const embed = new MessageEmbed()
         .setAuthor(`${detUser.tag} (${detUser.id})`, detUser.displayAvatarURL())
         .setDescription("Detention Ended")

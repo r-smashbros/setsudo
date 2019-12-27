@@ -15,7 +15,7 @@ module.exports = class extends Command {
     const removeRegex = /(?:remove)(?:\s+(\d+))/.exec(message.content);
     const listRegex = /(?:list)/.exec(message.content);
 
-    if (!addRegex && !removeRegex && !listRegex) { 
+    if (!addRegex && !removeRegex && !listRegex) {
       let toReturn = "";
       toReturn += "Invalid Command Usage\n";
       toReturn += "```asciidoc\n";

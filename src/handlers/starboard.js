@@ -41,7 +41,7 @@ class Starboard {
       if (!gSettings["starboard"][id]) return reject(`No entry was found for channel ID ${id}`);
 
       delete gSettings["starboard"][id];
-      
+
       this.client.db.settings.set(message.guild.id, gSettings);
 
       return resolve();
