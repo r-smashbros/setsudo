@@ -82,7 +82,7 @@ module.exports = class extends Command {
         }
       }
 
-      for (const val of Object.keys(rUsers)) { 
+      for (const val of Object.keys(rUsers)) {
         if (rUsers[val] >= voteMsg.size) { rUsers[val] = 0; continue; }
         rUsers[val] = voteMsg.size - rUsers[val];
       }

@@ -20,7 +20,7 @@ module.exports = class extends Command {
       const numEmoji = ["1⃣", "2⃣", "3⃣", "4⃣", "5⃣", "6⃣", "7⃣", "8⃣", "9⃣"];
       numEmoji.splice(num[0]);
 
-      for (const emoji of numEmoji) { 
+      for (const emoji of numEmoji) {
         await toReact.react(emoji).catch(e => console.error(e.stack));
       }
     } else {

@@ -11,11 +11,11 @@ module.exports = class extends Event {
 
   async execute(ctx = null) {
     const guild = ctx.guild;
-    
+
     let detChan = this.client.db.detention.get(`${guild.id}-${ctx.user.id}`);
     if (!detChan) return;
     detChan = guild.channels.get(detChan);
-    
+
     const gSettings = this.client.db.settings.get(guild.id);
 
     if (gSettings["logschannel"] && guild.channels.get(gSettings["logschannel"])) {

@@ -17,7 +17,7 @@ class PermissionLevel {
         client.constants.perms.staff,
         "Staff"
       ];
-    
+
     if (gSettings['helperrole'] && message.member.roles.some(r => r.id === gSettings['helperrole']))
       return [
         client.constants.perms.helper,

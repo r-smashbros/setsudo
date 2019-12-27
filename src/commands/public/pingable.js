@@ -12,7 +12,7 @@ module.exports = class extends Command {
 
   async execute(message) {
     const input = /(?:pingable)\s+(.+)/.exec(message.content);
-    
+
     if (
       !input &&
       // [SH] Make clause for Helper permission
@@ -25,7 +25,7 @@ module.exports = class extends Command {
       if (!role) return message.reply("Cannot find Tournament News role.");
 
       role.setMentionable(true, `${message.author.tag} set ${role.name} mentionable`).then(r => {
-        setTimeout(() => r.setMentionable(false) , 10 * 1000);
+        setTimeout(() => r.setMentionable(false), 10 * 1000);
       });
 
       return message.reply(`${role.name} is mentionable for 10 seconds.`);

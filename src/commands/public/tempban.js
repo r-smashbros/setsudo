@@ -22,7 +22,7 @@ module.exports = class extends Command {
 
     await user.send({ embed: this.client.constants.embedTemplates.dm(message, `Tempbanned (${match[2]} days)`, match[3]) })
       .catch(() => message.reply("Unable to DM user."));
-    
+
     await member.ban();
 
     let logsChan = this.client.db.settings.get(message.guild.id, "logschannel");
