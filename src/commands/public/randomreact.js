@@ -22,5 +22,4 @@ module.exports = class extends Command {
 
     return message.reply(`The randomly selected user is: ${winner.tag}`);
   }
-
 };
