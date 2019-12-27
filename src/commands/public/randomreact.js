@@ -12,14 +12,12 @@ module.exports = class extends Command {
 
   async execute(message) {
     const input = /(?:randomreact)\s+(.+)/.exec(message.content);
+    const msg = await message.channel.messages.fetch(input[1]).catch(e => null);
 
-    try { message = await message.channel.messages.fetch(input[1]); } catch { return message.reply("Unable to locate message ID specified.") };
+    if (!msg) return message.reply("Unable to locate message ID specified.");
+    if (!msg.reactions.size) return message.reply("Found message but unable to find reactions.");
 
-    if (!message.reactions.size) return message.reply("Found message but unable to find reactions.");
-
-    const reactUsers = await message.reactions.random().users.fetch();
-    const winner = reactUsers.random();
-
+    const winner = await msg.reactions.random().users.fetch().random();
     return message.reply(`The randomly selected user is: ${winner.tag}`);
   }
 };
