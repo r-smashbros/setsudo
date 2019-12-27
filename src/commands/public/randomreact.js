@@ -5,7 +5,7 @@ module.exports = class extends Command {
     super(client, {
       name: "randomreact",
       aliases: [],
-      ltu: client.constants.perms.helper,
+      ltu: client.constants.perms.staff,
       selfhost: true
     });
   }
@@ -17,7 +17,7 @@ module.exports = class extends Command {
     if (!msg) return message.reply("Unable to locate message ID specified.");
     if (!msg.reactions.size) return message.reply("Found message but unable to find reactions.");
 
-    const winner = await msg.reactions.random().users.fetch().random();
+    const winner = (await msg.reactions.random().users.fetch()).random();
     return message.reply(`The randomly selected user is: ${winner.tag}`);
   }
 };
