@@ -1,5 +1,5 @@
 # Setsudo
-Moderation and utility bot for the r/smashbros Discord server.
+Moderation and utility bot for the r/smashbros Discord server
 
 ## Self-hosting
 
