@@ -12,6 +12,7 @@ module.exports = class extends Command {
 
   async execute(message) {
     const match = /(?:randomreact)(?:\s+(?:<#)?(\d{17,20})>?)?(?:\s+(\d{17,20}))/.exec(message.content);
+    if (!match) return message.reply("Invalid Syntax: randomreact [channel-id/mention] <message-id/mention>");
 
     const msgChan = match[1] ? message.guild.channels.get(match[1]) : message.channel;
     if (!msgChan) return message.reply("The provided channel ID is not valid.");
