@@ -49,7 +49,7 @@ module.exports = class extends Command {
       logsChan.send({ embed });
     }
 
-    if (typeof muteChan === TextChannel) muteChan.delete();
+    if (muteChan instanceof TextChannel) muteChan.delete();
     else if (muteChan && message.guild.channels.get(muteChan)) message.guild.channels.get(muteChan).delete();
 
     this.client.db.tempModActions.delete(`${message.guild.id}-${user.id}`);
