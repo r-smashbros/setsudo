@@ -13,6 +13,7 @@ module.exports = class extends Command {
   /**
    * Entry point for warn command
    * @param {Message} message The message that invoked the command
+   * @returns {Message} The response to the command
    */
   async execute(message) {
 
