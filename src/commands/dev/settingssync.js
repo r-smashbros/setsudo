@@ -10,6 +10,10 @@ module.exports = class extends Command {
     });
   }
 
+  /**
+   * Entry point for settingssync command
+   * @param {Message} message The message that invoked the command
+   */
   async execute(message) {
     await this.client.db.settings.forEach(async (gSet, gID, map) => {
       for (const defVal of Object.keys(this.client.constants.defaultSettings)) {

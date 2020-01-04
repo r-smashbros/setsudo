@@ -44,22 +44,37 @@ new class extends Client {
     }
 
     // Run Init Functions
-    this.init();
+    this._init();
 
+    // Login to Discord
     this.login(this.config["discord"]["token"]);
   }
 
-  init() {
+  /**
+   * Loads commands and events into discord.js Client instance
+   * @private
+   */
+  _init() {
     this._loadCommands();
     this._loadEvents();
   }
 
+  /**
+   * Uploads input to hastebin and returns URL
+   * @param {string} data Data to be uploaded to hastebin
+   * @returns {string} Hastebin URL
+   */
   async hastebin(data) {
     const { body } = await fetch.post(`${this.config.hastebinURL}/documents`).send(data).catch(() => { return false; });
     if (!body || !body.key) return false;
     return `${this.config.hastebinURL}/${body.key}`;
   }
 
+  /**
+   * Fetches all messages in a TextChannel and returns a Collection 
+   * @param {TextChannel} channel TextChannel to have messages fetched from
+   * @returns {Collection} Collection of all messages in the TextChannel
+   */
   getChanMsg(channel) {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
@@ -80,6 +95,10 @@ new class extends Client {
     });
   }
 
+  /**
+   * Loads all commands in commandPath into discord.js Client
+   * @private
+   */
   _loadCommands() {
     klaw(commandsPath).on("data", item => {
       const file = path.parse(item.path);
@@ -90,6 +109,10 @@ new class extends Client {
     });
   }
 
+  /**
+   * Loads all events in eventsPath into discord.js Client
+   * @private
+   */
   _loadEvents() {
     klaw(eventsPath).on("data", item => {
       const file = path.parse(item.path);

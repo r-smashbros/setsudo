@@ -11,15 +11,29 @@ module.exports = class extends Command {
     });
   }
 
+  /**
+   * Entry point for emojistats command
+   * @param {Message} message The message that invoked the command
+   */
   async execute(message) {
+    // Sort emojistats DB in descending order
     const sorted = new Map([...this.client.db.emojiStats.entries()].sort((a, b) => b[1] - a[1]));
-    let embed = `\`\`\`asciidoc\n= Emoji stats for ${message.guild.name}\n`;
+
+    let msg = `\`\`\`asciidoc\n= Emoji stats for ${message.guild.name}\n`;
+    
+    // Loop over each emoji
     sorted.forEach((usageCount, emojiID) => {
+      // Fetch emoji
       const emoji = message.guild.emojis.get(emojiID);
+
       const emojiList = message.guild.emojis.map(e => e.name);
-      if (emoji) embed += `${emoji.name}${" ".repeat(Math.max(...(emojiList.map(el => el.length))) - emoji.name.length + 1)}:: ${usageCount.toLocaleString()} usages\n`;
+
+      // Template emoji stats and append to string
+      if (emoji) msg += `${emoji.name}${" ".repeat(Math.max(...(emojiList.map(el => el.length))) - emoji.name.length + 1)}:: ${usageCount.toLocaleString()} usages\n`;
     });
-    embed += `\`\`\``;
-    message.channel.send(embed, { split: { prepend: "```asciidoc\n", append: "```" } });
+    msg += `\`\`\``;
+
+    // Send stats split across multiple messages with proper formatting
+    message.channel.send(msg, { split: { prepend: "```asciidoc\n", append: "```" } });
   }
 };

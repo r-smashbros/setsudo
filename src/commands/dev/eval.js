@@ -11,11 +11,25 @@ module.exports = class extends Command {
       selfhost: true
     });
 
+    /**
+     * Creates a templated embed for eval
+     * 
+     * @param {string} input Provided code to be executed
+     * @param {string} output Output of execution of provided code
+     * @param {boolean} error Whether or not the error template should be applied
+     * 
+     * @returns {MessageEmbed} Templated MessageEmbed instance for eval commands
+     */
     this.embed = function (input, output, error = false) {
       return new MessageEmbed().setColor(error ? 0xFF0000 : 0x00FF00).addField("Input", input).addField(error ? "Error" : "Output", `\`\`\`${error ? "" : "js"}\n${output}\n\`\`\``).setFooter(`${this.client.user.username} Eval`);
     };
   }
 
+  /**
+   * Entry point for eval command
+   * @param {Message} message The message that invoked the command
+   * @returns {Message} The response to the command
+   */
   execute(message) {
     const code = message.content.slice(message.content.search(" ") + 1);
     if (!code.length) return message.channel.send("No code input.");

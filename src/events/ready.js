@@ -7,6 +7,9 @@ module.exports = class extends Event {
     });
   }
 
+  /**
+   * Entry point for ready event
+   */
   execute(ctx = null) {
     console.log('Ready');
 

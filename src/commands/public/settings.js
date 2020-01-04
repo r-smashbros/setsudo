@@ -11,6 +11,11 @@ module.exports = class extends Command {
     this.possibleSettings = `Possible settings:\n${Object.keys(this.client.constants.defaultSettings).map(set => `\`${set}\``).join(" | ")}`;
   }
 
+  /**
+   * Entry point for settings command
+   * @param {Message} message The message that invoked the command
+   * @returns {Message} The response to the command
+   */
   async execute(message) {
     const match = /(?:set(?:tings)?)(?:\s+([a-zA-Z0-9]+))?(?:\s+([a-zA-Z0-9]+))?/.exec(message.content);
     if (!match) {
@@ -18,16 +23,23 @@ module.exports = class extends Command {
       return message.reply("An error has occurred. Contact the bot developer.");
     }
 
+    // Fetch guild settings
     const gSettings = this.client.db.settings.get(message.guild.id);
 
+    // If no setting is provided, list possible options
     if (!match[1]) return message.reply(`No setting provided. ${this.possibleSettings}`);
+
+    // If setting is provided but no value is given, return currently set value
     if (match[1] && !match[2]) {
       if (!Object.prototype.hasOwnProperty.call(gSettings, match[1])) return message.reply(`Invalid seting provided: \`${match[1]}\`. ${this.possibleSettings}`);
       return message.reply(`\`${match[1].toLowerCase()}\` is ${!gSettings[match[1]] ? "not set" : `set to ${gSettings[match[1]]}`}`);
     }
+
+    // If both a setting and value is provided
     if (match[1] && match[2]) {
       match[1] = match[1].toLowerCase();
 
+      // Check if the provided setting matches existing settings and validate provided value before updating setting
       /* eslint-disable indent */
       switch (match[1]) {
         case ("automodchannel"):

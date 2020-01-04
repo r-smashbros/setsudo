@@ -10,6 +10,11 @@ module.exports = class extends Command {
     });
   }
 
+  /**
+   * Entry point for editnote command
+   * @param {Message} message The message that invoked the command
+   * @returns {Message|null} Returns Message instance if an error occurs. Otherwise, nothing is returned.
+   */
   async execute(message) {
     // editNote(message, user, nNum, note)
     const match = /(?:editnote)\s+(?:(?:<@!?)?(\d{17,20})>?)(?:\s+(\d+))(?:\s+(.+))/.exec(message.content);
