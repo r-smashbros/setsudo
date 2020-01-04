@@ -15,6 +15,7 @@ module.exports = class extends Command {
   /**
    * Entry point for undetention command
    * @param {Message} message The message that invoked the command
+   * @returns {Message} The response to the command
    */
   async execute(message) {
     const gSettings = this.client.db.settings.get(message.guild.id);
