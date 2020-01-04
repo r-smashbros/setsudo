@@ -10,6 +10,11 @@ module.exports = class extends Command {
     });
   }
 
+  /**
+   * Entry point for removeaction command
+   * @param {Message} message The message that invoked the command
+   * @returns {Message|null} Returns Message instance if an error occurs. Otherwise, nothing is returned.
+   */
   async execute(message) {
     // removeAction(message, user, aNum)
     const match = /(?:removeaction)\s+(?:(?:<@!?)?(\d{17,20})>?)(?:\s+(\d+))/.exec(message.content);
