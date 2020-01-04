@@ -6,12 +6,12 @@ class Starboard {
   /**
    * Add starboard DB entry for guild
    * 
-   * @param {Message} message 
-   * @param {string} channelID 
-   * @param {string} emojiUnicode 
-   * @param {string} emojiName 
-   * @param {string} emojiID 
-   * @param {string} limit 
+   * @param {Message} message The original message from the command
+   * @param {string} channelID The channel ID of the starboard channel
+   * @param {boolean} emojiUnicode Whether or not the emoji is from the Unicode standard
+   * @param {string} emojiName The name of the emoji
+   * @param {string} emojiID The ID of the emoji
+   * @param {string} limit The required number of reactions
    * 
    * @returns {Promise<string>}
    */
@@ -33,8 +33,8 @@ class Starboard {
 
   /**
    * Fetch all guild starboards and return a formatted list
-   * @param {Message} message 
-   * @returns {Promise<string>}
+   * @param {Message} message The original message from the command
+   * @returns {Promise<string>} A promise with the guild's starboard list
    */
   listServerSB(message) {
     return new Promise((resolve, reject) => {
@@ -59,10 +59,10 @@ class Starboard {
   /**
    * Remove starboard DB entry for guild
    * 
-   * @param {Message} message 
-   * @param {string} id
+   * @param {Message} message The original message from the command
+   * @param {string} id The channel ID for the starboard
    * 
-   * @returns {Promise<string>}
+   * @returns {Promise<string>|Promise<>} An empty resolved promise or a rejected promise with an error
    */
   removeSB(message, id) {
     return new Promise((resolve, reject) => {
@@ -75,7 +75,7 @@ class Starboard {
 
       this.client.db.settings.set(message.guild.id, gSettings);
 
-      return resolve("");
+      return resolve();
     });
   }
 }
