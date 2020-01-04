@@ -15,6 +15,7 @@ module.exports = class extends Command {
   /**
    * Entry point for the unmute command
    * @param {Message} message The message that invoked the command
+   * @returns {Message} The response to the command
    */
   async execute(message) {
     const match = /(?:mute)\s+(?:(?:<@!?)?(\d{17,20})>?)(?:\s+([\w\W]+))/.exec(message.content);
