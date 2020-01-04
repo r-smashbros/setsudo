@@ -3,6 +3,18 @@ class Starboard {
     this.client = client;
   }
 
+  /**
+   * Add starboard DB entry for guild
+   * 
+   * @param {Message} message 
+   * @param {string} channelID 
+   * @param {string} emojiUnicode 
+   * @param {string} emojiName 
+   * @param {string} emojiID 
+   * @param {string} limit 
+   * 
+   * @returns {Promise<string>}
+   */
   addSB(message, channelID, emojiUnicode, emojiName, emojiID, limit) {
     return new Promise((resolve, reject) => {
       const gSettings = this.client.db.settings.get(message.guild.id);
@@ -10,21 +22,31 @@ class Starboard {
       if (gSettings["starboard"][channelID])
         return reject(`${channelID} already has a starboard set. Starboards are limited to one per channel. Remove it and try again.`);
 
+      // Store starboard information in a template
       gSettings["starboard"][channelID] = { "emoji": { "unicode": emojiUnicode, "name": emojiName, "id": emojiID }, limit: Number(limit) };
 
       this.client.db.settings.set(message.guild.id, gSettings);
 
-      return resolve();
+      return resolve("");
     });
   }
+
+  /**
+   * Fetch all guild starboards and return a formatted list
+   * @param {Message} message 
+   * @returns {Promise<string>}
+   */
   listServerSB(message) {
     return new Promise((resolve, reject) => {
       const gSettings = this.client.db.settings.get(message.guild.id);
       let toSend = `__**Starboards for ${message.guild.name}**__\`\`\`md\n`;
 
+      // Check if guild has any starboards
       if (!Object.keys(gSettings["starboard"]).length) return resolve(`${message.guild.name} has no starboards!`);
       else {
+        // Loop over each starboard
         for (const [id, data] of Object.entries(gSettings["starboard"])) {
+          // Append starboard information to string
           toSend += `${id}. ${data["emoji"]["name"]}${!data["emoji"]["unicode"] ? ` (${data["emoji"]["id"]})` : ""} | Limit: ${data["limit"]}\n`;
         }
       }
@@ -33,6 +55,15 @@ class Starboard {
       return resolve(toSend);
     });
   }
+  
+  /**
+   * Remove starboard DB entry for guild
+   * 
+   * @param {Message} message 
+   * @param {string} id
+   * 
+   * @returns {Promise<string>}
+   */
   removeSB(message, id) {
     return new Promise((resolve, reject) => {
       const gSettings = this.client.db.settings.get(message.guild.id);
@@ -44,7 +75,7 @@ class Starboard {
 
       this.client.db.settings.set(message.guild.id, gSettings);
 
-      return resolve();
+      return resolve("");
     });
   }
 }
