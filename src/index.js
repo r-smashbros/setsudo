@@ -61,8 +61,8 @@ new class extends Client {
 
   /**
    * Uploads input to hastebin and returns URL
-   * @param {string} data 
-   * @returns {string}
+   * @param {string} data Data to be uploaded to hastebin
+   * @returns {string} Hastebin URL
    */
   async hastebin(data) {
     const { body } = await fetch.post(`${this.config.hastebinURL}/documents`).send(data).catch(() => { return false; });
@@ -72,8 +72,8 @@ new class extends Client {
 
   /**
    * Fetches all messages in a TextChannel and returns a Collection 
-   * @param {TextChannel} channel
-   * @returns {Collection} 
+   * @param {TextChannel} channel TextChannel to have messages fetched from
+   * @returns {Collection} Collection of all messages in the TextChannel
    */
   getChanMsg(channel) {
     // eslint-disable-next-line no-async-promise-executor
