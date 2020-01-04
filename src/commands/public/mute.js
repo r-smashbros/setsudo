@@ -10,6 +10,11 @@ module.exports = class extends Command {
     });
   }
 
+  /**
+   * Entry point for the mute command
+   * @param {Message} message The message that invoked the command
+   * @returns {Message} The response to the command
+   */
   async execute(message) {
     // match[] - msg content, ID, length:days?, length: hours?, length:minutes?, length:seconds?, reason 
     const match = /(?:mute)\s+(?:(?:<@!?)?(\d{17,20})>?)(?:\s+(?:(\d+)\s*d(?:ays)?)?\s*(?:(\d+)\s*h(?:ours|rs|r)?)?\s*(?:(\d+)\s*m(?:inutes|in)?)?\s*(?:(\d+)\s*s(?:econds|ec)?)?)(?:\s+([\w\W]+))/.exec(message.content);
@@ -20,20 +25,25 @@ module.exports = class extends Command {
     let detCat = gSettings["detentioncategory"];
     let muteRole = gSettings["mutedrole"];
 
+    // Check for detention category, mute role, and supplied user
     if (!detCat || !message.guild.channels.get(detCat)) return message.reply("The detention category is either not set or no longer exists.");
     if (!muteRole || !message.guild.roles.get(muteRole)) return message.reply("The muted role is either not set or no longer exists");
     if (!match[1] || !message.guild.members.get(match[1])) return message.reply("Either a user was not supplied, or the user is no longer a member of the guild.");
 
+    // Fetch affected user and corresponding GuildMember along with the mute role
     const muteUser = this.client.users.get(match[1]);
     const muteMember = await message.guild.members.fetch(match[1]);
     muteRole = message.guild.roles.get(muteRole);
 
+    // Prevent a user from being muted twice
     if (this.client.db.detention.get(`${message.guild.id}-${muteUser.id}`)) return message.reply(`${muteUser.tag} is already muted`);
 
     detCat = message.guild.channels.get(detCat);
 
+    // Add mute role to affected user
     await muteMember.roles.add(muteRole);
 
+    // Calculate mute length and string
     const muteLengthMS =
       ((60 * 60 * 24 * (match[2] ? Number(match[2]) : 0)) +
         (60 * 60 * (match[3] ? Number(match[3]) : 0)) +
@@ -42,6 +52,7 @@ module.exports = class extends Command {
     const muteLengthStr = `${match[2] ? `${match[2]}d` : ""}${match[3] ? `${match[3]}h` : ""}${match[4] ? `${match[4]}m` : ""}${match[5] ? `${match[5]}s` : ""}`;
     const endTime = Date.now() + muteLengthMS;
 
+    // Create mute channel
     const muteChan = await message.guild.channels.create(
       `mute-${muteUser.username.replace(/\s/, "-")}`,
       {
@@ -51,21 +62,27 @@ module.exports = class extends Command {
       }
     );
 
+    // Make muted user able to see the mute channel
     muteChan.updateOverwrite(muteUser.id, {
       VIEW_CHANNEL: true
     });
 
+    // DM affected user that they were muted if possible
     await muteUser.send({ embed: this.client.constants.embedTemplates.dm(message, `Muted (${muteLengthStr})`, match[6]) })
       .catch(() => message.reply('Unable to DM user.'));
 
+    // Check if the guild has a logs channel
     let logsChan = this.client.db.settings.get(message.guild.id, "logschannel");
     if (logsChan && message.guild.channels.get(logsChan)) {
       logsChan = message.guild.channels.get(logsChan);
       logsChan.send({ embed: this.client.constants.embedTemplates.logs(message, muteUser, `Mute (${muteLengthStr})`, match[6]) });
     }
 
+    // Store mute in corresponding DBs
     this.client.db.tempModActions.set(`${message.guild.id}-${muteUser.id}`, { action: "mute", endTime });
     this.client.db.detention.set(`${message.guild.id}-${muteUser.id}`, muteChan.id);
+
+    // Add mute to the user's mod notes DB entry
     this.client.handlers.modNotes.addAction(message, muteUser, message.author, `Mute (${muteLengthStr})`, match[6]);
 
     return message.reply(`${muteUser.tag} has been muted.`);
