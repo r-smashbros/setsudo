@@ -10,6 +10,11 @@ module.exports = class extends Command {
     });
   }
 
+  /**
+   * Entry point for editaction command
+   * @param {Message} message The message that invoked the command
+   * @returns {Message|null} Returns Message instance if an error occurs. Otherwise, nothing is returned.
+   */
   async execute(message) {
     // editAction(message, user, aNum, note)
     const match = /(?:editaction)\s+(?:(?:<@!?)?(\d{17,20})>?)(?:\s+(\d+))(?:\s+(.+))/.exec(message.content);
