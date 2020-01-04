@@ -10,11 +10,17 @@ module.exports = class extends Command {
     });
   }
 
+  /**
+   * Entry point for automod command
+   * @param {Message} message The message that invoked the command
+   * @returns {Message} The response to the command
+   */
   async execute(message) {
     const addRegex = /(?:add)(?:\s+([\w\W]+))/.exec(message.content);
     const removeRegex = /(?:remove)(?:\s+(\d+))/.exec(message.content);
     const listRegex = /(?:list)/.exec(message.content);
 
+    // If no matching syntax is found, show help information
     if (!addRegex && !removeRegex && !listRegex) {
       let toReturn = "";
       toReturn += "Invalid Command Usage\n";
