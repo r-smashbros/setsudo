@@ -3,10 +3,10 @@ class PermissionLevel {
   /**
    * Fetches message author's permission level for invoking commands
    * 
-   * @param {Client} client 
-   * @param {Message} message
+   * @param {Client} client The discord.js Client instance
+   * @param {Message} message The message to check
    * 
-   * @returns {Array} 
+   * @returns {Array} Array of permission information
    */
   fetch(client, message) {
 
