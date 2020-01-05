@@ -17,7 +17,7 @@ module.exports = class extends Command {
    * @returns {Message} The response to the command
    */
   async execute(message) {
-    const match = /(?:set(?:tings)?)(?:\s+([a-zA-Z0-9]+))?(?:\s+([a-zA-Z0-9]+))?/.exec(message.content);
+    const match = /(?:set(?:tings)?)(?:\s+([a-zA-Z0-9]+))?(?:\s+([\w\W]+))?/.exec(message.content);
     if (!match) {
       console.error(`ERROR IN "settings" COMMAND: RegexMal\n\n${message.content}`);
       return message.reply("An error has occurred. Contact the bot developer.");
@@ -40,54 +40,67 @@ module.exports = class extends Command {
       match[1] = match[1].toLowerCase();
 
       // Check if the provided setting matches existing settings and validate provided value before updating setting
-      /* eslint-disable indent */
-      switch (match[1]) {
-        case ("automodchannel"):
-          if (message.guild.channels.get(match[2]) && message.guild.channels.get(match[2]).type === "text") {
-            gSettings["automodchannel"] = match[2];
-            this.client.db.settings.set(message.guild.id, gSettings);
-            return message.reply(`Setting \`${match[1]}\` set to \`${match[2]}\``);
-          } else return message.reply(`The provided value is not a valid channel ID: ${match[2]}`);
-        case ("detentioncategory"):
-          if (message.guild.channels.get(match[2]) && message.guild.channels.get(match[2]).type === "category") {
-            gSettings["detentioncategory"] = match[2];
-            this.client.db.settings.set(message.guild.id, gSettings);
-            return message.reply(`Setting \`${match[1]}\` set to \`${match[2]}\``);
-          } else return message.reply(`The provided value is not a valid category ID: ${match[2]}`);
-        case ("detentionrole"):
-          if (message.guild.roles.get(match[2])) {
-            gSettings["detentionrole"] = match[2];
-            this.client.db.settings.set(message.guild.id, gSettings);
-            return message.reply(`Setting \`${match[1]}\` set to \`${match[2]}\``);
-          } else return message.reply(`The provided value is not a valid role ID: ${match[2]}`);
-        case ("helperrole"):
-          if (message.guild.roles.get(match[2])) {
-            gSettings["helperrole"] = match[2];
-            this.client.db.settings.set(message.guild.id, gSettings);
-            return message.reply(`Setting \`${match[1]}\` set to \`${match[2]}\``);
-          } else return message.reply(`The provided value is not a valid role ID: ${match[2]}`);
-        case ("logschannel"):
-          if (message.guild.channels.get(match[2]) && message.guild.channels.get(match[2]).type === "text") {
-            gSettings["logschannel"] = match[2];
-            this.client.db.settings.set(message.guild.id, gSettings);
-            return message.reply(`Setting \`${match[1]}\` set to \`${match[2]}\``);
-          } else return message.reply(`The provided value is not a valid channel ID: ${match[2]}`);
-        case ("mutedrole"):
-          if (message.guild.roles.get(match[2])) {
-            gSettings["mutedrole"] = match[2];
-            this.client.db.settings.set(message.guild.id, gSettings);
-            return message.reply(`Setting \`${match[1]}\` set to \`${match[2]}\``);
-          } else return message.reply(`The provided value is not a valid role ID: ${match[2]}`);
-        case ("staffrole"):
-          if (message.guild.roles.get(match[2])) {
-            gSettings["staffrole"] = match[2];
-            this.client.db.settings.set(message.guild.id, gSettings);
-            return message.reply(`Setting \`${match[1]}\` set to \`${match[2]}\``);
-          } else return message.reply(`The provided value is not a valid role ID: ${match[2]}`);
-        default:
-          message.channel.reply(`Invalid seting provided: \`${match[1]}\`. ${this.possibleSettings}`);
-          break;
-      }
+      if (match[1] === "automodchannel") return message.reply(this._setChannel(message, gSettings, match[1], match[2], false));
+      if (match[1] === "detentioncategory") return message.reply(this._setChannel(message, gSettings, match[1], match[2], true));
+      if (match[1] === "detentionrole") return message.reply(this._setRole(message, gSettings, match[1], match[2]));
+      if (match[1] === "helperrole") return message.reply(this._setRole(message, gSettings, match[1], match[2]));
+      if (match[1] === "logschannel") return message.reply(this._setChannel(message, gSettings, match[1], match[2], false));
+      if (match[1] === "mutedrole") return message.reply(this._setRole(message, gSettings, match[1], match[2]));
+      if (match[1] === "staffrole") return message.reply(this._setRole(message, gSettings, match[1], match[2]));
+
+      return message.channel.reply(`Invalid seting provided: \`${match[1]}\`. ${this.possibleSettings}`);
     }
   }
+
+  /**
+   * Finds, verifies, and stores channel information for a setting
+   * @private
+   * 
+   * @param {Message} message The message that invoked the command
+   * @param {object} gSettings The guild's settings
+   * @param {string} setting The setting to be changed
+   * @param {string} value The name or ID of the channel value
+   * @param {boolean} isCategory Whether or not the setting must be a category
+   * 
+   * @returns {string} Output to be returned to user
+   */
+  _setChannel(message, gSettings, setting, value, isCategory) {
+
+    // Fetch channel based on name or ID. Return error message if none found.
+    const channel = message.guild.channels.find(c => c.name === value) || message.guild.channels.get(value);
+    if (!channel) return `The provided value is not a valid channel name or ID: ${value}`;
+
+    // Ensure channel is a category if isCategory is set
+    if (isCategory && channel.type !== "category") return `The provided value is not a valid category name or ID: ${value}`;
+
+    // Update guild settings
+    gSettings[setting] = channel.id;
+    this.client.db.settings.set(message.guild.id, gSettings);
+
+    return `Setting \`${setting}\` set to \`${channel.name}\``;
+  }
+
+  /**
+   * Finds, verifies, and stores role information for a setting
+   * @private
+   * 
+   * @param {Message} message The message that invoked the command
+   * @param {object} gSettings The guild's settings
+   * @param {string} setting The setting to be changed
+   * @param {string} value The name or ID of the role value
+   * 
+   * @returns {string} Output to be returned to user
+   */
+  _setRole(message, gSettings, setting, value) {
+    // Fetch role based on name or ID. Return error message if none found.
+    const role = message.guild.roles.find(c => c.name === value) || message.guild.roles.get(value);
+    if (!role) return `The provided value is not a valid channel name or ID: ${value}`;
+
+    // Update guild settings
+    gSettings[setting] = role.id;
+    this.client.db.settings.set(message.guild.id, gSettings);
+
+    return `Setting \`${setting}\` set to \`${role.name}\``;
+  }
+
 };
