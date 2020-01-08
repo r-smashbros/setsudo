@@ -19,7 +19,7 @@
   "dependencies": {
     "better-sqlite-pool": "^0.2.2",
     "discord.js": "github:discordjs/discord.js",
-    "enmap": "^5.1.2",
+    "enmap": "^5.2.4",
     "klaw": "^3.0.0",
     "moment": "^2.24.0",
     "snekfetch": "^4.0.4"
