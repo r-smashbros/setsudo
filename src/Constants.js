@@ -17,7 +17,7 @@ module.exports = {
   },
   "defaultSettings": {
     // AutoMod related settings
-    "automodchannel": null, // Channel ID
+    "automodlogschannel": null, // Channel ID
     "automodlist": [], // Array of strings
 
     // Detention/mute settings
