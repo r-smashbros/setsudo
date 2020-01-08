@@ -22,7 +22,7 @@ module.exports = {
     "change": "0x000000",
 
     // Message
-    "edit": "0xFF8800",
+    "edit": "0xFFFF00",
     "delete": "0xFF0000"
   },
   "defaultSettings": {
