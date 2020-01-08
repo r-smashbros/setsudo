@@ -24,8 +24,8 @@ module.exports = class extends Event {
     const gSettings = this.client.db.settings.get(guild.id);
 
     // Check if the guild has a logs channel
-    if (gSettings["logschannel"] && guild.channels.get(gSettings["logschannel"])) {
-      const logsChan = guild.channels.get(gSettings["logschannel"]);
+    if (gSettings["modlogschannel"] && guild.channels.get(gSettings["modlogschannel"])) {
+      const logsChan = guild.channels.get(gSettings["modlogschannel"]);
 
       // Fetch all messages from the detention channel and format them
       let detChanMsg = await this.client.getChanMsg(detChan);

@@ -52,8 +52,8 @@ module.exports = class extends Command {
     const hastebinURL = await this.client.hastebin(muteChanMsg);
 
     // Check if the guild has a logs channel
-    if (gSettings["logschannel"] && message.guild.channels.get(gSettings["logschannel"])) {
-      const logsChan = message.guild.channels.get(gSettings["logschannel"]);
+    if (gSettings["modlogschannel"] && message.guild.channels.get(gSettings["modlogschannel"])) {
+      const logsChan = message.guild.channels.get(gSettings["modlogschannel"]);
 
       const embed = new MessageEmbed()
         .setAuthor(`${detUser.tag} (${detUser.id})`, detUser.displayAvatarURL())

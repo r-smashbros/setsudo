@@ -27,7 +27,7 @@ module.exports = {
     // Role ID
     "helperrole": null,
     // Channel ID
-    "logschannel": null,
+    "modlogschannel": null,
     // Role ID
     "mutedrole": null,
     // Role ID
