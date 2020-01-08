@@ -16,24 +16,27 @@ module.exports = {
     "success": "0x00FF00"
   },
   "defaultSettings": {
-    // Channel ID
-    "automodchannel": null,
-    // Array of strings
-    "automodlist": [],
-    // Category ID
-    "detentioncategory": null,
-    // Role ID
-    "detentionrole": null,
-    // Role ID
-    "helperrole": null,
-    // Channel ID
-    "modlogschannel": null,
-    // Role ID
-    "mutedrole": null,
-    // Role ID
-    "staffrole": null,
-    // Object
-    "starboard": {}
+    // AutoMod related settings
+    "automodchannel": null, // Channel ID
+    "automodlist": [], // Array of strings
+
+    // Detention/mute settings
+    "detentioncategory": null, // Category ID
+    "detentionrole": null, // Role ID
+
+    // Role/permission settings
+    "helperrole": null, // Role ID
+    "mutedrole": null, // Role ID
+    "staffrole": null, // Role ID
+
+    // Log channel settings
+    "modlogschannel": null, // Channel ID
+    "messagelogschannel": null, // Channel ID
+    "memberlogschannel": null, // Channel ID
+    "vclogschannel": null, // Channel ID
+
+    // Misc. settings
+    "starboard": {} // Object
   },
   "defaultNotes": {
     "actions": [],
