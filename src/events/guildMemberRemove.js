@@ -15,13 +15,23 @@ module.exports = class extends Event {
    */
   async execute(ctx = null) {
     const guild = ctx.guild;
+    const gSettings = this.client.db.settings.get(guild.id);
+
+    if (gSettings["memberlogschannel"] && guild.channels.get(gSettings["memberlogschannel"])) {
+      const memberLogsChan = guild.channels.get(gSettings["memberlogschannel"]);
+      memberLogsChan.send({ 
+        embed: new MessageEmbed()
+          .setAuthor(`${ctx.user.tag} (${ctx.user.id})`, ctx.user.avatarURL())
+          .setColor(this.client.constants.colours.leave)
+          .setDescription("User Left/Banned")
+          .setTimestamp()
+      });
+    }
 
     // Attempt to fetch the user's detention channel and return if it doesn't exist
     let detChan = this.client.db.detention.get(`${guild.id}-${ctx.user.id}`);
     if (!detChan) return;
     detChan = guild.channels.get(detChan);
-
-    const gSettings = this.client.db.settings.get(guild.id);
 
     // Check if the guild has a logs channel
     if (gSettings["modlogschannel"] && guild.channels.get(gSettings["modlogschannel"])) {

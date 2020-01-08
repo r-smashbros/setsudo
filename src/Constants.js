@@ -10,10 +10,20 @@ module.exports = {
     "blacklist": 0
   },
   "colours": {
+    // Status
     "info": "0x00FFF9",
     "error": "0xFF0000",
     "warn": "0xFF8800",
-    "success": "0x00FF00"
+    "success": "0x00FF00",
+
+    // Guild/VC
+    "join": "0x00FF00",
+    "leave": "0xFF0000",
+    "change": "0x000000",
+
+    // Message
+    "edit": "0xFF8800",
+    "delete": "0xFF0000"
   },
   "defaultSettings": {
     // AutoMod related settings
