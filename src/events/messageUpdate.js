@@ -9,7 +9,7 @@ module.exports = class extends Event {
   }
 
   /**
-   * Entry point for messageUpdateEvent
+   * Entry point for messageUpdate event
    * 
    * @param {Message} oldMsg The original version of the message
    * @param {Message} newMsg The updated version of the message
