@@ -122,8 +122,8 @@ module.exports = class extends Event {
           await message.delete();
 
           // Check if the guild has a channel to log automod violations in
-          if (gSettings["automodchannel"] && message.guild.channels.get(gSettings["automodchannel"])) {
-            const amChan = message.guild.channels.get(gSettings["automodchannel"]);
+          if (gSettings["automodlogschannel"] && message.guild.channels.get(gSettings["automodlogschannel"])) {
+            const amChan = message.guild.channels.get(gSettings["automodlogschannel"]);
 
             // Create automod violation embed
             const embed = new MessageEmbed()

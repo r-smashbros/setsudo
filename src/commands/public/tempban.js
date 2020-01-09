@@ -34,7 +34,7 @@ module.exports = class extends Command {
     await member.ban();
 
     // Check if guild has logs channel
-    let logsChan = this.client.db.settings.get(message.guild.id, "logschannel");
+    let logsChan = this.client.db.settings.get(message.guild.id, "modlogschannel");
     if (logsChan && message.guild.channels.get(logsChan)) {
       logsChan = message.guild.channels.get(logsChan);
       logsChan.send({ embed: this.client.constants.embedTemplates.logs(message, user, `Tempban (${match[2]} days)`, match[3]) });

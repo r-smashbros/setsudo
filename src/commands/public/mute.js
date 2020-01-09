@@ -72,7 +72,7 @@ module.exports = class extends Command {
       .catch(() => message.reply('Unable to DM user.'));
 
     // Check if the guild has a logs channel
-    let logsChan = this.client.db.settings.get(message.guild.id, "logschannel");
+    let logsChan = this.client.db.settings.get(message.guild.id, "modlogschannel");
     if (logsChan && message.guild.channels.get(logsChan)) {
       logsChan = message.guild.channels.get(logsChan);
       logsChan.send({ embed: this.client.constants.embedTemplates.logs(message, muteUser, `Mute (${muteLengthStr})`, match[6]) });

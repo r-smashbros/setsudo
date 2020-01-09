@@ -28,7 +28,7 @@ module.exports = class extends Command {
     // Fetch guild settings and mute channel
     const gSettings = this.client.db.settings.get(message.guild.id);
     let muteChan = this.client.db.detention.get(`${message.guild.id}-${user.id}`);
-    let logsChan = gSettings["logschannel"];
+    let logsChan = gSettings["modlogschannel"];
     let muteRole = gSettings["mutedrole"];
 
     // Check if mutedrole setting is still valid

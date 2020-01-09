@@ -63,9 +63,9 @@ class Timers {
           if (muteChan && (muteChan = guild.channels.get(muteChan))) {
 
             // Check if guild has a logs channel
-            if (gSettings["logschannel"] && guild.channels.get(gSettings["logschannel"])) {
+            if (gSettings["modlogschannel"] && guild.channels.get(gSettings["modlogschannel"])) {
 
-              const logsChan = guild.channels.get(gSettings["logschannel"]);
+              const logsChan = guild.channels.get(gSettings["modlogschannel"]);
 
               // Fetch all messages in channel
               let muteChanMsg = await this.client.getChanMsg(muteChan);
