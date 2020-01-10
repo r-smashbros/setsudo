@@ -18,19 +18,24 @@ module.exports = class extends Command {
   async execute(message) {
     // Sort emojistats DB in descending order
     const sorted = new Map([...this.client.db.emojiStats.entries()].sort((a, b) => b[1] - a[1]));
-
+    const emojiList = message.guild.emojis.map(e => e.name);
     let msg = `\`\`\`asciidoc\n= Emoji stats for ${message.guild.name}\n`;
-    
-    // Loop over each emoji
+
+    // Loop over the emojis and usage counts in the enmap (previously used emojis)
     sorted.forEach((usageCount, emojiID) => {
-      // Fetch emoji
       const emoji = message.guild.emojis.get(emojiID);
-
-      const emojiList = message.guild.emojis.map(e => e.name);
-
-      // Template emoji stats and append to string
-      if (emoji) msg += `${emoji.name}${" ".repeat(Math.max(...(emojiList.map(el => el.length))) - emoji.name.length + 1)}:: ${usageCount.toLocaleString()} usages\n`;
+      if (!emoji) return;
+      // Append the emoji name, dynamic spacer, and usage count to the message
+      msg += `${emoji.name}`;
+      msg += `${" ".repeat(Math.max(...(emojiList)) - emoji.name.length + 1)}:: `;
+      msg += `${usageCount.toLocaleString()} usages\n`;
     });
+
+    // Append all unused emoji
+    for (const emoji of message.guild.emojis.values()) {
+      if (!sorted.has(emoji.id)) msg += `${emoji.name}${" ".repeat(Math.max(...(emojiList)) - emoji.name.length + 1)}:: 0 usages\n`;
+    }
+
     msg += `\`\`\``;
 
     // Send stats split across multiple messages with proper formatting
