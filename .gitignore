@@ -65,6 +65,7 @@ typings/
 
 # Config file
 config.json
+config.json.*
 
 # Enmap files
 data
