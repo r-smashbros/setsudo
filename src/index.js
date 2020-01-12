@@ -25,6 +25,7 @@ new class extends Client {
     // Init Database Tables (Enmap)
     this.db = {};
     this.db.detention = new Enmap({ name: "detention", fetchAll: true });
+    this.db.dynamicVC = new Enmap({ name: "dynamicVC", fetchAll: true });
     this.db.emojiStats = new Enmap({ name: "emojiStats", fetchAll: true });
     this.db.modNotes = new Enmap({ name: "modNotes", fetchAll: true });
     this.db.settings = new Enmap({ name: "settings", fetchAll: true });

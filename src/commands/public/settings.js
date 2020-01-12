@@ -43,6 +43,8 @@ module.exports = class extends Command {
       if (match[1] === "automodlogschannel") return message.reply(this._setChannel(message, gSettings, match[1], match[2], false));
       if (match[1] === "detentioncategory") return message.reply(this._setChannel(message, gSettings, match[1], match[2], true));
       if (match[1] === "detentionrole") return message.reply(this._setRole(message, gSettings, match[1], match[2]));
+      if (match[1] === "dynamicvccategory") return message.reply(this._setChannel(message, gSettings, match[1], match[2], true));
+      if (match[1] === "dynamicvcbasevc") return message.reply(this._setChannel(message, gSettings, match[1], match[2], false));
       if (match[1] === "helperrole") return message.reply(this._setRole(message, gSettings, match[1], match[2]));
       if (match[1] === "memberlogschannel") return message.reply(this._setChannel(message, gSettings, match[1], match[2], false));
       if (match[1] === "messagelogschannel") return message.reply(this._setChannel(message, gSettings, match[1], match[2], false));
@@ -51,7 +53,7 @@ module.exports = class extends Command {
       if (match[1] === "staffrole") return message.reply(this._setRole(message, gSettings, match[1], match[2]));
       if (match[1] === "vclogschannel") return message.reply(this._setChannel(message, gSettings, match[1], match[2], false));
 
-      return message.channel.reply(`Invalid seting provided: \`${match[1]}\`. ${this.possibleSettings}`);
+      return message.reply(`Invalid seting provided: \`${match[1]}\`. ${this.possibleSettings}`);
     }
   }
 
