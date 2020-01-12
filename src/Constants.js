@@ -45,6 +45,10 @@ module.exports = {
     "memberlogschannel": null, // Channel ID
     "vclogschannel": null, // Channel ID
 
+    // Dynamic VC settings
+    "dynamicvccategory": null, // Channel (Category) ID
+    "dynamicvcbasevc": null, // Channel ID
+
     // Misc. settings
     "starboard": {} // Object
   },
