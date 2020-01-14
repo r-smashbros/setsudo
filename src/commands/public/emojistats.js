@@ -27,13 +27,13 @@ module.exports = class extends Command {
       if (!emoji) return;
       // Append the emoji name, dynamic spacer, and usage count to the message
       msg += `${emoji.name}`;
-      msg += `${" ".repeat(Math.max(...(emojiList)) - emoji.name.length + 1)}:: `;
+      msg += `${" ".repeat(Math.max(...(emojiList.map(el => el.length))) - emoji.name.length + 1)}:: `;
       msg += `${usageCount.toLocaleString()} usages\n`;
     });
 
     // Append all unused emoji
     for (const emoji of message.guild.emojis.values()) {
-      if (!sorted.has(emoji.id)) msg += `${emoji.name}${" ".repeat(Math.max(...(emojiList)) - emoji.name.length + 1)}:: 0 usages\n`;
+      if (!sorted.has(emoji.id)) msg += `${emoji.name}${" ".repeat(Math.max(...(emojiList.map(el => el.length))) - emoji.name.length + 1)}:: 0 usages\n`;
     }
 
     msg += `\`\`\``;
