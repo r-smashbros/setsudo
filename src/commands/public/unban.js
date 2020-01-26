@@ -10,7 +10,7 @@ module.exports = class extends Command {
     });
   }
   /**
-   * Entry point for the ban command
+   * Entry point for the unban command
    * @param {Message} message The message that invoked the command
    * @returns {Message} The response to the command
    */
