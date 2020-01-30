@@ -42,7 +42,7 @@ module.exports = class extends Command {
 
     // Create detention channel
     const detChan = await message.guild.channels.create(
-      `detention-${detUser.username.replace(/\s/, '-')}`,
+      `detention-${detUser.id}`,
       {
         parent: detCat,
         reason: `${message.author.tag} detentioned ${detUser.tag}`,
