@@ -1,7 +1,6 @@
 const path = require("path");
 const klaw = require("klaw");
 const fetch = require("snekfetch");
-const Enmap = require("enmap");
 const { Client, Collection } = require("discord.js");
 
 const commandsPath = path.join(__dirname, "commands");
