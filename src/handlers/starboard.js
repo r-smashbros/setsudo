@@ -16,8 +16,8 @@ class Starboard {
    * @returns {Promise<string>}
    */
   addSB(message, channelID, emojiUnicode, emojiName, emojiID, limit) {
-    return new Promise((resolve, reject) => {
-      const gSettings = this.client.db.settings.get(message.guild.id);
+    return new Promise(async (resolve, reject) => {
+      const gSettings = await this.client.handlers.db.get("settings". message.guild.id);
 
       if (gSettings["starboard"][channelID])
         return reject(`${channelID} already has a starboard set. Starboards are limited to one per channel. Remove it and try again.`);
@@ -25,7 +25,7 @@ class Starboard {
       // Store starboard information in a template
       gSettings["starboard"][channelID] = { "emoji": { "unicode": emojiUnicode, "name": emojiName, "id": emojiID }, limit: Number(limit) };
 
-      this.client.db.settings.set(message.guild.id, gSettings);
+      await this.client.handlers.db.update("settings", message.guild.id, gSettings);
 
       return resolve("");
     });
@@ -37,8 +37,8 @@ class Starboard {
    * @returns {Promise<string>} A promise with the guild's starboard list
    */
   listServerSB(message) {
-    return new Promise((resolve, reject) => {
-      const gSettings = this.client.db.settings.get(message.guild.id);
+    return new Promise(async (resolve, reject) => {
+      const gSettings = await this.client.handlers.db.get("settings". message.guild.id);
       let toSend = `__**Starboards for ${message.guild.name}**__\`\`\`md\n`;
 
       // Check if guild has any starboards
@@ -65,15 +65,15 @@ class Starboard {
    * @returns {Promise<string>|Promise<>} An empty resolved promise or a rejected promise with an error
    */
   removeSB(message, id) {
-    return new Promise((resolve, reject) => {
-      const gSettings = this.client.db.settings.get(message.guild.id);
+    return new Promise(async (resolve, reject) => {
+      const gSettings = await this.client.handlers.db.get("settings". message.guild.id);
 
       if (!Object.keys(gSettings["starboard"]).length) return reject("There are no starboards.");
       if (!gSettings["starboard"][id]) return reject(`No entry was found for channel ID ${id}`);
 
       delete gSettings["starboard"][id];
 
-      this.client.db.settings.set(message.guild.id, gSettings);
+      await this.client.handlers.db.update("settings", message.guild.id, gSettings);
 
       return resolve();
     });

@@ -16,7 +16,7 @@ module.exports = class extends Command {
    * @returns {Message} The response to the command
    */
   async execute(message) {
-    const gSettings = this.client.db.settings.get(message.guild.id);
+    const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
 
     let detCat = gSettings["detentioncategory"];
     let detRole = gSettings["detentionrole"];
@@ -34,7 +34,8 @@ module.exports = class extends Command {
     detRole = message.guild.roles.get(detRole);
 
     // Prevent the user from being detentioned twice
-    if (this.client.db.detention.get(`${message.guild.id}-${detUser.id}`)) return message.reply(`${detUser.tag} is already detentioned`);
+    if (await this.client.handlers.db.has("detention", `${message.guild.id}-${detUser.id}`)) 
+      return message.reply(`${detUser.tag} is already detentioned`);
 
     detCat = message.guild.channels.get(detCat);
 
@@ -60,14 +61,17 @@ module.exports = class extends Command {
       .catch(() => message.reply('Unable to DM user.'));
 
     // Check if guild has logs channel
-    let logsChan = this.client.db.settings.get(message.guild.id, "modlogschannel");
-    if (logsChan && message.guild.channels.get(logsChan)) {
-      logsChan = message.guild.channels.get(logsChan);
-      logsChan.send({ embed: this.client.constants.embedTemplates.logs(message, detUser, "Detention", "N/A") });
+    if (gSettings["modlogschannel"] && message.guild.channels.get(gSettings["modlogschannel"])) {
+      message.guild.channels
+        .get(gSettings["modlogschannel"])
+        .send({ embed: this.client.constants.embedTemplates.logs(message, detUser, "Detention", "N/A") });
     }
 
     // Store detention information in appropriate DB
-    this.client.db.detention.set(`${message.guild.id}-${detUser.id}`, detChan.id);
+    await this.client.handlers.db.insert("detention", {
+      "id": `${message.guild.id}-${detUser.id}`,
+      "data": detChan.id
+    });
 
     return message.reply(`${detUser.tag} has been detentioned.`);
   }

@@ -22,27 +22,13 @@ new class extends Client {
     this.events = new Collection();
     this.constants = require("./Constants.js");
 
-    // Init Database Tables (Enmap)
-    this.db = {};
-    this.db.detention = new Enmap({ name: "detention", fetchAll: true });
-    this.db.dynamicVC = new Enmap({ name: "dynamicVC", fetchAll: true });
-    this.db.emojiStats = new Enmap({ name: "emojiStats", fetchAll: true });
-    this.db.modNotes = new Enmap({ name: "modNotes", fetchAll: true });
-    this.db.settings = new Enmap({ name: "settings", fetchAll: true });
-    this.db.starboard = new Enmap({ name: "starboard", fetchAll: true });
-    this.db.tempModActions = new Enmap({ name: "tempModActions", fetchAll: true });
-
     // Load Global Handlers
     this.handlers = {};
     this.handlers.autoMod = new (require("./handlers/autoMod.js"))(this);
+    this.handlers.db = new(require("./handlers/database.js"))(this);
     this.handlers.modNotes = new (require("./handlers/modNotes.js"))(this);
     this.handlers.starboard = new (require("./handlers/starboard.js"))(this);
     this.handlers.timers = new (require("./handlers/timers.js"))(this);
-
-    // [SH] Init r/smashbros Specific DB Tables / Handlers
-    if (!this.config["selfhost"]) {
-      this.db.activityStats = new Enmap({ name: "activityStats", fetchAll: true });
-    }
 
     // Run Init Functions
     this._init();

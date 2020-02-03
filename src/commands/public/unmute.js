@@ -26,10 +26,12 @@ module.exports = class extends Command {
     const member = await message.guild.members.fetch(user).catch(() => null);
 
     // Fetch guild settings and mute channel
-    const gSettings = this.client.db.settings.get(message.guild.id);
-    let muteChan = this.client.db.detention.get(`${message.guild.id}-${user.id}`);
+    const gSettings =  await this.client.handlers.db.get("settings", message.guild.id);
     let logsChan = gSettings["modlogschannel"];
     let muteRole = gSettings["mutedrole"];
+
+    let muteChan = await this.client.handlers.db.get("detention", `${message.guild.id}-${user.id}`);
+    if (muteChan) muteChan = muteChan["data"];
 
     // Check if mutedrole setting is still valid
     if (!muteRole || !message.guild.roles.get(muteRole)) return message.reply("The muted role is either not set or no longer exists");
@@ -69,8 +71,8 @@ module.exports = class extends Command {
     else if (muteChan && message.guild.channels.get(muteChan)) message.guild.channels.get(muteChan).delete();
 
     // Purge DBs of all mute references.
-    this.client.db.tempModActions.delete(`${message.guild.id}-${user.id}`);
-    this.client.db.detention.delete(`${message.guild.id}-${user.id}`);
+    await this.client.handlers.db.delete("tempmodactions", `${message.guild.id}-${user.id}`);
+    await this.client.handlers.db.delete("detention", `${message.guild.id}-${user.id}`);
 
     // Append unmute to user's mod notes DB entry
     this.client.handlers.modNotes.addAction(message, user, message.author, `Unmute`, match[2]);

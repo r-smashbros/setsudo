@@ -34,14 +34,18 @@ module.exports = class extends Command {
     await member.ban();
 
     // Check if guild has logs channel
-    let logsChan = this.client.db.settings.get(message.guild.id, "modlogschannel");
-    if (logsChan && message.guild.channels.get(logsChan)) {
-      logsChan = message.guild.channels.get(logsChan);
-      logsChan.send({ embed: this.client.constants.embedTemplates.logs(message, user, `Tempban (${match[2]} days)`, match[3]) });
+    const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
+    if (gSettings["modlogschannel"] && message.guild.channels.get(gSettings["modlogschannel"])) {
+      message.guild.channels
+        .get(gSettings["modlogschannel"])
+        .send({ embed: this.client.constants.embedTemplates.logs(message, user, `Tempban (${match[2]} days)`, match[3]) });
     }
 
     // Store tempban information in DB
-    this.client.db.tempModActions.set(`${message.guild.id}-${user.id}`, { action: "tempban", endTime });
+    await this.client.handlers.db.insert("tempmodactions", {
+      "id": `${message.guild.id}-${user.id}`,
+      "data": { action: "tempban", endTime }
+    });
 
     // Append tempban to user's mod notes DB entry
     this.client.handlers.modNotes.addAction(message, user, message.author, `Tempban (${match[2]}d)`, match[3]);

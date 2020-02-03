@@ -25,11 +25,14 @@ module.exports = class extends Command {
     const mObj = {}, mArr = [];
     let vStr = "";
 
+    let activityStats = await this.client.handlers.db.get("activitystats");
+    activityStats = activityStats.map(entry => [ entry["id"], entry["data"]]);
+
     // Loop over each entry in the activityStats DB
-    this.client.db.activityStats.forEach((v, k) => {
+    activityStats.forEach(entry => {
       // Separate actions and messages for sorting
-      aArr.push([k, v["actions"]]);
-      mArr.push([k, v["messages"]]);
+      aArr.push([entry[0], entry[1]["actions"]]);
+      mArr.push([entry[0], entry[1]["messages"]]);
     });
 
     // Sort action and message counts
@@ -69,7 +72,7 @@ module.exports = class extends Command {
     await message.channel.send({ embed: vEmbed });
 
     // Clear stats if the "--clear" flag was present
-    if (clearStats) this.client.db.activityStats.deleteAll();
+    if (clearStats) await this.client.handlers.db.deleteAll("activitystats");
   }
 
   /**

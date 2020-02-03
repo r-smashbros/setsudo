@@ -31,10 +31,11 @@ module.exports = class extends Command {
     await member.kick();
 
     // Check if guild has logs channel
-    let logsChan = this.client.db.settings.get(message.guild.id, "modlogschannel");
-    if (logsChan && message.guild.channels.get(logsChan)) {
-      logsChan = message.guild.channels.get(logsChan);
-      logsChan.send({ embed: this.client.constants.embedTemplates.logs(message, user, "Kick", match[2]) });
+    const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
+    if (gSettings["modlogschannel"] && message.guild.channels.get(gSettings["modlogschannel"])) {
+      message.guild.channels
+        .get(gSettings["modlogschannel"])
+        .send({ embed: this.client.constants.embedTemplates.logs(message, user, "Kick", match[2]) });
     }
 
     // Add kick to the user's mod notes DB entry

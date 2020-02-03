@@ -24,7 +24,7 @@ module.exports = class extends Command {
     }
 
     // Fetch guild settings
-    const gSettings = this.client.db.settings.get(message.guild.id);
+    const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
 
     // If no setting is provided, list possible options
     if (!match[1]) return message.reply(`No setting provided. ${this.possibleSettings}`);
@@ -80,7 +80,7 @@ module.exports = class extends Command {
 
     // Update guild settings
     gSettings[setting] = channel.id;
-    this.client.db.settings.set(message.guild.id, gSettings);
+    this.client.handlers.db.update("settings", message.guild.id, gSettings);
 
     return `Setting \`${setting}\` set to \`${channel.name}\``;
   }
@@ -103,7 +103,7 @@ module.exports = class extends Command {
 
     // Update guild settings
     gSettings[setting] = role.id;
-    this.client.db.settings.set(message.guild.id, gSettings);
+    this.client.handlers.db.update("settings", message.guild.id, gSettings);
 
     return `Setting \`${setting}\` set to \`${role.name}\``;
   }

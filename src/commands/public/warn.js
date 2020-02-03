@@ -28,10 +28,11 @@ module.exports = class extends Command {
       .catch(() => message.reply("Unable to DM user."));
 
     // Check if there is a log channel and send the log information
-    let logsChan = this.client.db.settings.get(message.guild.id, "modlogschannel");
-    if (logsChan && message.guild.channels.get(logsChan)) {
-      logsChan = message.guild.channels.get(logsChan);
-      logsChan.send({ embed: this.client.constants.embedTemplates.logs(message, user, `Warn`, match[2]) });
+    const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
+    if (gSettings["modlogschannel"] && message.guild.channels.get(gSettings["modlogschannel"])) {
+      message.guild.channels
+        .get(gSettings["modlogschannel"])
+        .send({ embed: this.client.constants.embedTemplates.logs(message, user, `Warn`, match[2]) });
     }
 
     // Append warn to the user's mod notes DB entry
