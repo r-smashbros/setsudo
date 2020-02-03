@@ -17,7 +17,7 @@ class Starboard {
    */
   addSB(message, channelID, emojiUnicode, emojiName, emojiID, limit) {
     return new Promise(async (resolve, reject) => {
-      const gSettings = await this.client.handlers.db.get("settings". message.guild.id);
+      const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
 
       if (gSettings["starboard"][channelID])
         return reject(`${channelID} already has a starboard set. Starboards are limited to one per channel. Remove it and try again.`);
@@ -38,7 +38,7 @@ class Starboard {
    */
   listServerSB(message) {
     return new Promise(async (resolve, reject) => {
-      const gSettings = await this.client.handlers.db.get("settings". message.guild.id);
+      const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
       let toSend = `__**Starboards for ${message.guild.name}**__\`\`\`md\n`;
 
       // Check if guild has any starboards
@@ -66,7 +66,7 @@ class Starboard {
    */
   removeSB(message, id) {
     return new Promise(async (resolve, reject) => {
-      const gSettings = await this.client.handlers.db.get("settings". message.guild.id);
+      const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
 
       if (!Object.keys(gSettings["starboard"]).length) return reject("There are no starboards.");
       if (!gSettings["starboard"][id]) return reject(`No entry was found for channel ID ${id}`);
