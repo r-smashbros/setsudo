@@ -39,7 +39,7 @@ module.exports = class extends Event {
         (ctx.channel.parent.id === this.client.config["servSpec"]["modCat"] || ctx.channel.parent.id === this.client.config["servSpec"]["voteCat"])
       ) {
         if(!await this.client.handlers.db.has("activitystats", ctx.author.id))
-          await this.client.handlers.db.insert({
+          await this.client.handlers.db.insert("activitystats", {
             "id": ctx.author.id,
             "data": { "actions": 0, "messages": 1 }
           });
