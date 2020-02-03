@@ -21,7 +21,7 @@ module.exports = class extends Command {
     if (!match) return message.reply("Invalid Syntax: silence <user-id/mention> <time-in-minutes> <reason>");
 
     // Fetch mute role if possible
-    const gSettings = this.client.db.settings.get(message.guild.id);
+    const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
     let muteRole = gSettings["mutedrole"];
     if (!muteRole || !message.guild.roles.get(muteRole)) return message.reply("The muted role is either not set or no longer exists");
     muteRole = message.guild.roles.get(muteRole);
@@ -39,14 +39,17 @@ module.exports = class extends Command {
       .catch(() => message.reply("Unable to DM user."));
 
     // Check if the guild has a logs channel
-    let logsChan = this.client.db.settings.get(message.guild.id, "modlogschannel");
-    if (logsChan && message.guild.channels.get(logsChan)) {
-      logsChan = message.guild.channels.get(logsChan);
-      logsChan.send({ embed: this.client.constants.embedTemplates.logs(message, user, `Silence (${match[2]} minutes)`, match[3]) });
+    if (gSettings["modlogschannel"] && message.guild.channels.get(gSettings["modlogschannel"])) {
+      message.guild.channels
+        .get(gSettings["modlogschannel"])
+        .send({ embed: this.client.constants.embedTemplates.logs(message, user, `Silence (${match[2]} minutes)`, match[3]) });
     }
 
     // Store silence information in timer DB
-    this.client.db.tempModActions.set(`${message.guild.id}-${user.id}`, { action: "silence", endTime });
+    await this.client.handlers.db.insert("tempmodactions", {
+      "id": `${message.guild.id}-${user.id}`,
+      "data": { action: "silence", endTime }
+    });
 
     // Append silence to the user's mod notes DB entry
     this.client.handlers.modNotes.addAction(message, user, message.author, `Silence (${match[2]}m)`, match[3]);

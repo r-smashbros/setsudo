@@ -18,7 +18,7 @@ module.exports = class extends Command {
    * @returns {Message} The response to the command
    */
   async execute(message) {
-    const gSettings = this.client.db.settings.get(message.guild.id);
+    const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
 
     let detRole = gSettings["detentionrole"];
 
@@ -35,14 +35,14 @@ module.exports = class extends Command {
     detRole = message.guild.roles.get(detRole);
 
     // Attempt to fetch detention channel
-    let detChan = this.client.db.detention.get(`${message.guild.id}-${detUser.id}`);
+    let detChan = await this.client.handlers.db.get("detention", `${message.guild.id}-${detUser.id}`);
     if (!detChan) return message.reply(`${detUser.tag} is not currently detentioned.`);
 
     // Remove detention role
     detMember.roles.remove(detRole);
 
     // Fetch and format detention channel messages
-    detChan = message.guild.channels.get(detChan);
+    detChan = message.guild.channels.get(detChan["data"]);
     let muteChanMsg = await this.client.getChanMsg(detChan);
     muteChanMsg = muteChanMsg
       .map(m => `${moment(m.createdAt).format("dddd MMMM Do, YYYY, hh:mm A")} | ${m.author.tag} (${m.author.id}):\n${m.content}`)
@@ -68,7 +68,7 @@ module.exports = class extends Command {
 
     // Delete the detention channel and DB entry
     await detChan.delete(`${message.author.tag} removed ${detUser.tag} from detention`);
-    this.client.db.detention.delete(`${message.guild.id}-${detUser.id}`);
+    await this.client.handlers.db.delete("detention", `${message.guild.id}-${detUser.id}`);
 
     return message.reply(`${detUser.tag} has been removed from detention`);
   }

@@ -20,7 +20,7 @@ module.exports = class extends Command {
     const match = /(?:mute)\s+(?:(?:<@!?)?(\d{17,20})>?)(?:\s+(?:(\d+)\s*d(?:ays)?)?\s*(?:(\d+)\s*h(?:ours|rs|r)?)?\s*(?:(\d+)\s*m(?:inutes|in)?)?\s*(?:(\d+)\s*s(?:econds|ec)?)?)(?:\s+([\w\W]+))/.exec(message.content);
     if (!match) return message.reply("Invalid Syntax: mute <user-id/mention> <#d#h#m#s> <reason>");
 
-    const gSettings = this.client.db.settings.get(message.guild.id);
+    const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
 
     let detCat = gSettings["detentioncategory"];
     let muteRole = gSettings["mutedrole"];
@@ -36,7 +36,8 @@ module.exports = class extends Command {
     muteRole = message.guild.roles.get(muteRole);
 
     // Prevent a user from being muted twice
-    if (this.client.db.detention.get(`${message.guild.id}-${muteUser.id}`)) return message.reply(`${muteUser.tag} is already muted`);
+    if (await this.client.handlers.db.has("detention", `${message.guild.id}-${muteUser.id}`)) 
+      return message.reply(`${muteUser.tag} is already muted`);
 
     detCat = message.guild.channels.get(detCat);
 
@@ -72,15 +73,22 @@ module.exports = class extends Command {
       .catch(() => message.reply('Unable to DM user.'));
 
     // Check if the guild has a logs channel
-    let logsChan = this.client.db.settings.get(message.guild.id, "modlogschannel");
-    if (logsChan && message.guild.channels.get(logsChan)) {
-      logsChan = message.guild.channels.get(logsChan);
-      logsChan.send({ embed: this.client.constants.embedTemplates.logs(message, muteUser, `Mute (${muteLengthStr})`, match[6]) });
+    if (gSettings["modlogschannel"] && message.guild.channels.get(gSettings["modlogschannel"])) {
+      message.guild.channels
+        .get(gSettings["modlogschannel"])
+        .send({ embed: this.client.constants.embedTemplates.logs(message, muteUser, `Mute (${muteLengthStr})`, match[6]) });
     }
 
     // Store mute in corresponding DBs
-    this.client.db.tempModActions.set(`${message.guild.id}-${muteUser.id}`, { action: "mute", endTime });
-    this.client.db.detention.set(`${message.guild.id}-${muteUser.id}`, muteChan.id);
+    await this.client.handlers.db.insert("tempmodactions", {
+      "id": `${message.guild.id}-${muteUser.id}`,
+      "data": { action: "mute", endTime }
+    });
+
+    await this.client.handlers.db.insert("detention", {
+      "id": `${message.guild.id}-${muteUser.id}`,
+      "data": muteChan.id
+    });
 
     // Add mute to the user's mod notes DB entry
     this.client.handlers.modNotes.addAction(message, muteUser, message.author, `Mute (${muteLengthStr})`, match[6]);

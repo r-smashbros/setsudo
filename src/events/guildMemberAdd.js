@@ -15,7 +15,7 @@ module.exports = class extends Event {
    */
   async execute(ctx = null) {
     const guild = ctx.guild;
-    const gSettings = this.client.db.settings.get(guild.id);
+    const gSettings = await this.client.handlers.db.get("settings", guild.id);
 
     if (gSettings["memberlogschannel"] && guild.channels.get(gSettings["memberlogschannel"])) {
       const memberLogsChan = guild.channels.get(gSettings["memberlogschannel"]);

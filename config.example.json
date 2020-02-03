@@ -5,5 +5,10 @@
     "token": "",
     "owner": ""
   },
+  "database": {
+    "creds": {
+      "db": ""
+    }
+  },
   "hastebinURL": "https://hastebin.com"
 }

@@ -15,8 +15,8 @@ module.exports = class extends Event {
    * @param {VoiceState} newState New instance of a member's VoiceState
    */
   execute(oldState, newState) {
-    const gSettings = this.client.db.settings.get(oldState.guild.id);
-    
+    const gSettings = this.client.handlers.db.get("settings", oldState.guild.id);
+
     this._handleVCLogging(oldState, newState, gSettings);
     this._handleDynamicVC(oldState, newState, gSettings);
   }
@@ -92,7 +92,7 @@ module.exports = class extends Event {
 
     const createVC = oldState.guild.channels.get(gSettings["dynamicvcbasevc"]);
 
-    const vcDBEntry = this.client.db.dynamicVC.get(`${oldState.guild.id}-${oldState.member.id}`);
+    const vcDBEntry = this.client.handlers.db.get("dynamicvc", `${oldState.guild.id}-${oldState.member.id}`);
 
     // Handle new VC creation
     if (!vcDBEntry && newState.channelID === gSettings["dynamicvcbasevc"]) {
@@ -132,21 +132,24 @@ module.exports = class extends Event {
         ]
       });
 
-      this.client.db.dynamicVC.set(`${newState.guild.id}-${newState.member.id}`, { main: mainChannel.id, secondary: secondaryChannel.id});
+      await this.client.handlers.db.insert("dynamicvc", {
+        "id": `${newState.guild.id}-${newState.member.id}`,
+        "data": { main: mainChannel.id, secondary: secondaryChannel.id }
+      });
 
       // Move the user to the new dynamic VC
       newState.setChannel(mainChannel).catch(e => console.error("Cannot move member - voiceStateUpdate event"));
     }
 
     // Handle VC deletion
-    if (vcDBEntry && (!newState.channelID || newState.channelID !== vcDBEntry["main"])) {
-      const mainChannel = newState.guild.channels.get(vcDBEntry["main"]);
-      const secondaryChannel = newState.guild.channels.get(vcDBEntry["secondary"]);
+    if (vcDBEntry && (!newState.channelID || newState.channelID !== vcDBEntry["data"]["main"])) {
+      const mainChannel = newState.guild.channels.get(vcDBEntry["data"]["main"]);
+      const secondaryChannel = newState.guild.channels.get(vcDBEntry["data"]["secondary"]);
 
       if (mainChannel) mainChannel.delete().catch(e => console.error("Cannot delete VC - voiceStateUpdate event"));
       if (secondaryChannel) secondaryChannel.delete().catch(e => null);
-      
-      this.client.db.dynamicVC.delete(`${oldState.guild.id}-${oldState.member.id}`);
+
+      await this.client.handlers.db.delete("dynamicvc", `${oldState.guild.id}-${oldState.member.id}`);
 
       // Allow user to create more dynamic VCs
       createVC.permissionOverwrites.get(oldState.member.id).delete();

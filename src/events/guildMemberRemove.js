@@ -15,7 +15,7 @@ module.exports = class extends Event {
    */
   async execute(ctx = null) {
     const guild = ctx.guild;
-    const gSettings = this.client.db.settings.get(guild.id);
+    const gSettings = await this.client.handlers.db.get("settings", guild.id);
 
     if (gSettings["memberlogschannel"] && guild.channels.get(gSettings["memberlogschannel"])) {
       const memberLogsChan = guild.channels.get(gSettings["memberlogschannel"]);
@@ -29,9 +29,9 @@ module.exports = class extends Event {
     }
 
     // Attempt to fetch the user's detention channel and return if it doesn't exist
-    let detChan = this.client.db.detention.get(`${guild.id}-${ctx.user.id}`);
+    let detChan = await this.client.handlers.db.get("detention", `${guild.id}-${ctx.user.id}`);
     if (!detChan) return;
-    detChan = guild.channels.get(detChan);
+    detChan = guild.channels.get(detChan["data"]);
 
     // Check if the guild has a logs channel
     if (gSettings["modlogschannel"] && guild.channels.get(gSettings["modlogschannel"])) {
@@ -54,7 +54,7 @@ module.exports = class extends Event {
 
     // Delete detention channel and all related DB entries
     detChan.delete();
-    this.client.db.detention.delete(`${guild.id}-${ctx.user.id}`);
-    this.client.db.tempModActions.delete(`${guild.id}-${ctx.user.id}`);
+    await this.client.handlers.db.delete("detention", `${guild.id}-${ctx.user.id}`);
+    await this.client.handlers.db.delete("tempmodactions", `${guild.id}-${ctx.user.id}`);
   }
 };

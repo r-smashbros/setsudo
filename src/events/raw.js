@@ -27,36 +27,36 @@ module.exports = class extends Event {
    */
   async _handleReaction(data, action) {
     const reaction = data.d;
-    
+
     // Fetch reaction user
     const user = await this.client.users.fetch(reaction.user_id).catch(() => null);
     if (user === null) return;
 
     // Fetch reaction channel
     const channel = this.client.channels.get(reaction.channel_id);
-    
+
     // Check if reaction channel is valid, of proper type, and is viewable to the bot
     if (!channel || channel.type !== "text" || channel.permissionsFor(this.client.user).has("VIEW_CHANNEL") === false) return;
-    
+
     // Fetch reaction message
     const message = await channel.messages.fetch(reaction.message_id);
 
     // Fetch guild settings and check if the server has starboards
-    const gSettings = this.client.db.settings.get(message.guild.id);
+    const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
     if (!Object.keys(gSettings["starboard"]).length) return;
 
     // Loop over guild starboards
     for (const [id, val] of Object.entries(gSettings["starboard"])) {
-      
+
       // Check if the reaction matches either the stored ID or stored name for the starboard
       if (
         (val["emoji"]["unicode"] && reaction.emoji.name === val["emoji"]["name"]) ||
         (!val["emoji"]["unicode"] && reaction.emoji.id === val["emoji"]["id"])
       ) {
-        if (this.client.db.starboard.has(`${channel.id}-${message.id}`))
-          return this._handleUpdate(message, id, val, this.client.db.starboard.get(`${channel.id}-${message.id}`), action);
-        else
-          return this._handleNew(message, id, val);
+        if (await this.client.handlers.db.has("starboard", `${channel.id}-${message.id}`)) {
+          const sbSet = await this.client.handlers.db.get("starboard", `${channel.id}-${message.id}`);
+          return this._handleUpdate(message, id, val, sbSet["data"], action);
+        } else return this._handleNew(message, id, val);
       }
     }
   }
@@ -74,7 +74,7 @@ module.exports = class extends Event {
 
     // Filter out extra/invalid emoji
     const reactions = message.reactions.filter(r => r._emoji.name === emojiData["name"]);
-    
+
     // Check if the starboard reaction is present and above the required amount
     if (reactions.size < 1 || sbSet["limit"] > reactions.first().count) return;
 
@@ -96,12 +96,13 @@ module.exports = class extends Event {
     );
 
     // Store the new starboard entry in the starboard DB
-    this.client.db.starboard.set(`${message.channel.id}-${message.id}`,
-      {
+    await this.client.handlers.db.insert("starboard", {
+      "id": `${message.channel.id}-${message.id}`,
+      "data": {
         "sbEntryID": `${sbChanID}-${msg.id}`,
         "count": sbSet["limit"]
       }
-    );
+    });
 
   }
 
@@ -126,7 +127,7 @@ module.exports = class extends Event {
 
     // Check if the starboard reaction is present and above the required amount
     if (reactions.size < 1 || sbSet["limit"] > reactions.first().count) {
-      this.client.db.starboard.delete(`${message.channel.id}-${message.id}`);
+      await this.client.handlers.db.delete("starboard", `${message.channel.id}-${message.id}`);
       return msg.delete();
     }
 
@@ -154,12 +155,13 @@ module.exports = class extends Event {
       );
 
       // Store the new starboard entry in the starboard DB
-      this.client.db.starboard.set(`${message.channel.id}-${message.id}`,
-        {
+      await this.client.handlers.db.insert("starboard", {
+        "id": `${message.channel.id}-${message.id}`,
+        "data": {
           "sbEntryID": `${sbChanID}-${msg.id}`,
-          "count": sbData["count"]
+          "count": sbSet["limit"]
         }
-      );
+      });
 
       return;
     }
@@ -168,12 +170,13 @@ module.exports = class extends Event {
     msg.edit(`${emojiData["unicode"] ? emojiData["name"] : `<:${emojiData["name"]}:${emojiData["id"]}>`} ${sbData["count"]} <#${message.channel.id}> ID: ${message.id}`, { embed: message.embeds[0] });
 
     // Store updated reaction count within starboard DB
-    this.client.db.starboard.set(`${message.channel.id}-${message.id}`,
-      {
-        "sbEntryID": sbData["sbEntryID"],
-        "count": sbData["count"]
+    await this.client.handlers.db.insert("starboard", {
+      "id": `${message.channel.id}-${message.id}`,
+      "data": {
+        "sbEntryID": `${sbChanID}-${msg.id}`,
+        "count": sbSet["limit"]
       }
-    );
+    });
 
     return;
   }

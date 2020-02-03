@@ -17,7 +17,10 @@ module.exports = class extends Command {
    */
   async execute(message) {
     // Sort emojistats DB in descending order
-    const sorted = new Map([...this.client.db.emojiStats.entries()].sort((a, b) => b[1] - a[1]));
+    let emojiStats = await this.client.handlers.db.get("emojistats");
+    emojiStats = emojiStats.map(entry => [entry["id"], Number(entry["data"])]);
+
+    const sorted = new Map([emojiStats].sort((a, b) => b[1] - a[1]));
     const emojiList = message.guild.emojis.map(e => e.name);
     let msg = `\`\`\`asciidoc\n= Emoji stats for ${message.guild.name}\n`;
 

@@ -14,11 +14,11 @@ module.exports = class extends Event {
    * @param {Message} oldMsg The original version of the message
    * @param {Message} newMsg The updated version of the message
    */
-  execute(oldMsg, newMsg) {
+  async execute(oldMsg, newMsg) {
     if (oldMsg.content === newMsg.content) return;
 
     const guild = oldMsg.guild;
-    const gSettings = this.client.db.settings.get(guild.id);
+    const gSettings = await this.client.handlers.db.get("settings". guild.id);
 
     if (gSettings["messagelogschannel"] && guild.channels.get(gSettings["messagelogschannel"])) {
       const messageLogsChan = guild.channels.get(gSettings["messagelogschannel"]);

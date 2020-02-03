@@ -20,7 +20,12 @@ module.exports = class extends Event {
     if (ctx.channel.type !== "text") return;
 
     // Create guild settings if they don't exist
-    if (!this.client.db.settings.has(ctx.guild.id)) this.client.db.settings.set(ctx.guild.id, this.client.constants.defaultSettings);
+    if (!await this.client.handlers.db.has("settings", ctx.guild.id)) {
+      const defaultSettings = JSON.parse(JSON.stringify(this.client.constants.defaultSettings));
+      defaultSettings["id"] = ctx.guild.id;
+      
+      await this.client.handlers.db.insert("settings", defaultSettings);
+    }
 
     // Check for automod violations
     await this.autoModCheck(ctx);
@@ -33,9 +38,16 @@ module.exports = class extends Event {
         ctx.guild.id === this.client.config["servSpec"]["modServ"] &&
         (ctx.channel.parent.id === this.client.config["servSpec"]["modCat"] || ctx.channel.parent.id === this.client.config["servSpec"]["voteCat"])
       ) {
-        if (!this.client.db.activityStats.has(ctx.author.id))
-          this.client.db.activityStats.set(ctx.author.id, { "actions": 0, "messages": 1 });
-        else this.client.db.activityStats.inc(ctx.author.id, "messages");
+        if(!await this.client.handlers.db.has("activitystats", ctx.author.id))
+          await this.client.handlers.db.insert({
+            "id": ctx.author.id,
+            "data": { "actions": 0, "messages": 1 }
+          });
+        else {
+          const activityData = await this.client.handlers.db.get("activitystats", ctx.author.id);
+          activityData["data"]["messages"]++;
+          await this.client.handlers.db.update("activitystats", ctx.author.id, activityData);
+        }
       }
 
       // Focused Opt-In
@@ -51,8 +63,15 @@ module.exports = class extends Event {
     while ((emojiArray = emojiRegex.exec(ctx.content))) {
       if (!ctx.guild.emojis.has(emojiArray[2])) continue;
 
-      if (!this.client.db.emojiStats.has(emojiArray[2])) this.client.db.emojiStats.set(emojiArray[2], 1);
-      else this.client.db.emojiStats.set(emojiArray[2], Number(this.client.db.emojiStats.get(emojiArray[2])) + 1);
+      if (!await this.client.handlers.db.has("emojistats", emojiArray[2])) await this.client.handlers.db.insert("emojiStats", {
+        "id": emojiArray[2],
+        "data": 1
+      });
+      else {
+        const emojiStats = await this.client.handlers.db.get("emojistats", emojiArray[2]);
+        emojiStats["data"]++;
+        await this.client.handlers.db.update("emojistats", emojiArray[2], emojiStats);
+      }
     }
 
     // Check if message starts with prefix and slice it off if so
@@ -101,7 +120,7 @@ module.exports = class extends Event {
    * @param {Message} message The message to be processed
    */
   async autoModCheck(message) {
-    const gSettings = this.client.db.settings.get(message.guild.id);
+    const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
 
     // Check if guild has anything in its automod list
     if (gSettings["automodlist"] && gSettings["automodlist"].length) {

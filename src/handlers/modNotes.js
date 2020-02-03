@@ -15,9 +15,14 @@ class ModNotes {
    * 
    * @returns {object} The affected user's mod notes DB entry
    */
-  _init(message, user) {
-    this.client.db.modNotes.set(`${message.guild.id}-${user.id}`, this.client.constants.defaultNotes);
-    return this.client.db.modNotes.get(`${message.guild.id}-${user.id}`);
+  async _init(message, user) {
+    await this.client.handlers.db.insert("modnotes", {
+      "id": `${message.guild.id}-${user.id}`,
+      "data": this.client.constants.defaultNotes
+    });
+
+    const notes = await this.client.handlers.db.get("modnotes", `${message.guild.id}-${user.id}`);
+    return notes;
   }
 
   /**
@@ -41,29 +46,38 @@ class ModNotes {
    * 
    * @returns {Promise<>} An empty resolved promise
    */
-  addNote(message, user, mod, note) {
+  async addNote(message, user, mod, note) {
 
     // [SH] Handle stats if not self-hosted
     if (!this.client.config["selfhost"]) {
-      if (!this.client.db.activityStats.has(message.author.id))
-        this.client.db.activityStats.set(message.author.id, {
-          "actions": 1,
-          "messages": 0
+      if (!await this.client.handlers.db.has("activitystats", message.author.id))
+        await this.client.handlers.db.insert("activitystats", {
+          "id": message.author.id,
+          "data": {
+            "actions": 1,
+            "messages": 0
+          }
         });
-      else this.client.db.activityStats.inc(message.author.id, "actions");
+      else {
+        const stats = await this.client.handlers.db.get("activitystats", message.author.id);
+        stats["data"]["actions"]++;
+        await this.client.handlers.db.update("activitystats", message.author.id, stats);
+      }
     }
 
-    return new Promise((resolve, reject) => {
-      const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init(message, user);
+    return new Promise(async (resolve, reject) => {
+      const userNotes = await this.client.handlers.db.has("modnotes", `${message.guild.id}-${user.id}`) ?
+        await this.client.handlers.db.get("modnotes", `${message.guild.id}-${user.id}`) :
+        await this._init(message, user);
 
       // Append templated mod note to user notes
-      userNotes["notes"].push({
+      userNotes["data"]["notes"].push({
         "mod": `${mod.tag} (${mod.id})`,
         "note": note,
         "date": this._getDateString()
       });
 
-      this.client.db.modNotes.set(`${message.guild.id}-${user.id}`, userNotes);
+      await this.client.handlers.db.update("modnotes", `${message.guild.id}-${user.id}`, userNotes);
       return resolve();
     });
   }
@@ -79,12 +93,14 @@ class ModNotes {
    * @returns {Promise<string>|Promise<>} An empty resolved promise or a rejected promise with an error
    */
   editNote(message, user, nNum, note) {
-    
+
     // Arrays start at zero
     nNum = Number(nNum) - 1;
-    
-    return new Promise((resolve, reject) => {
-      const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init(message, user);
+
+    return new Promise(async (resolve, reject) => {
+      const userNotes = await this.client.handlers.db.has("modnotes", `${message.guild.id}-${user.id}`) ?
+        await this.client.handlers.db.get("modnotes", `${message.guild.id}-${user.id}`) :
+        await this._init(message, user);
       if (userNotes === this.client.constants.defaultNotes) return reject("User has no entries");
 
       if (!userNotes["notes"][nNum]) return reject(`Note #${nNum + 1} does not exist for ${user.id}`);
@@ -92,7 +108,7 @@ class ModNotes {
       // Update note reason
       userNotes["notes"][nNum].note = note;
 
-      this.client.db.modNotes.set(`${message.guild.id}-${user.id}`, userNotes);
+      await this.client.handlers.db.update("modnotes", `${message.guild.id}-${user.id}`, userNotes);
       return resolve();
     });
   }
@@ -107,12 +123,14 @@ class ModNotes {
    * @returns {Promise<string>|Promise<>} An empty resolved promise or a rejected promise with an error
    */
   removeNote(message, user, nNum) {
-    
+
     // Arrays start at zero
     nNum = Number(nNum) - 1;
 
-    return new Promise((resolve, reject) => {
-      const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init(message, user);
+    return new Promise(async (resolve, reject) => {
+      const userNotes = await this.client.handlers.db.has("modnotes", `${message.guild.id}-${user.id}`) ?
+        await this.client.handlers.db.get("modnotes", `${message.guild.id}-${user.id}`) :
+        await this._init(message, user);
       if (userNotes === this.client.constants.defaultNotes) return reject("User has no entries");
 
       if (!userNotes["notes"][nNum]) return reject(`Note #${nNum + 1} does not exist for ${user.id}`);
@@ -120,7 +138,7 @@ class ModNotes {
       // Remove note entry
       userNotes["notes"].splice(nNum, 1);
 
-      this.client.db.modNotes.set(`${message.guild.id}-${user.id}`, userNotes);
+      await this.client.handlers.db.update("modnotes", `${message.guild.id}-${user.id}`, userNotes);
       return resolve();
     });
   }
@@ -134,8 +152,10 @@ class ModNotes {
    * @returns {Promise<string>|Promise<MessageEmbed>} A promise with a formatted list of mod notes or a promise with a MessageEmbed instance
    */
   listNotes(message, user) {
-    return new Promise((resolve, reject) => {
-      const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init(message, user);
+    return new Promise(async (resolve, reject) => {
+      const userNotes = await this.client.handlers.db.has("modnotes", `${message.guild.id}-${user.id}`) ?
+        await this.client.handlers.db.get("modnotes", `${message.guild.id}-${user.id}`) :
+        await this._init(message, user);
 
       let desc = "";
 
@@ -182,20 +202,29 @@ class ModNotes {
    * 
    * @returns {Promise<>} An empty resolved promise
    */
-  addAction(message, user, mod, action, reason) {
+  async addAction(message, user, mod, action, reason) {
 
     // [SH] Handle stats if not self-hosted
     if (!this.client.config["selfhost"]) {
-      if (!this.client.db.activityStats.has(message.author.id))
-        this.client.db.activityStats.set(message.author.id, {
-          "actions": 1,
-          "messages": 0
+      if (!await this.client.handlers.db.has("activitystats", message.author.id))
+        await this.client.handlers.db.insert("activitystats", {
+          "id": message.author.id,
+          "data": {
+            "actions": 1,
+            "messages": 0
+          }
         });
-      else this.client.db.activityStats.inc(message.author.id, "actions");
+      else {
+        const stats = await this.client.handlers.db.get("activitystats", message.author.id);
+        stats["data"]["actions"]++;
+        await this.client.handlers.db.update("activitystats", message.author.id, stats);
+      }
     }
 
-    return new Promise((resolve, reject) => {
-      const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init(message, user);
+    return new Promise(async (resolve, reject) => {
+      const userNotes = await this.client.handlers.db.has("modnotes", `${message.guild.id}-${user.id}`) ?
+        await this.client.handlers.db.get("modnotes", `${message.guild.id}-${user.id}`) :
+        await this._init(message, user);
 
       // Append templated mod action to user notes
       userNotes["actions"].push({
@@ -205,7 +234,7 @@ class ModNotes {
         "date": this._getDateString()
       });
 
-      this.client.db.modNotes.set(`${message.guild.id}-${user.id}`, userNotes);
+      await this.client.handlers.db.update("modnotes", `${message.guild.id}-${user.id}`, userNotes);
       return resolve();
     });
   }
@@ -225,8 +254,10 @@ class ModNotes {
     // Arrays start at zero
     aNum = Number(aNum) - 1;
 
-    return new Promise((resolve, reject) => {
-      const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init(message, user);
+    return new Promise(async (resolve, reject) => {
+      const userNotes = await this.client.handlers.db.has("modnotes", `${message.guild.id}-${user.id}`) ?
+        await this.client.handlers.db.get("modnotes", `${message.guild.id}-${user.id}`) :
+        await this._init(message, user);
       if (userNotes === this.client.constants.defaultNotes) return reject("User has no entries");
 
       if (!userNotes["actions"][aNum]) return reject(`Action #${aNum + 1} does not exist for ${user.id}`);
@@ -234,7 +265,7 @@ class ModNotes {
       // Update action reason
       userNotes["actions"][aNum].reason = reason;
 
-      this.client.db.modNotes.set(`${message.guild.id}-${user.id}`, userNotes);
+      await this.client.handlers.db.update("modnotes", `${message.guild.id}-${user.id}`, userNotes);
       return resolve();
     });
   }
@@ -249,12 +280,14 @@ class ModNotes {
    * @returns {Promise<string>|Promise<>} An empty resolved promise or a rejected promise with an error
    */
   removeAction(message, user, aNum) {
-    
+
     // Arrays start at zero
     aNum = Number(aNum) - 1;
 
-    return new Promise((resolve, reject) => {
-      const userNotes = this.client.db.modNotes.get(`${message.guild.id}-${user.id}`) || this._init(message, user);
+    return new Promise(async (resolve, reject) => {
+      const userNotes = await this.client.handlers.db.has("modnotes", `${message.guild.id}-${user.id}`) ?
+        await this.client.handlers.db.get("modnotes", `${message.guild.id}-${user.id}`) :
+        await this._init(message, user);
       if (userNotes === this.client.constants.defaultNotes) return reject("User has no entries");
 
       if (!userNotes["actions"][aNum]) return reject(`Action #${aNum + 1} does not exist for ${user.id}`);
@@ -262,7 +295,7 @@ class ModNotes {
       // Remove action entry
       userNotes["actions"].splice(aNum, 1);
 
-      this.client.db.modNotes.set(`${message.guild.id}-${user.id}`, userNotes);
+      await this.client.handlers.db.update("modnotes", `${message.guild.id}-${user.id}`, userNotes);
       return resolve();
     });
   }

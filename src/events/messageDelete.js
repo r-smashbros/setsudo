@@ -12,11 +12,11 @@ module.exports = class extends Event {
    * Entry point for messageDelete event
    * @param {Message} message The deleted message
    */
-  execute(message) {
+  async execute(message) {
     if (!message.content) return;
 
     const guild = message.guild;
-    const gSettings = this.client.db.settings.get(guild.id);
+    const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
 
     if (gSettings["messagelogschannel"] && guild.channels.get(gSettings["messagelogschannel"])) {
       const messageLogsChan = guild.channels.get(gSettings["messagelogschannel"]);

@@ -17,11 +17,10 @@
   },
   "homepage": "https://github.com/SirPacker/Setsudo#readme",
   "dependencies": {
-    "better-sqlite-pool": "^0.2.2",
     "discord.js": "github:discordjs/discord.js",
-    "enmap": "^5.2.4",
     "klaw": "^3.0.0",
     "moment": "^2.24.0",
+    "rethinkdbdash": "^2.3.31",
     "snekfetch": "^4.0.4"
   }
 }
