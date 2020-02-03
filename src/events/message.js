@@ -63,7 +63,7 @@ module.exports = class extends Event {
     while ((emojiArray = emojiRegex.exec(ctx.content))) {
       if (!ctx.guild.emojis.has(emojiArray[2])) continue;
 
-      if (!await this.client.handlers.db.has("emojistats", emojiArray[2])) await this.client.handlers.db.insert("emojiStats", {
+      if (!await this.client.handlers.db.has("emojistats", emojiArray[2])) await this.client.handlers.db.insert("emojistats", {
         "id": emojiArray[2],
         "data": 1
       });
