@@ -8,7 +8,7 @@ class PermissionLevel {
    * 
    * @returns {Array} Array of permission information
    */
-  fetch(client, message) {
+  async fetch(client, message) {
 
     // Fallback to normal guild member
     if (!message.author || !message.member) return [0, "Guild Member"];
@@ -16,8 +16,7 @@ class PermissionLevel {
     if (client.config.discord.owner === message.author.id)
       return [client.constants.perms.dev, "Developer"];
 
-    let gSettings = client.db.settings.get(message.guild.id);
-    if (!gSettings) gSettings = client.db.settings.set(message.guild.id, client.constants.defaultSettings);
+    const gSettings = await client.handlers.db.get("settings", message.guild.id);
 
     if (gSettings['staffrole'] && message.member.roles.some(r => r.id === gSettings['staffrole']))
       return [client.constants.perms.staff, "Staff"];
