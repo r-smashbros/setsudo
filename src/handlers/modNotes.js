@@ -101,12 +101,12 @@ class ModNotes {
       const userNotes = await this.client.handlers.db.has("modnotes", `${message.guild.id}-${user.id}`) ?
         await this.client.handlers.db.get("modnotes", `${message.guild.id}-${user.id}`) :
         await this._init(message, user);
-      if (userNotes === this.client.constants.defaultNotes) return reject("User has no entries");
+      if (userNotes["data"] === this.client.constants.defaultNotes) return reject("User has no entries");
 
-      if (!userNotes["notes"][nNum]) return reject(`Note #${nNum + 1} does not exist for ${user.id}`);
+      if (!userNotes["data"]["notes"][nNum]) return reject(`Note #${nNum + 1} does not exist for ${user.id}`);
 
       // Update note reason
-      userNotes["notes"][nNum].note = note;
+      userNotes["data"]["notes"][nNum].note = note;
 
       await this.client.handlers.db.update("modnotes", `${message.guild.id}-${user.id}`, userNotes);
       return resolve();
@@ -131,12 +131,12 @@ class ModNotes {
       const userNotes = await this.client.handlers.db.has("modnotes", `${message.guild.id}-${user.id}`) ?
         await this.client.handlers.db.get("modnotes", `${message.guild.id}-${user.id}`) :
         await this._init(message, user);
-      if (userNotes === this.client.constants.defaultNotes) return reject("User has no entries");
+      if (userNotes["data"] === this.client.constants.defaultNotes) return reject("User has no entries");
 
-      if (!userNotes["notes"][nNum]) return reject(`Note #${nNum + 1} does not exist for ${user.id}`);
+      if (!userNotes["data"]["notes"][nNum]) return reject(`Note #${nNum + 1} does not exist for ${user.id}`);
 
       // Remove note entry
-      userNotes["notes"].splice(nNum, 1);
+      userNotes["data"]["notes"].splice(nNum, 1);
 
       await this.client.handlers.db.update("modnotes", `${message.guild.id}-${user.id}`, userNotes);
       return resolve();
@@ -161,9 +161,9 @@ class ModNotes {
 
       // Append all mod actions
       desc += "**__Mod Actions__**\n";
-      if (userNotes["actions"].length) {
+      if (userNotes["data"]["actions"].length) {
         // Loop over all actions and append formatted information to string
-        userNotes["actions"].forEach((item, index) => {
+        userNotes["data"]["actions"].forEach((item, index) => {
           desc += `${index + 1}. ${item.mod}・${item.date}\n`;
           desc += `\`\`\`[${item.action}] ${item.reason}\`\`\`\n`;
         });
@@ -171,11 +171,11 @@ class ModNotes {
 
       // Append all mod notes
       desc += "**__Mod Notes__**\n";
-      if (userNotes["notes"].length) {
+      if (userNotes["data"]["notes"].length) {
         // Loop over all notes and append formatted information to string
-        userNotes["notes"].forEach((item, index) => {
+        userNotes["data"]["notes"].forEach((item, index) => {
           desc += `${index + 1}. ${item.mod}・${item.date}\n`;
-          desc += `\`\`\`${item.note}\`\`\`${userNotes["notes"].length === (index + 1) ? "" : "\n"}`;
+          desc += `\`\`\`${item.note}\`\`\`${userNotes["data"]["notes"].length === (index + 1) ? "" : "\n"}`;
         });
       } else desc += "No notes stored";
 
@@ -227,7 +227,7 @@ class ModNotes {
         await this._init(message, user);
 
       // Append templated mod action to user notes
-      userNotes["actions"].push({
+      userNotes["data"]["actions"].push({
         "mod": `${mod.tag} (${mod.id})`,
         "action": action,
         "reason": reason,
@@ -258,12 +258,12 @@ class ModNotes {
       const userNotes = await this.client.handlers.db.has("modnotes", `${message.guild.id}-${user.id}`) ?
         await this.client.handlers.db.get("modnotes", `${message.guild.id}-${user.id}`) :
         await this._init(message, user);
-      if (userNotes === this.client.constants.defaultNotes) return reject("User has no entries");
+      if (userNotes["data"] === this.client.constants.defaultNotes) return reject("User has no entries");
 
-      if (!userNotes["actions"][aNum]) return reject(`Action #${aNum + 1} does not exist for ${user.id}`);
+      if (!userNotes["data"]["actions"][aNum]) return reject(`Action #${aNum + 1} does not exist for ${user.id}`);
 
       // Update action reason
-      userNotes["actions"][aNum].reason = reason;
+      userNotes["data"]["actions"][aNum].reason = reason;
 
       await this.client.handlers.db.update("modnotes", `${message.guild.id}-${user.id}`, userNotes);
       return resolve();
@@ -288,12 +288,12 @@ class ModNotes {
       const userNotes = await this.client.handlers.db.has("modnotes", `${message.guild.id}-${user.id}`) ?
         await this.client.handlers.db.get("modnotes", `${message.guild.id}-${user.id}`) :
         await this._init(message, user);
-      if (userNotes === this.client.constants.defaultNotes) return reject("User has no entries");
+      if (userNotes["data"] === this.client.constants.defaultNotes) return reject("User has no entries");
 
-      if (!userNotes["actions"][aNum]) return reject(`Action #${aNum + 1} does not exist for ${user.id}`);
+      if (!userNotes["data"]["actions"][aNum]) return reject(`Action #${aNum + 1} does not exist for ${user.id}`);
 
       // Remove action entry
-      userNotes["actions"].splice(aNum, 1);
+      userNotes["data"]["actions"].splice(aNum, 1);
 
       await this.client.handlers.db.update("modnotes", `${message.guild.id}-${user.id}`, userNotes);
       return resolve();
