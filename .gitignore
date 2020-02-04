@@ -75,3 +75,7 @@ data
 
 # Testing files
 test.js
+
+# RethinkDB
+rethinkdb.exe
+rethinkdb_data/
