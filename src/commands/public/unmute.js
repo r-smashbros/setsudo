@@ -76,5 +76,7 @@ module.exports = class extends Command {
 
     // Append unmute to user's mod notes DB entry
     this.client.handlers.modNotes.addAction(message, user, message.author, `Unmute`, match[2]);
+
+    return message.reply(`${user.tag} unmuted.`);
   }
 };

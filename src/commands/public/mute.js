@@ -55,7 +55,7 @@ module.exports = class extends Command {
 
     // Create mute channel
     const muteChan = await message.guild.channels.create(
-      `mute-${muteUser.username.replace(/\s/, "-")}`,
+      `mute-${muteUser.id}`,
       {
         parent: detCat,
         reason: `${message.author.tag} muted ${muteUser.tag}`,
