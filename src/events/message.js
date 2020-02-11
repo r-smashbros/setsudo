@@ -132,6 +132,9 @@ module.exports = class extends Event {
         const checkRegex = new RegExp(`\\b${term}\\b`, "i");
         if (checkRegex.test(message.content)) {
 
+          // Allow the message to send if the sender was a staff member
+          if (gSettings['staffrole'] && message.member.roles.some(r => r.id === gSettings['staffrole'])) return;
+
           // Fetch messages near the violation for context
           let nearMsgs = await message.channel.messages.fetch({ limit: 5 });
 
