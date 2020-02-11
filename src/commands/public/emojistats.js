@@ -16,15 +16,14 @@ module.exports = class extends Command {
    * @param {Message} message The message that invoked the command
    */
   async execute(message) {
-    // Sort emojistats DB in descending order
+    // Sort emojistats DB in descending order based on usage value
     let emojiStats = await this.client.handlers.db.get("emojistats");
     emojiStats = emojiStats.map(entry => [entry["id"], Number(entry["data"])]);
-
-    const sorted = new Map([emojiStats].sort((a, b) => b[1] - a[1]));
+    const sorted = new Map([...emojiStats].sort((a, b) => b[1] - a[1]));
     const emojiList = message.guild.emojis.map(e => e.name);
     let msg = `\`\`\`asciidoc\n= Emoji stats for ${message.guild.name}\n`;
 
-    // Loop over the emojis and usage counts in the enmap (previously used emojis)
+    // Loop over emojis and usage count and append to embed
     sorted.forEach((usageCount, emojiID) => {
       const emoji = message.guild.emojis.get(emojiID);
       if (!emoji) return;
@@ -34,7 +33,7 @@ module.exports = class extends Command {
       msg += `${usageCount.toLocaleString()} usages\n`;
     });
 
-    // Append all unused emoji
+    // Append all of the emojis with zero usages to the end of the embed
     for (const emoji of message.guild.emojis.values()) {
       if (!sorted.has(emoji.id)) msg += `${emoji.name}${" ".repeat(Math.max(...(emojiList.map(el => el.length))) - emoji.name.length + 1)}:: 0 usages\n`;
     }
