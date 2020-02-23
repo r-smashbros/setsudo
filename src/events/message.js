@@ -84,7 +84,7 @@ module.exports = class extends Event {
 
     // Get permission information for the command user and reject if permission level is too low
     // eslint-disable-next-line require-atomic-updates
-    ctx.perm = this.checkPerm(ctx);
+    ctx.perm = await this.permissions.fetch(this.client, ctx);
     if (command.ltu > ctx.perm[0]) return;
 
     // Prevent execution of r/smashbros commands if the bot is self-hosted
@@ -104,15 +104,6 @@ module.exports = class extends Event {
       this.client.commands.forEach(c => { if (c.aliases && c.aliases.includes(text)) return resolve(c); });
       return resolve();
     });
-  }
-
-  /**
-   * Fetches the permission level for the message author
-   * @param {Message} message The message to be processed
-   * @returns {array} Permission level data
-   */
-  checkPerm(message) {
-    return this.permissions.fetch(this.client, message);
   }
 
   /**
