@@ -11,7 +11,7 @@ class PermissionLevel {
   async fetch(client, message) {
 
     // Fallback to normal guild member
-    if (!message.author || !message.member) return [0, "Guild Member"];
+    if (!message.author || !message.member) return [client.constants.perms.user, "Guild Member"];
 
     if (client.config.discord.owner === message.author.id)
       return [client.constants.perms.dev, "Developer"];
