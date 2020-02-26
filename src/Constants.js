@@ -26,6 +26,9 @@ module.exports = {
     "delete": "0xFF0000"
   },
   "defaultSettings": {
+    "antiinvite": null, // Boolean
+    "antiinvitewhitelist": null, // Array of strings
+
     // AutoMod related settings
     "automodlogschannel": null, // Channel ID
     "automodlist": [], // Array of strings

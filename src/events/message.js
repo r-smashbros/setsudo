@@ -14,6 +14,7 @@ module.exports = class extends Event {
    * @param {Message} ctx The message to be processed
    */
   async execute(ctx = null) {
+    const gSettings = await this.client.handlers.db.get("settings", ctx.guild.id);
 
     // Filter out other bots and DM channels
     if (ctx.author.bot) return;
@@ -23,12 +24,15 @@ module.exports = class extends Event {
     if (!await this.client.handlers.db.has("settings", ctx.guild.id)) {
       const defaultSettings = JSON.parse(JSON.stringify(this.client.constants.defaultSettings));
       defaultSettings["id"] = ctx.guild.id;
-      
+
       await this.client.handlers.db.insert("settings", defaultSettings);
     }
 
     // Check for automod violations
     await this.autoModCheck(ctx);
+
+    // Check for Discord invites
+    if (gSettings["antiinvite"] == "true") await this.antiInviteCheck(ctx);
 
     // [SH] Handle r/smashbros related data
     if (!this.client.config["selfhost"]) {
@@ -38,7 +42,7 @@ module.exports = class extends Event {
         ctx.guild.id === this.client.config["servSpec"]["modServ"] &&
         (ctx.channel.parent.id === this.client.config["servSpec"]["modCat"] || ctx.channel.parent.id === this.client.config["servSpec"]["voteCat"])
       ) {
-        if(!await this.client.handlers.db.has("activitystats", ctx.author.id))
+        if (!await this.client.handlers.db.has("activitystats", ctx.author.id))
           await this.client.handlers.db.insert("activitystats", {
             "id": ctx.author.id,
             "data": { "actions": 0, "messages": 1 }
@@ -110,8 +114,61 @@ module.exports = class extends Event {
    * 
    * @param {Message} message The message to be processed
    */
+  async antiInviteCheck(message) {
+    const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
+
+    // Allow the message to send if the sender was a staff member
+    if (gSettings["staffrole"] && message.member.roles.some(r => r.id === gSettings["staffrole"])) return;
+
+    // Check if guild has any channels in its whitelist
+    if (gSettings["antiinvitewhitelist"] && gSettings["antiinvitewhitelist"].length) {
+
+      // Loop over each whitelist entry
+      for (const term of gSettings["antiinvitewhitelist"]) {
+
+        // Construct and test regex to search for Discord invites
+        const checkRegex = new RegExp(`(https:\/\/)?(www\.)?(?:discord\.(?:gg|io|me|li)|discordapp\.com\/invite)\/([a-z0-9-.]+)?`, "i");
+        if (checkRegex.test(message.content)) {
+
+          // Fetch messages near the violation for context
+          let nearMsgs = await message.channel.messages.fetch({ limit: 5 });
+
+          // Reverse the order of the fetched messages to be oldest to newest
+          nearMsgs = new Collection([...nearMsgs].reverse());
+
+          await message.delete();
+
+          // Check if the guild has a channel to log automod violations in
+          if (gSettings["automodlogschannel"] && message.guild.channels.get(gSettings["automodlogschannel"])) {
+            const amChan = message.guild.channels.get(gSettings["automodlogschannel"]);
+
+            // Create automod violation embed
+            const embed = new MessageEmbed()
+              .setDescription(`**User sent a Discord invite in <#${message.channel.id}>**`)
+              .setColor(this.client.constants.colours.info)
+              .setTimestamp();
+
+            for (const m of nearMsgs.values()) {
+              embed.addField(`${m.author.tag} (${m.author.id})`, m.content.replace(term, `__**${term}**__`), false);
+            }
+
+            amChan.send({ embed });
+            return
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * 
+   * @param {Message} message The message to be processed
+   */
   async autoModCheck(message) {
     const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
+
+    // Allow the message to send if the sender was a staff member
+    if (gSettings["staffrole"] && message.member.roles.some(r => r.id === gSettings["staffrole"])) return;
 
     // Check if guild has anything in its automod list
     if (gSettings["automodlist"] && gSettings["automodlist"].length) {
@@ -122,9 +179,6 @@ module.exports = class extends Event {
         // Construct and test regex to search for banned term
         const checkRegex = new RegExp(`\\b${term}\\b`, "i");
         if (checkRegex.test(message.content)) {
-
-          // Allow the message to send if the sender was a staff member
-          if (gSettings["staffrole"] && message.member.roles.some(r => r.id === gSettings["staffrole"])) return;
 
           // Fetch messages near the violation for context
           let nearMsgs = await message.channel.messages.fetch({ limit: 5 });

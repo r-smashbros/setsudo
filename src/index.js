@@ -23,8 +23,9 @@ new class extends Client {
 
     // Load Global Handlers
     this.handlers = {};
+    this.handlers.autoInvite = new (require("./handlers/antiInvite.js"))(this);
     this.handlers.autoMod = new (require("./handlers/autoMod.js"))(this);
-    this.handlers.db = new(require("./handlers/database.js"))(this);
+    this.handlers.db = new (require("./handlers/database.js"))(this);
     this.handlers.modNotes = new (require("./handlers/modNotes.js"))(this);
     this.handlers.starboard = new (require("./handlers/starboard.js"))(this);
     this.handlers.timers = new (require("./handlers/timers.js"))(this);
