@@ -13,7 +13,7 @@ class AntiInvite {
     return new Promise(async (resolve, reject) => {
       const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
 
-      if (gSettings["antiinvitewhitelist"].indexOf(channel) !== -1) return reject(`\`${channel} is already on this server's anti invite whitelist\``);
+      if (gSettings["antiinvitewhitelist"].indexOf(channel) !== -1) return reject(`\`${channel} is already on this server's anti-invite whitelist\``);
       gSettings["antiinvitewhitelist"].push(channel);
 
       await this.client.handlers.db.update("settings", message.guild.id, gSettings);

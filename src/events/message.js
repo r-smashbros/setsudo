@@ -124,7 +124,7 @@ module.exports = class extends Event {
     if (gSettings["antiinvitewhitelist"] && gSettings["antiinvitewhitelist"].length) {
 
       // Loop over each whitelist entry
-      for (const term of gSettings["antiinvitewhitelist"]) {
+      for (const channel of gSettings["antiinvitewhitelist"]) {
 
         // Construct and test regex to search for Discord invites
         const checkRegex = new RegExp(`(https:\/\/)?(www\.)?(?:discord\.(?:gg|io|me|li)|discordapp\.com\/invite)\/([a-z0-9-.]+)?`, "i");
@@ -149,7 +149,7 @@ module.exports = class extends Event {
               .setTimestamp();
 
             for (const m of nearMsgs.values()) {
-              embed.addField(`${m.author.tag} (${m.author.id})`, m.content.replace(term, `__**${term}**__`), false);
+              embed.addField(`${m.author.tag} (${m.author.id})`, m.content.replace(channel, `__**${channel}**__`), false);
             }
 
             amChan.send({ embed });
