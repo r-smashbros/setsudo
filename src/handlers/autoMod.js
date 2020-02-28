@@ -59,7 +59,6 @@ class AutoMod {
    * @returns {Promise<string>|Promise<>} An empty resolved promise or a rejected promise with an error
    */
   removeWord(message, number) {
-
     // Arrays start at zero
     number = Number(number) - 1;
 

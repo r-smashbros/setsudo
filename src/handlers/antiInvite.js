@@ -38,7 +38,8 @@ class AntiInvite {
         // Loop over each channel
         gSettings["antiinvitewhitelist"].forEach((val, index) => {
           // Append channel to string in a formatted form
-          toSend += `${index + 1}. ${val}${gSettings["antiinvitewhitelist"].length > index ? ` (#${(message.guild.channels.get(val).name)})\n` : ""}`;
+          toSend += `${index + 1}. ${val}${gSettings["antiinvitewhitelist"].length > index ? `\n` : ""}`;
+          // toSend += `${index + 1}. ${val}${gSettings["automodlist"].length > index ? "\n" : ""}`;
         });
       }
 
@@ -59,9 +60,9 @@ class AntiInvite {
 
     return new Promise(async (resolve, reject) => {
       const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
-
+      console.log(gSettings)
       if (!gSettings["antiinvitewhitelist"].length) return reject("Anti-invite channel list is empty.");
-      if (!gSettings["antiinvitewhitelist"][number]) return reject(`No entry was found for channel ${number + 1}`);
+      if (!gSettings["antiinvitewhitelist"][number]) return reject(`No entry was found for channel ${channel}`);
 
       // Remove channel from whitelist
       gSettings["antiinvitewhitelist"].splice(number, 1);
