@@ -60,7 +60,6 @@ class AntiInvite {
 
     return new Promise(async (resolve, reject) => {
       const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
-      console.log(gSettings)
       if (!gSettings["antiinvitewhitelist"].length) return reject("Anti-invite channel list is empty.");
       if (!gSettings["antiinvitewhitelist"][number]) return reject(`No entry was found for channel ${channel}`);
 
