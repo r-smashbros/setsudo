@@ -116,7 +116,7 @@ module.exports = class extends Event {
    */
   async antiInviteCheck(message) {
     const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
-
+    
     // Allow the message to send if the sender was a staff member
     if (gSettings["staffrole"] && message.member.roles.some(r => r.id === gSettings["staffrole"])) return;
 

@@ -7,7 +7,7 @@ module.exports = class extends Command {
       name: "majority",
       aliases: ["maj"],
       ltu: client.constants.perms.staff,
-      selfhost: true
+      selfhost: false
     });
   }
 
