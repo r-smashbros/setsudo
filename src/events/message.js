@@ -129,7 +129,7 @@ module.exports = class extends Event {
         if (message.channel.id === channel) return;
 
         // Construct and test regex to search for Discord invites
-        const checkRegex = /(https:\/\/)?(www\.)?(?:discord\.(?:gg|io|me|li)|discordapp\.com\/invite)\/([a-z0-9-.]+)?/g;
+        const checkRegex = /(https:\/\/)?(www\.)?(?:discord\.(?:gg|io|me|li)|discordapp\.com\/invite)\/([a-z0-9-.]+)?/gi;
         if (checkRegex.test(message.content)) {
 
           // Fetch messages near the violation for context

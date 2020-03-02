@@ -125,12 +125,12 @@ module.exports = class extends Command {
 
     // Converts the string value to a boolean for storage
     let valueAsBool = (value == 'true')
-    
+
     // Update guild settings
     gSettings[setting] = valueAsBool;
     this.client.handlers.db.update("settings", message.guild.id, gSettings);
 
-    return `Setting \`${setting}\` set to \`${value}\``;
+    return `Setting \`${setting}\` set to \`${valueAsBool}\``;
   }
 
 };
