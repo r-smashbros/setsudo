@@ -18,19 +18,10 @@ module.exports = class extends Command {
   async execute(message) {
     const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
     let modCount = message.guild.roles.get(gSettings["staffrole"]).members.size
-    const embed = {
-        "fields": [
-          {
-            "name": "Majority:",
-            "value": `${Math.round((modCount / 100) * 60 )}`,
-          },
-          {
-            "name": "Super-majority:",
-            "value": `${Math.round((modCount / 100) * 80 )}`,
-          }
-        ]
-      };
-      message.channel.send({ embed });
+    const embed = new MessageEmbed()
+        .addField("Majority", `${Math.round((modCount / 100) * 60 )}`, false)
+        .addField("Super-majority", `${Math.round((modCount / 100) * 80 )}`, false);
+    message.channel.send({ embed });
   }
 };
 

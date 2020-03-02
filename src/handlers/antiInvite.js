@@ -39,7 +39,6 @@ class AntiInvite {
         gSettings["antiinvitewhitelist"].forEach((val, index) => {
           // Append channel to string in a formatted form
           toSend += `${index + 1}. ${val}${gSettings["antiinvitewhitelist"].length > index ? `\n` : ""}`;
-          // toSend += `${index + 1}. ${val}${gSettings["automodlist"].length > index ? "\n" : ""}`;
         });
       }
 

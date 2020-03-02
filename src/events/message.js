@@ -32,7 +32,7 @@ module.exports = class extends Event {
     await this.autoModCheck(ctx);
 
     // Check for Discord invites
-    if (gSettings["antiinvite"] == "true") await this.antiInviteCheck(ctx);
+    if (gSettings["antiinvite"]) await this.antiInviteCheck(ctx);
 
     // [SH] Handle r/smashbros related data
     if (!this.client.config["selfhost"]) {
@@ -126,37 +126,36 @@ module.exports = class extends Event {
       // Loop over each whitelist entry
       for (const channel of gSettings["antiinvitewhitelist"]) {
         
-        if (message.channel.id != channel) {
+        if (message.channel.id === channel) return;
 
-          // Construct and test regex to search for Discord invites
-          const checkRegex = new RegExp(`(https:\/\/)?(www\.)?(?:discord\.(?:gg|io|me|li)|discordapp\.com\/invite)\/([a-z0-9-.]+)?`, "i");
-          if (checkRegex.test(message.content)) {
+        // Construct and test regex to search for Discord invites
+        const checkRegex = /(https:\/\/)?(www\.)?(?:discord\.(?:gg|io|me|li)|discordapp\.com\/invite)\/([a-z0-9-.]+)?/g;
+        if (checkRegex.test(message.content)) {
 
-            // Fetch messages near the violation for context
-            let nearMsgs = await message.channel.messages.fetch({ limit: 5 });
+          // Fetch messages near the violation for context
+          let nearMsgs = await message.channel.messages.fetch({ limit: 5 });
 
-            // Reverse the order of the fetched messages to be oldest to newest
-            nearMsgs = new Collection([...nearMsgs].reverse());
+          // Reverse the order of the fetched messages to be oldest to newest
+          nearMsgs = new Collection([...nearMsgs].reverse());
 
-            await message.delete();
+          await message.delete();
 
-            // Check if the guild has a channel to log automod violations in
-            if (gSettings["automodlogschannel"] && message.guild.channels.get(gSettings["automodlogschannel"])) {
-              const amChan = message.guild.channels.get(gSettings["automodlogschannel"]);
+          // Check if the guild has a channel to log automod violations in
+          if (gSettings["automodlogschannel"] && message.guild.channels.get(gSettings["automodlogschannel"])) {
+            const amChan = message.guild.channels.get(gSettings["automodlogschannel"]);
 
-              // Create automod violation embed
-              const embed = new MessageEmbed()
-                .setDescription(`**User sent a Discord invite in <#${message.channel.id}>**`)
-                .setColor(this.client.constants.colours.info)
-                .setTimestamp();
+            // Create automod violation embed
+            const embed = new MessageEmbed()
+              .setDescription(`**User sent a Discord invite in <#${message.channel.id}>**`)
+              .setColor(this.client.constants.colours.info)
+              .setTimestamp();
 
-              for (const m of nearMsgs.values()) {
-                embed.addField(`${m.author.tag} (${m.author.id})`, m.content.replace(channel, `__**${channel}**__`), false);
-              }
-
-              amChan.send({ embed });
-              return
+            for (const m of nearMsgs.values()) {
+              embed.addField(`${m.author.tag} (${m.author.id})`, m.content.replace(channel, `__**${channel}**__`), false);
             }
+
+            amChan.send({ embed });
+            return
           }
         }
       }

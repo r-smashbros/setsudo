@@ -38,7 +38,6 @@ module.exports = class extends Command {
     // If both a setting and value is provided
     if (match[1] && match[2]) {
       match[1] = match[1].toLowerCase();
-      match[2] = match[2].toLowerCase();
 
       // Check if the provided setting matches existing settings and validate provided value before updating setting
       if (match[1] === "antiinvite") return message.reply(this._setBoolean(message, gSettings, match[1], match[2]));
@@ -124,8 +123,11 @@ module.exports = class extends Command {
   _setBoolean(message, gSettings, setting, value) {
     if (value != "true" && value != "false") return `The provided value is not a boolean: ${value}`;
 
+    // Converts the string value to a boolean for storage
+    let valueAsBool = (value == 'true')
+    
     // Update guild settings
-    gSettings[setting] = value;
+    gSettings[setting] = valueAsBool;
     this.client.handlers.db.update("settings", message.guild.id, gSettings);
 
     return `Setting \`${setting}\` set to \`${value}\``;
