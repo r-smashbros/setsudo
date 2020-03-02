@@ -40,6 +40,7 @@ module.exports = class extends Command {
       match[1] = match[1].toLowerCase();
 
       // Check if the provided setting matches existing settings and validate provided value before updating setting
+      if (match[1] === "antiinvite") return message.reply(this._setBoolean(message, gSettings, match[1], match[2]));
       if (match[1] === "automodlogschannel") return message.reply(this._setChannel(message, gSettings, match[1], match[2], false));
       if (match[1] === "detentioncategory") return message.reply(this._setChannel(message, gSettings, match[1], match[2], true));
       if (match[1] === "detentionrole") return message.reply(this._setRole(message, gSettings, match[1], match[2]));
@@ -106,6 +107,30 @@ module.exports = class extends Command {
     this.client.handlers.db.update("settings", message.guild.id, gSettings);
 
     return `Setting \`${setting}\` set to \`${role.name}\``;
+  }
+
+  /**
+   * Stores boolean for a setting
+   * @private
+   * 
+   * @param {Message} message The message that invoked the command
+   * @param {object} gSettings The guild's settings
+   * @param {string} setting The setting to be changed
+   * @param {string} value The boolean to be stored
+   * 
+   * @returns {string} Output to be returned to user
+   */
+  _setBoolean(message, gSettings, setting, value) {
+    if (value != "true" && value != "false") return `The provided value is not a boolean: ${value}`;
+
+    // Converts the string value to a boolean for storage
+    let valueAsBool = (value == 'true')
+
+    // Update guild settings
+    gSettings[setting] = valueAsBool;
+    this.client.handlers.db.update("settings", message.guild.id, gSettings);
+
+    return `Setting \`${setting}\` set to \`${valueAsBool}\``;
   }
 
 };
