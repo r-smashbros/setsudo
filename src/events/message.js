@@ -161,7 +161,7 @@ module.exports = class extends Event {
   }
 
   /**
-   * 
+   * Checks message for AutoMod violations
    * @param {Message} message The message to be processed
    */
   async autoModCheck(message) {
