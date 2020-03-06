@@ -111,7 +111,7 @@ module.exports = class extends Event {
   }
 
   /**
-   * 
+   * Checks messages for Discord invites
    * @param {Message} message The message to be processed
    */
   async antiInviteCheck(message) {
@@ -159,54 +159,53 @@ module.exports = class extends Event {
       }
     }
   }
-}
 
-/**
- * 
- * @param {Message} message The message to be processed
- */
-async autoModCheck(message) {
-  const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
+  /**
+   * 
+   * @param {Message} message The message to be processed
+   */
+  async autoModCheck(message) {
+    const gSettings = await this.client.handlers.db.get("settings", message.guild.id);
 
-  // Allow the message to send if the sender was a staff member
-  if (gSettings["staffrole"] && message.member.roles.some(r => r.id === gSettings["staffrole"])) return;
+    // Allow the message to send if the sender was a staff member
+    if (gSettings["staffrole"] && message.member.roles.some(r => r.id === gSettings["staffrole"])) return;
 
-  // Check if guild has anything in its automod list
-  if (gSettings["automodlist"] && gSettings["automodlist"].length) {
+    // Check if guild has anything in its automod list
+    if (gSettings["automodlist"] && gSettings["automodlist"].length) {
 
-    // Loop over each automod entry
-    for (const term of gSettings["automodlist"]) {
+      // Loop over each automod entry
+      for (const term of gSettings["automodlist"]) {
 
-      // Construct and test regex to search for banned term
-      const checkRegex = new RegExp(`\\b${term}\\b`, "i");
-      if (checkRegex.test(message.content)) {
+        // Construct and test regex to search for banned term
+        const checkRegex = new RegExp(`\\b${term}\\b`, "i");
+        if (checkRegex.test(message.content)) {
 
-        // Fetch messages near the violation for context
-        let nearMsgs = await message.channel.messages.fetch({ limit: 5 });
+          // Fetch messages near the violation for context
+          let nearMsgs = await message.channel.messages.fetch({ limit: 5 });
 
-        // Reverse the order of the fetched messages to be oldest to newest
-        nearMsgs = new Collection([...nearMsgs].reverse());
+          // Reverse the order of the fetched messages to be oldest to newest
+          nearMsgs = new Collection([...nearMsgs].reverse());
 
-        await message.delete();
+          await message.delete();
 
-        // Check if the guild has a channel to log automod violations in
-        if (gSettings["automodlogschannel"] && message.guild.channels.get(gSettings["automodlogschannel"])) {
-          const amChan = message.guild.channels.get(gSettings["automodlogschannel"]);
+          // Check if the guild has a channel to log automod violations in
+          if (gSettings["automodlogschannel"] && message.guild.channels.get(gSettings["automodlogschannel"])) {
+            const amChan = message.guild.channels.get(gSettings["automodlogschannel"]);
 
-          // Create automod violation embed
-          const embed = new MessageEmbed()
-            .setDescription(`**Potential trouble found in <#${message.channel.id}>**`)
-            .setColor(this.client.constants.colours.info)
-            .setTimestamp();
+            // Create automod violation embed
+            const embed = new MessageEmbed()
+              .setDescription(`**Potential trouble found in <#${message.channel.id}>**`)
+              .setColor(this.client.constants.colours.info)
+              .setTimestamp();
 
-          for (const m of nearMsgs.values()) {
-            embed.addField(`${m.author.tag} (${m.author.id})`, m.content.replace(term, `__**${term}**__`), false);
+            for (const m of nearMsgs.values()) {
+              embed.addField(`${m.author.tag} (${m.author.id})`, m.content.replace(term, `__**${term}**__`), false);
+            }
+
+            amChan.send({ embed });
           }
-
-          amChan.send({ embed });
         }
       }
     }
   }
-}
 };
