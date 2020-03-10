@@ -37,7 +37,7 @@ class Timers {
         const member = await guild.members.fetch(user).catch(() => null);
 
         // Check if action is a silence and the user is still a member of the guild
-        if (dbEntry["action"] === "silence" && member) {
+        if (dbEntry["data"]["action"] === "silence" && member) {
           // Get guild's muted role
           const gSettings = await this.client.handlers.db.get("settings", guild.id);
           let muteRole = gSettings["mutedrole"];
@@ -49,7 +49,7 @@ class Timers {
         }
 
         // Check if action is mute. Member check not required for logging purposes
-        if (dbEntry["action"] === "mute") {
+        if (dbEntry["data"]["action"] === "mute") {
 
           // Get guild's muted role
           const gSettings = await this.client.handlers.db.get("settings", guild.id);
@@ -96,7 +96,7 @@ class Timers {
         }
 
         // Check if action is a tempban
-        if (dbEntry["action"] === "tempban") {
+        if (dbEntry["data"]["action"] === "tempban") {
           guild.members.unban(user);
         }
 
