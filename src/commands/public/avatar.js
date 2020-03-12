@@ -6,7 +6,7 @@ module.exports = class extends Command {
     super(client, {
       name: "avatar",
       aliases: [],
-      ltu: client.constants.perms.staff,
+      ltu: client.constants.perms.user,
       selfhost: true
     });
   }
@@ -15,22 +15,22 @@ module.exports = class extends Command {
    * Entry point for avatar command
    * @param {Message} message The message that invoked the command
    */
-  async execute(message)
-  {
-  	const command = /(\d{17,20})/.exec(message.content);
+  async execute(message) {
+  	const targetUser = /(\d{17,20})/.exec(message.content);
 
-    if (command) {
+    if (targetUser) {
+      const user = await this.client.users.fetch(targetUser[1]);
+      if (!user) return message.reply("Invalid user provided. Did you enter a valid avatar ID?");
+
       const embed = new MessageEmbed()
-            .setImage(this.client.users.get(command[1]).avatarURL({"size": 2048}))
-            .setTitle(`${this.client.users.get(command[1]).username}'s avatar`);
-      message.channel.send(embed);
+        .setImage(user.avatarURL({ "dynamic": true, "size": 2048 }))
+        .setTitle(`${user.username}'s avatar`);
+      return message.channel.send({ embed });
     }
 
-  	if (!command) {
-  		const embed = new MessageEmbed()
-            .setImage(message.author.avatarURL({"size": 2048}))
-            .setTitle(`${message.author.username}'s avatar`);
-  		message.channel.send(embed);
-  	}
+    const embed = new MessageEmbed()
+      .setImage(message.author.avatarURL({ "dynamic": true, "size": 2048 }))
+      .setTitle(`${message.author.username}'s avatar`);
+  	message.channel.send({ embed });
   }
 };	
