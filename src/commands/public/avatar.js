@@ -20,7 +20,7 @@ module.exports = class extends Command {
 
     if (targetUser) {
       const user = await this.client.users.fetch(targetUser[1]);
-      if (!user) return message.reply("Invalid user provided. Did you enter a valid avatar ID?");
+      if (!user) return message.reply("Invalid user ID provided.");
 
       const embed = new MessageEmbed()
         .setImage(user.avatarURL({ "dynamic": true, "size": 2048 }))
