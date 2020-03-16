@@ -24,26 +24,31 @@ module.exports = class extends Command {
     let mStr = "";
     const mObj = {}, mArr = [];
     let vStr = "";
+    let cStr = "";
+    const cObj = {}, cArr = [];
 
     let activityStats = await this.client.handlers.db.get("activitystats");
     activityStats = activityStats.map(entry => [ entry["id"], entry["data"]]);
 
     // Loop over each entry in the activityStats DB
     activityStats.forEach(entry => {
-      // Separate actions and messages for sorting
+      // Separate actions, closed modmails, and messages for sorting
       aArr.push([entry[0], entry[1]["actions"]]);
       mArr.push([entry[0], entry[1]["messages"]]);
+      cArr.push([entry[0], entry[1]["closes"]]);
     });
 
-    // Sort action and message counts
+    // Sort action, closed modmails, and message counts
     aArr.sort((a, b) => b[1] - a[1]);
     mArr.sort((a, b) => b[1] - a[1]);
+    cArr.sort((a, b) => b[1] - a[1]);
 
-    // Restore action and message counts to objects from arrays
+    // Restore action, closed modmails, and message counts to objects from arrays
     for (const entry of aArr) aObj[entry[0]] = entry[1];
     for (const entry of mArr) mObj[entry[0]] = entry[1];
+    for (const entry of cArr) cObj[entry[0]] = entry[1];
 
-    // Loop over action and message stats and append to strings
+    // Loop over action, closed modmails, and message stats and append to strings
     for (const [k, v] of Object.entries(aObj)) {
       const user = await this.client.users.fetch(k);
       aStr += `${user.tag}:: ${v}\n`;
@@ -51,6 +56,10 @@ module.exports = class extends Command {
     for (const [k, v] of Object.entries(mObj)) {
       const user = await this.client.users.fetch(k);
       mStr += `${user.tag}:: ${v}\n`;
+    }
+    for (const [k, v] of Object.entries(cObj)) {
+      const user = await this.client.users.fetch(k);
+      cStr += `${user.tag}:: ${v}\n`;
     }
 
     // Fetch voting statistics
@@ -62,14 +71,16 @@ module.exports = class extends Command {
       vStr += `${user.tag}:: ${v}\n`;
     }
 
-    // Construct and send action, message, and missed votes embeds
+    // Construct and send action, closed modmails, message, and missed votes embeds
     const aEmbed = new MessageEmbed().setTitle("Action Activity").setDescription(`\`\`\`asciidoc\n${aStr}\`\`\``).setColor(0xFF0000);
     const mEmbed = new MessageEmbed().setTitle("Message Activity").setDescription(`\`\`\`asciidoc\n${mStr}\`\`\``).setColor(0x00FF00);
-    const vEmbed = new MessageEmbed().setTitle("Missed Votes").setDescription(`\`\`\`asciidoc\n${vStr}\`\`\``).setColor(0x0000FF).setTimestamp();
+    const vEmbed = new MessageEmbed().setTitle("Missed Votes").setDescription(`\`\`\`asciidoc\n${vStr}\`\`\``).setColor(0x0000FF);
+    const cEmbed = new MessageEmbed().setTitle("Modmails Closed").setDescription(`\`\`\`asciidoc\n${cStr}\`\`\``).setColor(0x00FFFF);
 
     await message.channel.send({ embed: aEmbed });
     await message.channel.send({ embed: mEmbed });
     await message.channel.send({ embed: vEmbed });
+    await message.channel.send({ embed: cEmbed });
 
     // Clear stats if the "--clear" flag was present
     if (clearStats) await this.client.handlers.db.deleteAll("activitystats");
