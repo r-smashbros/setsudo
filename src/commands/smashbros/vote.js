@@ -31,8 +31,8 @@ module.exports = class extends Command {
       }
     } else {
       // If range value is not found, react with "yes" and "no" emoji
-      const yesEmoji = this.client.guilds.get("553311497279897601").emojis.get("556164445794074657");
-      const noEmoji = this.client.guilds.get("553311497279897601").emojis.get("556164445491953679");
+      const yesEmoji = this.client.guilds.get("691766079529156620").emojis.get("691811150555250688");
+      const noEmoji = this.client.guilds.get("691766079529156620").emojis.get("691811170222342217");
 
       await toReact.react(yesEmoji).catch(e => console.error(e.stack));
       await toReact.react(noEmoji).catch(() => message.channel.send("ERROR: I cannot react to the message."));
