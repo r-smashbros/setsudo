@@ -14,8 +14,8 @@ module.exports = class extends Event {
    * @param {VoiceState} oldState Old instance of a member's VoiceState
    * @param {VoiceState} newState New instance of a member's VoiceState
    */
-  execute(oldState, newState) {
-    const gSettings = this.client.handlers.db.get("settings", oldState.guild.id);
+  async execute(oldState, newState) {
+    const gSettings = await this.client.handlers.db.get("settings", oldState.guild.id);
 
     this._handleVCLogging(oldState, newState, gSettings);
     this._handleDynamicVC(oldState, newState, gSettings);
