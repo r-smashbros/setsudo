@@ -17,6 +17,9 @@ module.exports = class extends Event {
   async execute(oldState, newState) {
     const gSettings = await this.client.handlers.db.get("settings", oldState.guild.id);
 
+    // Filter out updates not relating to user-channel movement
+    if (oldState.channelID && newState.channelID && oldState.channelID === newState.channelID) return;
+
     this._handleVCLogging(oldState, newState, gSettings);
     this._handleDynamicVC(oldState, newState, gSettings);
   }
