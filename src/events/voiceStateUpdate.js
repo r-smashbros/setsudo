@@ -92,7 +92,7 @@ module.exports = class extends Event {
 
     const createVC = oldState.guild.channels.get(gSettings["dynamicvcbasevc"]);
 
-    const vcDBEntry = this.client.handlers.db.get("dynamicvc", `${oldState.guild.id}-${oldState.member.id}`);
+    const vcDBEntry = await this.client.handlers.db.get("dynamicvc", `${oldState.guild.id}-${oldState.member.id}`);
 
     // Handle new VC creation
     if (!vcDBEntry && newState.channelID === gSettings["dynamicvcbasevc"]) {
