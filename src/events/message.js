@@ -14,11 +14,11 @@ module.exports = class extends Event {
    * @param {Message} ctx The message to be processed
    */
   async execute(ctx = null) {
-    const gSettings = await this.client.handlers.db.get("settings", ctx.guild.id);
-
     // Filter out other bots and DM channels
     if (ctx.author.bot) return;
     if (ctx.channel.type !== "text") return;
+
+    const gSettings = await this.client.handlers.db.get("settings", ctx.guild.id);
 
     // Create guild settings if they don't exist
     if (!await this.client.handlers.db.has("settings", ctx.guild.id)) {
